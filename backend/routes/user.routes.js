@@ -1,13 +1,11 @@
-// backend/routes/user.routes.js
-
 const express = require('express');
 const router = express.Router();
-const UserController = require('../controllers/vote.controller');
+import { login, register, logout, deleteUser, updateUser } from '../controllers/vote.controller';
 
-// Ruta para emitir un voto
-router.post('/login', UserController.login);
-
-// Ruta para verificar un voto por usuario
-router.get('/register', UserController.register);
+router.post('/login', login);
+router.get('/register', register);
+router.post('/logout', logout);
+router.get('/deleteUser', deleteUser);
+router.get('/updateUser', updateUser);
 
 module.exports = router;
