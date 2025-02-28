@@ -1,0 +1,15 @@
+services:
+    db:
+        container_name: MariaDB
+        image: mariadb:lts
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_DATABASE: eVoting
+            MYSQL_USER: Nombre1
+            MYSQL_PASSWORD: password1
+
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./mysql:/var/lib/mysql
