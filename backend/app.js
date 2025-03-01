@@ -1,11 +1,14 @@
-const express = require('express');
-const userRoutes = require('./routes/user.routes');
+import express from 'express';
+import userRoutes from './routes/user.routes.js';
+import cors from 'cors';
 
 const app = express();
 
-// Middleware para procesar JSON
-app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:8080'
+}));
 
+// Rutas de usuarios
 app.use('/api/users', userRoutes);
 
 const PORT = 3000;

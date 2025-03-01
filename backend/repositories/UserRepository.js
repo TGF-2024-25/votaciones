@@ -1,7 +1,7 @@
 import BaseRepository from './BaseRepository.js';
 import User from '../models/User.js';
 
-class UserRepository extends BaseRepository {
+export default class UserRepository extends BaseRepository {
 
     constructor() {
         super();
