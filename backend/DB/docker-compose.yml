@@ -1,7 +1,7 @@
 services:
     db:
         container_name: MariaDB
-        image: mariadb:lts
+        image: mariadb:11.4
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: password
