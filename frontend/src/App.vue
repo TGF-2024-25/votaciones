@@ -1,26 +1,37 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1>Pruebas de Usuario</h1>
+    <button @click="probarRegistro">Probar Registro</button>
+    <button @click="probarLogin">Probar Login</button>
+    <button @click="probarLogout">Probar Logout</button>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { testRegister, testLogin, testLogout } from './main.js';
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  methods: {
+    async probarRegistro() {
+      await testRegister();
+    },
+    async probarLogin() {
+      await testLogin();
+    },
+    async probarLogout() {
+      await testLogout();
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+<style scoped>
+h1 {
+  color: #42b983;
+}
+button {
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
 }
 </style>
