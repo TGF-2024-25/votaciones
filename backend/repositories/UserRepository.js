@@ -22,6 +22,10 @@ export default class UserRepository extends BaseRepository {
         throw new Error('Método findAll() debe ser implementado.');
     }
 
+    async findByParams(params) {
+        throw new Error('Método findByParams() debe ser implementado.');
+    }
+
     async update(id, entity) {
         throw new Error('Método update() debe ser implementado.');
     }
