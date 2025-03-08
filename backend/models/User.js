@@ -1,18 +1,21 @@
-export default class User {
+import { DataTypes } from 'sequelize';
+import sequelize from '../DB/config.js';
 
-    constructor(id, name, email, photo, password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.photo = photo;
-        this.password = password;
-    }
-    
-    constructor(name, email, photo, password) {
-        this.name = name;
-        this.email = email;
-        this.photo = photo;
-        this.password = password;
-    }
-}
-  
+const User = sequelize.define('User', {
+  // Definir los atributos de la tabla
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true,
+    primaryKey: true,
+  },
+}, {
+  tableName: 'users',
+  timestamps: true,
+});
+
+export default User;
