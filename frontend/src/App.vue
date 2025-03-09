@@ -2,16 +2,19 @@
   <div>
     <h1>Aplicación Principal</h1>
     <UserTests />
+    <CandidacyTests />
   </div>
 </template>
 
 <script>
 import UserTests from './components/UserTest.vue';
+import CandidacyTests from './components/CandidacyTest.vue';
 
 export default {
   name: 'App',
   components: {
     UserTests,
+    CandidacyTests,
   },
 };
 </script>

@@ -35,7 +35,7 @@ export const controller_user_delete = async (req, res) => {
     }
 };
 
-export const updacontroller_user_update = async (req, res) => {
+export const controller_user_update = async (req, res) => {
     try {
         const { email, oldPassword, name, photo, password } = req.body;
         const newUser = await service_user_update(email, oldPassword, name, photo, password);
@@ -45,7 +45,7 @@ export const updacontroller_user_update = async (req, res) => {
     }
 };
 
-export const updacontroller_user_search = async (req, res) => {
+export const controller_user_search = async (req, res) => {
     try {
         const { email, name } = req.body;
         const users = await service_user_search(email, name);
@@ -55,7 +55,7 @@ export const updacontroller_user_search = async (req, res) => {
     }
 };
 
-export const updacontroller_user_consult = async (req, res) => {
+export const controller_user_consult = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await service_user_consult(email);

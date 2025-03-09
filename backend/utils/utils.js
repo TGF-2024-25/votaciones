@@ -7,7 +7,13 @@ export const validateEmail = async (email) => {
 }
 
 export const validateString = async (string) => {
-    if (typeof string !== 'string' || !/^[a-zA-ZáéíóúÁÉÍÓÚ\s]+$/.test(string)) {
-        throw new Error('Formato de nombre inválido');
+    if (typeof string !== 'string' || !/^[a-zA-ZáéíóúÁÉÍÓÚ!¡.\s]+$/.test(string)) {
+        throw new Error('Formato de cadena inválido');
+    }
+}
+
+export const validateBoolean = async (boolean) => {
+    if (typeof boolean !== 'boolean') {
+        throw new Error('La variable no es booleana');
     }
 }
