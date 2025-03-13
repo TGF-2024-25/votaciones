@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 import Election from '../models/Election.js';
 import ElectionRepository from '../repositories/ElectionRepository.js';
 import { validateString, validateDate } from '../utils/utils.js';
@@ -34,3 +34,13 @@ export const service_election_consult = async (id) => {
 
     return election;
 };
+
+export const service_election_vote = async (candidate, voterHashId) => {};
+
+export const service_election_verifyVote = async (voterHashId) => {};
+
+export const service_election_addCandidate = async (candidacy) => {};
+
+export const service_election_deleteCandidate = async (id) => {}; //Esta aqui pero no en Controller
+
+export const service_election_countVotes = async () => {};
