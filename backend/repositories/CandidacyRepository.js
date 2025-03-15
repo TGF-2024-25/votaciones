@@ -1,6 +1,6 @@
 import BaseRepository from './BaseRepository.js';
 
-export default class UserRepository extends BaseRepository {
+export default class CandidacyRepository extends BaseRepository {
 
     constructor() {
         super();
