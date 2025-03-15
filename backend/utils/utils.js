@@ -10,7 +10,7 @@ export const validateString = async (string) => {
     if (typeof string !== 'string' || !/^[a-zA-ZáéíóúÁÉÍÓÚ!¡.\s]+$/.test(string)) {
         throw new Error('Formato de cadena inválido');
     }
-}
+};
 
 export const validateBoolean = async (boolean) => {
     if (typeof boolean !== 'boolean') {
