@@ -7,8 +7,8 @@ export const validateEmail = async (email) => {
 }
 
 export const validateString = async (string) => {
-    if (typeof string !== 'string' || !/^[a-zA-ZáéíóúÁÉÍÓÚ!¡.\s]+$/.test(string)) {
-        throw new Error('Formato de cadena inválido');
+    if (typeof string !== 'string' || !/^[a-zA-Z0-9áéíóúÁÉÍÓÚ!¡¿?.,\s]+$/.test(string)) {
+        throw new Error('Formato de la cadena ' + string + ' inválido');
     }
 };
 

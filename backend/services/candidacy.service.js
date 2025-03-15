@@ -16,8 +16,8 @@ export const service_create_candidacy = async (candidacy) => {
 
     const params = {};
     params.electionId = candidacy.electionId;
-    params.user = user;
-    const existingCandidacy = await candidacyRepositoryRepository.findByParams(params);
+    params.user = candidacy.user;
+    const existingCandidacy = await candidacyRepository.findByParams(params);
     if (existingCandidacy) {
         throw new Error('Ya existe una candidatura para esta elección con este usuario.');
     }
@@ -39,7 +39,7 @@ export const service_delete_candidacy = async (id) => {
 };
 
 export const service_update_candidacy = async (candidacy) => {
-    if (!candidacy.id) {
+    if (candidacy.id == null) {
         throw new Error('El ID de la candidatura es obligatorio.');
     }
 
@@ -93,12 +93,12 @@ export const service_search_candidacy = async (candidacy) => {
     return candidacies;
 };
 
-export const service_consult_candidacy = async (candidacy) => {
-    if (!candidacy.id) {
+export const service_consult_candidacy = async (id) => {
+    if (id == null) {
         throw new Error('El ID de la candidatura es obligatorio.');
     }
 
-    const foundCandidacy = await candidacyRepository.findById(candidacy.id);
+    const foundCandidacy = await candidacyRepository.findById(id);
     if (!foundCandidacy) {
         throw new Error('La candidatura no existe.');
     }

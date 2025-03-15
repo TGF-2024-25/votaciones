@@ -10,7 +10,7 @@ import {
 export const controller_create_candidacy = async (req, res) => {
     try {
         const { electionId, slogan, text, user, video } = req.body;
-        const candidacy = new Candidacy(electionId, slogan, text, user, video, false);
+        const candidacy = new Candidacy(null, user, electionId, slogan, text, video, false);
         const newCandidacy = await service_create_candidacy(candidacy);
         res.status(201).json({ message: 'Candidatura creada con éxito', newCandidacy });
     } catch (error) {
@@ -33,7 +33,7 @@ export const controller_update_candidacy = async (req, res) => {
     try {
         const { electionId, slogan, text, user, video, id } = req.body;
         if (!id) throw new Error('ID de candidatura es requerido para actualizar');
-        const candidacy = new Candidacy(electionId, slogan, text, user, video, false);
+        const candidacy = new Candidacy(id, user, electionId, slogan, text, video, false);
         candidacy.id = id; // Asignamos el ID para actualizar el registro
         const updatedCandidacy = await service_update_candidacy(candidacy);
         res.status(200).json({ message: 'Candidatura modificada con éxito', updatedCandidacy });
@@ -45,7 +45,7 @@ export const controller_update_candidacy = async (req, res) => {
 export const controller_search_candidacy = async (req, res) => {
     try {
         const { id, electionId, slogan, text, user, video } = req.body;
-        const candidacy = new Candidacy(electionId, slogan, text, user, video, false);
+        const candidacy = new Candidacy(id, user, electionId, slogan, text, video, false);
         if (id) candidacy.id = id; // Opcionalmente filtrar por ID
         const candidacies = await service_search_candidacy(candidacy);
         res.status(200).json({ message: 'Candidaturas encontradas con éxito', candidacies });

@@ -34,6 +34,7 @@ export const testDeleteCandidacy = async () => {
 export const testUpdateCandidacy = async () => {
     try {
         const response = await axios.post(`${API_URL}/update`, {
+            id: '123',
             electionId: '12345',
             slogan: 'Cambio real, futuro brillante.',
             text: 'Nuestra visión es construir un mejor mañana.',
