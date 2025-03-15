@@ -1,27 +1,35 @@
 import sequelize from '../config.js';
 import User from '../../models/User.js';
-import Vote from '../../models/Vote.js';
+import Election from '../../models/Election.js';
 import { DATE } from 'sequelize';
 
 async function insertData() {
   try {
-    // Primero, inserta un usuario
+
+    // Sincroniza las tablas. Si ya existen, las elimina y las vuelve a crear
+    await sequelize.sync({ force: true });
+    console.log("Las tablas han sido sincronizadas.");
+
     const newUser = await User.create({
-      name: 'Hannah Montana',
+      name: 'Hannah',
+      surname: 'Montana',
+      password: '123',
       email: 'hmontana@gmail.com',
     });
 
-    console.log('Usuario creado:', newUser);
+    console.log('User created:', newUser);
 
-    // Luego, inserta un post relacionado con ese usuario
-    const newVote = await Vote.create({
-      name: 'Votacion de clase',
+    const newElection = await Election.create({
+      title: 'Votacion de clase',
       id: '1234567890',
-      fecha_inicio: new Date(),
+      init_date: new Date(),
+      end_date: new Date('2025-04-10'),
     });
 
-    console.log('Vote creado:', newVote);
+    console.log('Election created:', newElection);
 
+    await newUser.addElection(newElection);
+    console.log('User added to election');
 
   } catch (error) {
     console.error('Error al insertar los datos:', error);
