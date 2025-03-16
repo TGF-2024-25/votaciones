@@ -39,8 +39,12 @@ export const service_election_vote = async (candidate, voterHashId) => {};
 
 export const service_election_verifyVote = async (voterHashId) => {};
 
-export const service_election_addCandidate = async (candidacy) => {};
+export const service_election_addCandidate = async (candidacy) => {
+    return candidacy;
+};
 
-export const service_election_deleteCandidate = async (id) => {}; //Esta aqui pero no en Controller
+export const service_election_deleteCandidate = async (id) => {
+    return await electionRepository.deleteCandidate(id);
+}; //Esta aqui pero no en Controller
 
 export const service_election_countVotes = async () => {};
