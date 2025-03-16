@@ -1,4 +1,4 @@
-//import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import Election from '../models/Election.js';
 import ElectionRepository from '../repositories/ElectionRepository.js';
 import { validateString, validateDate } from '../utils/utils.js';
