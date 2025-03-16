@@ -2,8 +2,11 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../DB/config.js';
 
 const User = sequelize.define('User', {
-  // Definir los atributos de la tabla
   name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  surname: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -13,6 +16,15 @@ const User = sequelize.define('User', {
     unique: true,
     primaryKey: true,
   },
+  image:
+  {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  password: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  }
 }, {
   tableName: 'users',
   timestamps: true,

@@ -2,8 +2,8 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../DB/config.js';
 import User from './User.js';
 
-const Vote = sequelize.define('Vote', {
-  name: {
+const Election = sequelize.define('Election', {
+  title: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -13,17 +13,25 @@ const Vote = sequelize.define('Vote', {
     unique: true,
     primaryKey: true,
   },
-  fecha_inicio: {
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  init_date: {
     type: DataTypes.DATE,
     allowNull: false,
   },
+  end_date: {
+    type: DataTypes.DATE,
+    allowNull: false,
+  }
 }, {
-  tableName: 'votes',
+  tableName: 'elections',
   timestamps: true,
 });
 
 // Definir la relación muchos a muchos con una tabla intermedia
-const UserVotes = sequelize.define('UserVotes', {
+const UserElection = sequelize.define('UserElections', {
   userId: {
     type: DataTypes.STRING,
     references: {
@@ -31,16 +39,16 @@ const UserVotes = sequelize.define('UserVotes', {
       key: 'email',
     },
   },
-  voteId: {
+  electionId: {
     type: DataTypes.STRING,
     references: {
-      model: Vote,
+      model: Election,
       key: 'id',
     },
   },
 });
 
-Vote.belongsToMany(User, { through: UserVotes, foreignKey: 'voteId' });
-User.belongsToMany(Vote, { through: UserVotes, foreignKey: 'userId' });
+Election.belongsToMany(User, { through: UserElection, foreignKey: 'electionId' });
+User.belongsToMany(Election, { through: UserElection, foreignKey: 'userId' });
 
-export default Vote;
+export default Election;
