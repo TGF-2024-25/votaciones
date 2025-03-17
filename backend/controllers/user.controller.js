@@ -13,8 +13,8 @@ export const controller_user_login = async (req, res) => {
 
 export const controller_user_register = async (req, res) => {
     try {
-        const { email, oldPassword, name, photo, newPassword } = req.body;
-        const newUser = await service_user_register(email, oldPassword, name, photo, newPassword);
+        const { email, name, photo, password } = req.body;
+        const newUser = await service_user_register(email, name, photo, password);
         res.status(201).json({ message: 'Usuario registrado con éxito', newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
