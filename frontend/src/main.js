@@ -1,28 +1,45 @@
+import { createApp } from 'vue'
+import App from './App.vue'
 import axios from 'axios';
+
+createApp(App).mount('#app')
 
 const API_URL = 'http://localhost:3000/api/users';
 
-// Login de usuario
-export const loginUser = async (email, password) => {
-    return await axios.post(`${API_URL}/login`, { email, password });
+// Probar registro de usuario
+export const testRegister = async () => {
+    try {
+        const response = await axios.post(`${API_URL}/register`, {
+            email: 'test@email.com',
+            name: 'Usuario Prueba',
+            photo: 'foto.jpg',
+            password: '123456',
+        });
+        console.log('✅ Registro exitoso:', response.data);
+    } catch (error) {
+        console.error('❌ Error en registro:', error.response?.data || error.message);
+    }
 };
 
-// Registrar un usuario
-export const registerUser = async (email, name, photo, password) => {
-    return await axios.post(`${API_URL}/register`, { email, name, photo, password });
+// Probar login
+export const testLogin = async () => {
+    try {
+        const response = await axios.post(`${API_URL}/login`, {
+            email: 'test@email.com',
+            password: '123456',
+        });
+        console.log('✅ Login exitoso:', response.data);
+    } catch (error) {
+        console.error('❌ Error en login:', error.response?.data || error.message);
+    }
 };
 
-// Logout del usuario
-export const logoutUser = async () => {
-    return await axios.post(`${API_URL}/logout`);
-};
-
-// Actualizar usuario
-export const updateUser = async (email, name, photo, password) => {
-    return await axios.put(`${API_URL}/update`, { email, name, photo, password });
-};
-
-// Eliminar usuario
-export const deleteUser = async (email, password) => {
-    return await axios.delete(`${API_URL}/delete`, { data: { email, password } });
+// Probar logout
+export const testLogout = async () => {
+    try {
+        const response = await axios.post(`${API_URL}/logout`);
+        console.log('✅ Logout exitoso:', response.data);
+    } catch (error) {
+        console.error('❌ Error en logout:', error.response?.data || error.message);
+    }
 };
