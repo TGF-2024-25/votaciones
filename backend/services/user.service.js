@@ -32,7 +32,7 @@ export const service_user_register = async (email, name, photo, password) => {
 
     await validateString(name);
 
-    const hashedPassword = hashPassword(password);
+    const hashedPassword = await hashPassword(password);
     const newUser = new User(name, email, photo, hashedPassword);
     return await userRepository.create(newUser);
 };
@@ -45,7 +45,7 @@ export const service_user_delete = async (email, password) => {
         throw new Error('El usuario no existe.');
     }
 
-    const passwordCorrect = verifyPassword(password, user.password)
+    const passwordCorrect = verifyPassword(password, existingUser.password)
     if (!passwordCorrect) {
         throw new Error('Contraseña incorrecta');
     }
@@ -68,7 +68,7 @@ export const service_user_update = async (email, oldPassword, name, photo, newPa
 
     const hashedPassword = existingUser.password;
     if (newPassword) {
-        hashedPassword = hashPassword(password);
+        hashedPassword = await hashPassword(password);
     }
 
     await validateString(name);
@@ -111,9 +111,15 @@ export const service_user_consult = async (email) => {
 
 const hashPassword = async (password) => {
     const saltRounds = 10;
+    if (!password) {
+        throw new Error('Se debe especificar una contraseña');
+    }
     return await bcrypt.hash(password, saltRounds);
 };
 
 const verifyPassword = async (password, hash) => {
+    if (!password) {
+        throw new Error('Se debe especificar una contraseña');
+    }
     return await bcrypt.compare(password, hash);
 };
