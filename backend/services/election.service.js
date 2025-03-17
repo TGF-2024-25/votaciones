@@ -75,6 +75,6 @@ export const service_election_deleteCandidate = async (candidate, id) => {
     return await ElectionRepository.update(candidate, id);
 }; //Esta aqui pero no en Controller
 
-export const service_election_countVotes = async () => {
-    return service_election_consult ;
+export const service_election_countVotes = async (id) => {
+    return service_election_consult(id) ;
 };
