@@ -1,5 +1,4 @@
 import BaseRepository from './BaseRepository.js';
-import User from '../models/User.js';
 
 export default class UserRepository extends BaseRepository {
 
@@ -8,23 +7,60 @@ export default class UserRepository extends BaseRepository {
     }
 
     async create(entity) {
-        throw new Error('Método create() debe ser implementado.');
+        try {
+            const newUser = await User.create(entity);
+            return newUser;
+        } catch (error) {
+            console.error('Error al crear el usuario:', error);
+            throw error;
+        }
     }
 
-    async delete(id) {
-        throw new Error('Método delete() debe ser implementado.');
+    async delete(email) {
+        try {
+            const user = await User.findByPk(email);
+            if (user) {
+                await user.destroy();
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error al eliminar el usuario:', error);
+            throw error;
+        }
     }
 
-    async findById(id) {
-        throw new Error('Método findById() debe ser implementado.');
+    async findById(email) {
+        try {
+            const user = await User.findByPk(email);
+            return user;
+        } catch (error) {
+            console.error('Error al buscar el usuario por ID:', error);
+            throw error;
+        }
     }
 
     async findAll() {
-        throw new Error('Método findAll() debe ser implementado.');
+        try {
+            const users = await User.findAll();
+            return users;
+        } catch (error) {
+            console.error('Error al buscar todos los usuarios:', error);
+            throw error;
+        }
     }
 
-    async update(id, entity) {
-        throw new Error('Método update() debe ser implementado.');
+    async update(email, entity) {
+        try {
+            const user = await User.findByPk(email);
+            if (user) {
+                await user.update(entity);
+                return user;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error al actualizar el usuario:', error);
+            throw error;
+        }
     }
-
 }

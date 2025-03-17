@@ -1,8 +1,9 @@
-export default class BaseRepository {
+import BaseRepository from './BaseRepository.js';
+
+export default class CandidacyRepository extends BaseRepository {
+
     constructor() {
-        if (new.target === BaseRepository) {
-            throw new Error('No se puede instanciar la clase BaseRepository.');
-        }
+        super();
     }
 
     async create(entity) {
@@ -30,4 +31,3 @@ export default class BaseRepository {
     }
 
 }
-  
