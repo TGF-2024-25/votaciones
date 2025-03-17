@@ -1,4 +1,6 @@
 import BaseRepository from './BaseRepository.js';
+import User from '../models/User.js';
+
 
 export default class UserRepository extends BaseRepository {
 

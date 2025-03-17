@@ -6,10 +6,10 @@ const API_URL = 'http://localhost:3000/api/users';
 export const testRegister = async () => {
     try {
         const response = await axios.post(`${API_URL}/register`, {
-            email: 'test@email.com',
-            name: 'Usuario Prueba1',
-            photo: 'foto.jpg',
-            password: '123456',
+            email: 'SamuelDeLuque@gmail.com',
+            name: 'Samuel',
+            photo: 'alberto.jpg',
+            password: '321',
         });
         console.log('✅ Registro exitoso:', response.data);
     } catch (error) {
