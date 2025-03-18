@@ -1,4 +1,5 @@
 import BaseRepository from './BaseRepository.js';
+import Candidacy from '../models/Candidacy.js';
 
 export default class CandidacyRepository extends BaseRepository {
 

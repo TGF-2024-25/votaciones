@@ -1,7 +1,6 @@
 import BaseRepository from './BaseRepository.js';
 import User from '../models/User.js';
 
-
 export default class UserRepository extends BaseRepository {
 
     constructor() {
@@ -52,7 +51,17 @@ export default class UserRepository extends BaseRepository {
         }
     }
 
-    async update(id, entity) {
+    async findByParams(params) {
+        try {
+            const users = await User.findAll({ where: params });
+            return users;
+        } catch (error) {
+            console.error('Error al buscar usuarios con parámetros:', error);
+            throw error;
+        }
+    }
+
+    async update(email, entity) {
         try {
             const user = await User.findByPk(id);
             if (user) {

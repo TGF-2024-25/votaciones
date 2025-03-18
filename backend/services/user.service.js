@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import User from '../models/User.js';
+import {Op} from 'sequelize';
 import UserRepository from '../repositories/UserRepository.js';
 import {validateEmail, validateString} from '../utils/utils.js'
 
@@ -14,7 +14,7 @@ export const service_user_login = async (email, password) => {
         throw new Error('Usuario no encontrado');
     } 
 
-    const passwordCorrect = verifyPassword(password, user.password)
+    const passwordCorrect = await verifyPassword(password, user.password);
     if (!passwordCorrect) {
         throw new Error('Contraseña incorrecta');
     }
@@ -22,7 +22,7 @@ export const service_user_login = async (email, password) => {
     return user;
 };
 
-export const service_user_register = async (email, name, photo, password) => {
+export const service_user_register = async (email, name, surname, photo, password) => {
     await validateEmail(email);
 
     const existingUser = await userRepository.findById(email);
@@ -31,14 +31,10 @@ export const service_user_register = async (email, name, photo, password) => {
     }
 
     await validateString(name);
+    await validateString(surname);
 
     const hashedPassword = await hashPassword(password);
-    const newUser = {
-        email: email,
-        name: name,
-        photo: photo,
-        password: hashedPassword
-    }
+    const newUser = {name: name, surname: surname, email: email, photo: photo, password: hashedPassword};
     return await userRepository.create(newUser);
 };
 
@@ -58,7 +54,7 @@ export const service_user_delete = async (email, password) => {
     return await userRepository.delete(email);
 };
 
-export const service_user_update = async (email, oldPassword, name, photo, newPassword) => {
+export const service_user_update = async (email, oldPassword, name, surname, photo, newPassword) => {
     await validateEmail(email);
 
     const existingUser = await userRepository.findById(email);
@@ -71,18 +67,33 @@ export const service_user_update = async (email, oldPassword, name, photo, newPa
         throw new Error('Contraseña incorrecta');
     }
 
-    const hashedPassword = existingUser.password;
+    let hashedPassword = existingUser.password;
     if (newPassword) {
-        hashedPassword = await hashPassword(password);
+        hashedPassword = await hashPassword(newPassword);
     }
 
-    await validateString(name);
+    let newName = existingUser.name;
+    if (name) {
+        await validateString(name);
+        newName = name;
+    }
+
+    let newSurname = existingUser.surname;
+    if (surname) {
+        await validateString(surname);
+        newSurname = surname;
+    }
+
+    let newPhoto = existingUser.photo;
+    if (photo) {
+        newPhoto = photo;
+    }
     
-    const newUser = new User(name, email, photo, hashedPassword);
-    return await userRepository.update(id, newUser);
+    const newUser = {name: newName, surname: newSurname, email: email, photo: newPhoto, password: hashedPassword};
+    return await userRepository.update(email, newUser);
 };
 
-export const service_user_search = async (email, name) => {
+export const service_user_search = async (email, name, surname) => {
     const params = {};
     
     if (email) {
@@ -92,7 +103,12 @@ export const service_user_search = async (email, name) => {
 
     if (name) {
         await validateString(name);
-        params.name = { $regex: new RegExp(validator.escape(name), 'i') };
+        params.name = { [Op.like]: `%${validator.escape(name)}%` };
+    }
+
+    if (surname) {
+        await validateString(surname);
+        params.surname = { [Op.like]: `%${validator.escape(surname)}%` };
     }
 
     const users = await userRepository.findByParams(params);
@@ -125,6 +141,6 @@ const hashPassword = async (password) => {
 const verifyPassword = async (password, hash) => {
     if (!password) {
         throw new Error('Se debe especificar una contraseña');
-    }
+    } 
     return await bcrypt.compare(password, hash);
 };

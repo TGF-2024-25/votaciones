@@ -13,8 +13,8 @@ export const controller_user_login = async (req, res) => {
 
 export const controller_user_register = async (req, res) => {
     try {
-        const { email, name, photo, password } = req.body;
-        const newUser = await service_user_register(email, name, photo, password);
+        const { email, name, surname, photo, password } = req.body;
+        const newUser = await service_user_register(email, name, surname, photo, password);
         res.status(201).json({ message: 'Usuario registrado con éxito', newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -37,8 +37,8 @@ export const controller_user_delete = async (req, res) => {
 
 export const controller_user_update = async (req, res) => {
     try {
-        const { email, oldPassword, name, photo, password } = req.body;
-        const newUser = await service_user_update(email, oldPassword, name, photo, password);
+        const { email, oldPassword, name, surname, photo, password } = req.body;
+        const newUser = await service_user_update(email, oldPassword, name, surname, photo, password);
         res.status(201).json({ message: 'Usuario modificado con éxito', newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -47,8 +47,8 @@ export const controller_user_update = async (req, res) => {
 
 export const controller_user_search = async (req, res) => {
     try {
-        const { email, name } = req.body;
-        const users = await service_user_search(email, name);
+        const { email, name , surname} = req.body;
+        const users = await service_user_search(email, name, surname);
         res.status(201).json({ message: 'Usuarios buscados con éxito', users });
     } catch (error) {
         res.status(400).json({ error: error.message });
