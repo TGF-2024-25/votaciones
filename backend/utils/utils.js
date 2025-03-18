@@ -15,3 +15,9 @@ export const validateString = async (string) => {
         throw new Error(string + ' debe estar compuesto por letras, numeros, espacios, o los carácteres especiales .@=¿?¿!');
     }
 }
+
+export const validateBoolean = async (booleano) => {
+    if (typeof booleano !== 'boolean') {
+        throw new Error('La variable no es booleana');
+    }
+}
