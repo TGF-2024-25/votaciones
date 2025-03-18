@@ -7,8 +7,8 @@ export const testElectionCreate = async () => {
         const response = await axios.post(`${API_URL}/createElection`, {
             title: 'Nueva Eleccion',
             photoUrl: null,
-            initialDate: '28/03/2025',
-            finalDate: '29/03/2025',
+            initialDate: '28-03-2025',
+            finalDate: '29-03-2025',
         });
         console.log('✅ Elección creada con exito:', response.data);
     } catch (error) {
@@ -22,8 +22,8 @@ export const testElectionUpdate = async () => {
             id: '00001',
             title: 'Eleccion MODIFICADA',
             photoUrl: null,
-            initialDate: '20/03/2025',
-            finalDate: '28/03/2025',
+            initialDate: '20-03-2025',
+            finalDate: '28-03-2025',
         });
         console.log('✅ Elección modificada con exito:', response.data);
     } catch (error) {
