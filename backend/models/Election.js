@@ -8,10 +8,11 @@ const Election = sequelize.define('Election', {
     allowNull: false,
   },
   id: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
     unique: true,
     primaryKey: true,
+    autoIncrement: true,
   },
   image: {
     type: DataTypes.STRING,
@@ -36,7 +37,7 @@ const UserElection = sequelize.define('UserElections', {
     type: DataTypes.STRING,
     references: {
       model: User,
-      key: 'email',
+      key: 'id',
     },
   },
   electionId: {

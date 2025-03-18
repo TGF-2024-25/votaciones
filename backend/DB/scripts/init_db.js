@@ -13,6 +13,7 @@ async function insertData() {
     const newUser = await User.create({
       name: 'Hannah',
       surname: 'Montana',
+      id: '000000001',
       password: '123',
       email: 'hmontana@gmail.com',
     });
@@ -21,7 +22,7 @@ async function insertData() {
 
     const newElection = await Election.create({
       title: 'Votacion de clase',
-      id: '1234567890',
+      id: '100000000',
       init_date: new Date(),
       end_date: new Date('2025-04-10'),
     });

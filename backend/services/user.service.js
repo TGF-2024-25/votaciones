@@ -33,7 +33,12 @@ export const service_user_register = async (email, name, photo, password) => {
     await validateString(name);
 
     const hashedPassword = await hashPassword(password);
-    const newUser = new User(name, email, photo, hashedPassword);
+    const newUser = {
+        email: email,
+        name: name,
+        photo: photo,
+        password: hashedPassword
+    }
     return await userRepository.create(newUser);
 };
 
