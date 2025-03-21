@@ -17,9 +17,9 @@ export default class UserRepository extends BaseRepository {
         }
     }
 
-    async delete(id) {
+    async delete(email) {
         try {
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(email);
             if (user) {
                 await user.destroy();
                 return true;
@@ -31,12 +31,12 @@ export default class UserRepository extends BaseRepository {
         }
     }
 
-    async findById(id) {
+    async findById(email) {
         try {
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(email);
             return user;
         } catch (error) {
-            console.error('Error al buscar el usuario por ID:', error);
+            console.error('Error al buscar el usuario por email:', error);
             throw error;
         }
     }
@@ -63,7 +63,7 @@ export default class UserRepository extends BaseRepository {
 
     async update(email, entity) {
         try {
-            const user = await User.findByPk(id);
+            const user = await User.findByPk(email);
             if (user) {
                 await user.update(entity);
                 return user;
@@ -71,17 +71,6 @@ export default class UserRepository extends BaseRepository {
             return null;
         } catch (error) {
             console.error('Error al actualizar el usuario:', error);
-            throw error;
-        }
-    }
-    
-    async getUserByEmail(email) {
-        try {
-            const user = await User.findOne({ where: { email: email } });
-            return user; 
-        }  
-        catch (error) {
-            console.error('Error al buscar el usuario por email:', error);
             throw error;
         }
     }
