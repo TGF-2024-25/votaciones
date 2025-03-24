@@ -8,7 +8,7 @@
 
 <script>
 import UserTests from './components/UserTest.vue';
-import CandidacyTests from './components/CandidacyTest.vue';
+import CandidacyTests from './components/candidacy/CandidacyTest.vue';
 
 export default {
   name: 'App',
