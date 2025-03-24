@@ -13,13 +13,7 @@ const User = sequelize.define('User', {
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-  },
-  id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    unique: true,
     primaryKey: true,
-    autoIncrement: true,
   },
   image: {
     type: DataTypes.STRING,

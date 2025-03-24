@@ -1,6 +1,6 @@
 Para lanzar el frontend:
-    npm run serve
-    http://localhost:8080/
+    npm run dev
+    http://localhost:5173/
 
 Para lanzar el backend:
     node app.js
