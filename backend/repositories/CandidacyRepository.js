@@ -2,33 +2,75 @@ import BaseRepository from './BaseRepository.js';
 import Candidacy from '../models/Candidacy.js';
 
 export default class CandidacyRepository extends BaseRepository {
-
     constructor() {
         super();
     }
 
     async create(entity) {
-        throw new Error('Método create() debe ser implementado.');
+        try {
+            const newCandidacy = await Candidacy.create(entity);
+            return newCandidacy;
+        } catch (error) {
+            console.error('Error al crear la candidatura:', error);
+            throw error;
+        }
     }
 
     async delete(id) {
-        throw new Error('Método delete() debe ser implementado.');
+        try {
+            const candidacy = await Candidacy.findByPk(id);
+            if (candidacy) {
+                await candidacy.destroy();
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Error al eliminar la candidatura:', error);
+            throw error;
+        }
     }
 
     async findById(id) {
-        throw new Error('Método findById() debe ser implementado.');
+        try {
+            const candidacy = await Candidacy.findByPk(id);
+            return candidacy;
+        } catch (error) {
+            console.error('Error al buscar la candidatura por ID:', error);
+            throw error;
+        }
     }
 
     async findAll() {
-        throw new Error('Método findAll() debe ser implementado.');
+        try {
+            const candidacies = await Candidacy.findAll();
+            return candidacies;
+        } catch (error) {
+            console.error('Error al buscar todas las candidaturas:', error);
+            throw error;
+        }
     }
 
     async findByParams(params) {
-        throw new Error('Método findByParams() debe ser implementado.');
+        try {
+            const candidacies = await Candidacy.findAll({ where: params });
+            return candidacies;
+        } catch (error) {
+            console.error('Error al buscar candidaturas con parámetros:', error);
+            throw error;
+        }
     }
 
     async update(id, entity) {
-        throw new Error('Método update() debe ser implementado.');
+        try {
+            const candidacy = await Candidacy.findByPk(id);
+            if (candidacy) {
+                await candidacy.update(entity);
+                return candidacy;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error al actualizar la candidatura:', error);
+            throw error;
+        }
     }
-
 }
