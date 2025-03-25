@@ -2,8 +2,8 @@
   <div>
     <h1>Aplicación Principal</h1>
     <UserTests />
-    <CandidacyTests />
     <ElectionTest />
+    <CandidacyTests />
   </div>
 </template>
 

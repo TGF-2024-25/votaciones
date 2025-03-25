@@ -9,7 +9,7 @@
   </template>
   
   <script>
-  import { testElectionCreate, testElectionUpdate, testElectionConsult, testElectionDelete } from '../test/testElections.js';
+  import { testElectionCreate, testElectionUpdate, testElectionConsult, testElectionDelete } from '../test/testElection.js';
   
   export default {
     methods: {
@@ -28,3 +28,19 @@
   },
   };
   </script>
+
+
+<style scoped>
+h1 {
+  color: #42b983;
+}
+button {
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+  background-color: #42b983;
+  border: none;
+
+}
+</style>
