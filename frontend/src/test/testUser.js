@@ -94,3 +94,21 @@ export const testConsult = async () => {
         console.error('❌ Error en consult:', error.response?.data || error.message);
     }
 };
+
+// Probar subida de archivo
+export const testUploadFile = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append('file', file); // Añadir el archivo al FormData
+
+        const response = await axios.post(`${API_URL}/uploadFile`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Especificar el tipo de contenido
+            },
+        });
+
+        console.log('✅ Archivo subido exitosamente:', response.data);
+    } catch (error) {
+        console.error('❌ Error al subir el archivo:', error.response?.data || error.message);
+    }
+};

@@ -1,5 +1,6 @@
+import multer from 'multer';
 import { service_user_login, service_user_register, service_user_delete, service_user_update, service_user_search, 
-    service_user_consult } from '../services/user.service.js'
+    service_user_consult } from '../services/user.service.js';
 
 export const controller_user_login = async (req, res) => {
     try {
@@ -62,5 +63,31 @@ export const controller_user_consult = async (req, res) => {
         res.status(201).json({ message: 'Usuario buscado con éxito', user });
     } catch (error) {
         res.status(400).json({ error: error.message });
+    }
+};
+
+// Configuración de multer para manejar la subida de archivos
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'files/'); // Carpeta donde se guardarán los archivos
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`); // Nombre único para cada archivo
+    },
+});
+
+export const upload = multer({ storage });
+
+// Controlador para manejar la subida de archivos
+export const controller_upload_file = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: 'No se ha proporcionado ningún archivo' });
+        }
+
+        // Aquí puedes realizar lógica adicional, como guardar información del archivo en la base de datos
+        res.status(200).json({ message: 'Archivo subido exitosamente', file: req.file });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 };
