@@ -1,0 +1,25 @@
+/* Estilos compartidos entre Navbar y Footer */
+.layout {
+  background-color: orange;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+  
+/* Estilos específicos para el Navbar */
+.navbar ul {
+  margin: 0 15px;
+  font-weight: bold;
+}
+
+.navbar ul:hover {
+  text-decoration: underline;
+}
+
+/* Estilos específicos para el Footer */
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+  
