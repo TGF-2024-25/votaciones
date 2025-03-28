@@ -7,6 +7,11 @@
     <router-link to="/create-candidacy">
       <button class="btn btn-primary mt-4">Ir a Crear Candidatura</button>
     </router-link>
+
+    <!-- Botón para ir a la página de creación de candidatura -->
+    <router-link to="/login">
+      <button class="btn btn-primary mt-4">Iniciar sesion</button>
+    </router-link>
   </div>
 </template>
 

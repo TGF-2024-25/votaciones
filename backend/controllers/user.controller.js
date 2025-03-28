@@ -4,8 +4,13 @@ import { service_user_login, service_user_register, service_user_delete, service
 export const controller_user_login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const newUser = await service_user_login(email, password);
-        res.status(201).json({ message: 'Usuario logeado con éxito', newUser });
+        const { user, token } = await service_user_login(email, password);
+
+        res.status(200).json({
+            message: 'Login exitoso',
+            user,
+            token, // Enviar el token al frontend
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

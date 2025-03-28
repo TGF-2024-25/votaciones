@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../pages/Home.vue';
+import Login from '../pages/Login.vue';
 import CreateCandidacy from '../pages/CreateCandidacy.vue'; // Asegúrate de que la ruta sea correcta
 
 const routes = [
   { path: '/', component: Home },
+  { path: '/login', component: Login }, // Ruta de inicio de sesión
   { path: '/create-candidacy', component: CreateCandidacy }, // Nueva ruta para crear candidatura
 ];
 
