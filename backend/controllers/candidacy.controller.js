@@ -45,7 +45,6 @@ export const controller_update_candidacy = async (req, res) => {
 
 export const controller_search_candidacy = async (req, res) => {
     try {
-        const { electionId, slogan, name, surname, email } = req.body;
         const candidacies = await service_search_candidacy(req.body);
         res.status(200).json({ message: 'Candidaturas encontradas con éxito', candidacies });
     } catch (error) {

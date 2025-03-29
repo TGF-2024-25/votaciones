@@ -1,8 +1,7 @@
 <template>
-  <div class="container mt-4">
-    <div class="card p-4 shadow-lg form-container">
+    <div class="form-container">
       <h3 class="text-center mb-4">
-        {{ isEditing ? "Modificar Candidatura" : "Postularme como Candidato" }}
+        {{ isEditing ? "Modificar candidatura" : "Postularme como Candidato" }}
       </h3>
 
       <!-- Mensaje de error (si existe) -->
@@ -40,7 +39,6 @@
 
       </form>
     </div>
-  </div>
 </template>
 
 <script>
