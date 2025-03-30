@@ -23,9 +23,6 @@
           <label for="image" class="form-label text-bold">Imagen (opcional)</label>
           <input type="file" id="image" @change="handleImageUpload" class="form-control input-custom file-input" accept="image/*">
           <small class="text-muted">Formatos aceptados: JPG, PNG, GIF</small>
-          <div v-if="form.imagePreview" class="mt-2">
-            <img :src="form.imagePreview" alt="Previsualización" class="img-thumbnail" style="max-height: 150px;">
-          </div>
         </div>
 
         <!-- Fechas -->
@@ -62,7 +59,154 @@
 </div>
 </template>
 
+<script>
+import axios from "axios";
+import { API_URL } from "../../utils/config";
 
+export default {
+  props: {
+    election: Object, // Datos de elección si se está editando
+  },
+  data() {
+    return {
+      form: {
+        title: "",
+        image: null,
+        init_date: "",
+        end_date: ""
+      },
+      participantes: [],
+      errorMessage: "",
+    };
+  },
+  computed: {
+    isEditing() {
+      return !!this.election;
+    },
+  },
+  watch: {
+    election: {
+      immediate: true,
+      handler(nuevaEleccion) {
+        if (nuevaEleccion) {
+          this.form.title = nuevaEleccion.title || "";
+          this.form.init_date = this.formatDateForInput(nuevaEleccion.init_date);
+          this.form.end_date = this.formatDateForInput(nuevaEleccion.end_date);
+          this.cargarParticipantes(nuevaEleccion.id);
+        } else {
+          this.resetForm();
+        }
+      }
+    },
+    "form.end_date": function(newVal) {
+      if (newVal && this.form.init_date && new Date(newVal) <= new Date(this.form.init_date)) {
+        this.errorMessage = "La fecha de fin debe ser posterior a la de inicio";
+      } else {
+        this.errorMessage = "";
+      }
+    }
+  },
+  methods: {
+    formatDateForInput(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString);
+      return date.toISOString().slice(0, 16);
+    },
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!validTypes.includes(file.type)) {
+        this.errorMessage = "Formato de imagen no válido (solo JPG, PNG, GIF)";
+        event.target.value = "";
+        return;
+      }
+
+      if (file.size > 2 * 1024 * 1024) {
+        this.errorMessage = "La imagen no debe superar los 2MB";
+        event.target.value = "";
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.form.image = file;
+        this.errorMessage = "";
+      };
+      reader.readAsDataURL(file);
+    },
+    async cargarParticipantes(electionId) {
+      try {
+        const response = await axios.get(`${API_URL}elections/${electionId}/participants`);   //¿Podria acceder a una pagina con todos los participantes?
+        this.participantes = response.data;
+      } catch (error) {
+        console.error("Error cargando participantes:", error);
+        this.participantes = [];
+      }
+    },
+    async eliminarParticipante(userId) {
+      if (!confirm("¿Estás seguro de eliminar este participante?")) return;
+      
+      try {
+        await axios.delete(`${API_URL}elections/${this.election.id}/participants/${userId}`);
+        this.participantes = this.participantes.filter(p => p.id !== userId);
+      } catch (error) {
+        console.error("Error eliminando participante:", error);
+        this.errorMessage = "No se pudo eliminar el participante";
+      }
+    },
+    resetForm() {
+      this.form = {
+        title: "",
+        image: null,
+        init_date: "",
+        end_date: ""
+      };
+      this.participantes = [];
+      this.errorMessage = "";
+    },
+    async submitForm() {
+      if (new Date(this.form.end_date) <= new Date(this.form.init_date)) {
+        this.errorMessage = "La fecha de fin debe ser posterior a la de inicio";
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('title', this.form.title);
+      formData.append('init_date', this.form.init_date);
+      formData.append('end_date', this.form.end_date);
+      if (this.form.image) {
+        formData.append('image', this.form.image);
+      }
+
+      try {
+        let response;
+        if (this.isEditing) {
+          response = await axios.put(
+            `${API_URL}elections/update/${this.election.id}`,
+            formData,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+        } else {
+          response = await axios.post(
+            `${API_URL}elections/create`,
+            formData,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+        }
+
+        console.log("✅ Elección guardada:", response.data);
+        this.$emit('saved', response.data);
+        this.$emit('close');
+      } catch (error) {
+        console.error("❌ Error:", error.response?.data || error.message);
+        this.errorMessage = error.response?.data?.message || "Error al guardar la elección";
+      }
+    }
+  }
+};
+</script>
 
 <style scoped>
 /* Contenedor del formulario */
