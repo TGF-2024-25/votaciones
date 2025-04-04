@@ -7,7 +7,7 @@ const electionRepository = new ElectionRepository();
 
 export const service_election_create = async (imageUrl, participants, title, voteInitialDate, voteFinalDate) => {
     await validateString(title);
-    await validateDate(voteInitialDate);        //implementar en utils
+    await validateDate(voteInitialDate); 
     await validateDate(voteFinalDate);
 
     const newElection = new Election(imageUrl, participants, title, voteInitialDate, voteFinalDate);
@@ -59,8 +59,16 @@ export const service_election_consult = async (id) => {
 
 export const service_election_vote = async (candidate, voterHashId) => {
 
-      //Calcular tiempo actual
-      //Comprobar que no es nulo el IDElection
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses van de 0-11
+    const year = today.getFullYear();
+    const currentDate = `${day}/${month}/${year}`;
+
+    
+      if (!voterHashId) {      //Comprobar que el ID no sea nulo
+        throw new Error('El ID del voto es obligatorio.');
+    }
     const election = await ElectionRepository.findBy(candidate);
     if (!election) {
         throw new Error('La Elección asociada al candidato establecido no existe.');
@@ -70,8 +78,12 @@ export const service_election_vote = async (candidate, voterHashId) => {
 };
 
 export const service_election_verifyVote = async (voterHashId) => {
-    //const vote = await ElectionRepository; buscar el voto
+    
     //IDvoto
+    if (!voterHashId) {      //Comprobar que el ID no sea nulo
+        throw new Error('El ID del voto es obligatorio.');
+    }
+    const vote = await ElectionRepository; //buscar el voto
     if (!vote) {
         throw new Error('Voto no existente.');
     }
@@ -89,7 +101,9 @@ export const service_election_deleteCandidate = async (candidate, id) => {      
 
 export const service_election_countVotes = async (id) => {
     //Comprobar fecha es inactiva
-    //Validar ID de la eleccion
+    if (!id) {      //Comprobar que el ID no sea nulo
+        throw new Error('El ID de la Elección es obligatorio.');
+    }
     //Bucle de candidatos
     
     return service_election_consult(id) ;

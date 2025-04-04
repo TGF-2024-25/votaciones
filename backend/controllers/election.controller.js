@@ -1,4 +1,4 @@
-import { controller_election_create, controller_election_update, controller_election_delete, controller_election_search, controller_election_consult, controller_election_vote, controller_election_verifyVote, controller_election_addCandidate, controller_election_deleteCandidate, controller_election_countVotes } from '../services/election.service.js'
+import { service_election_create, service_election_delete, service_election_modify, service_election_search, service_election_consult, service_election_vote, service_election_verifyVote, service_election_addCandidate, service_election_countVotes, service_election_deleteCandidate } from '../services/election.service.js'
 
 
 

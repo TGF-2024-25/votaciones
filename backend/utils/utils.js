@@ -21,3 +21,14 @@ export const validateBoolean = async (booleano) => {
         throw new Error('La variable no es booleana');
     }
 }
+
+export const validateDate = async (dateString) => {
+    await validateString(dateString);
+    if (typeof string !== 'string') {
+        throw new Error(string + ' no es una cadena');
+    }
+
+    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
+        throw new Error('El formato de fecha debe ser DD/MM/YYYY');
+    }
+}
