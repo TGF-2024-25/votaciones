@@ -34,13 +34,13 @@
         >
           VOTAR
         </button>
-        <button 
+        <!-- <button 
           class="cancel-button"
           v-if="currentVote && isElectionActive"
           @click="cancelVote"
-        >
           Cancelar Voto
-        </button>
+        </button>-->
+        
       </div>
   
       <!-- Mensajes de estado -->
@@ -146,18 +146,6 @@
           this.showMessage("Voto registrado correctamente", "success");
         } catch (error) {
           this.showMessage(error.response?.data?.message || "Error al votar", "error");
-        }
-      },
-      async cancelVote() {
-        try {
-          await axios.delete(`${API_URL}elections/${this.electionId}/votes`, {
-            data: { voterHashId: this.voterHashId }
-          });
-          this.currentVote = null;
-          this.selectedCandidateId = null;
-          this.showMessage("Voto cancelado", "info");
-        } catch (error) {
-          this.showMessage("Error al cancelar el voto", "error");
         }
       },
       showMessage(text, type) {
