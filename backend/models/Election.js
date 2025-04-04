@@ -31,13 +31,13 @@ const Election = sequelize.define('Election', {
   timestamps: true,
 });
 
-// Definir la relación muchos a muchos con una tabla intermedia
+// Relacion usuario-eleccion
 const UserElection = sequelize.define('UserElections', {
   userId: {
     type: DataTypes.STRING,
     references: {
       model: User,
-      key: 'id',
+      key: 'email',
     },
   },
   electionId: {
@@ -47,7 +47,11 @@ const UserElection = sequelize.define('UserElections', {
       key: 'id',
     },
   },
+}, {
+  tableName: 'userElections',
+  timestamps: true,
 });
+
 
 Election.belongsToMany(User, { through: UserElection, foreignKey: 'electionId' });
 User.belongsToMany(Election, { through: UserElection, foreignKey: 'userId' });
