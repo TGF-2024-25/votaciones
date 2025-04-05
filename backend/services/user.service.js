@@ -1,14 +1,14 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
+import jwt from 'jsonwebtoken';
 import {Op} from 'sequelize';
 import UserRepository from '../repositories/UserRepository.js';
-import {validateEmail, validateString} from '../utils/utils.js'
+import {validateEmail, validateString, generateToken} from '../utils/utils.js'
 
 const userRepository = new UserRepository();
 
 export const service_user_login = async (email, password) => {
     await validateEmail(email);
-
     const user = await userRepository.findById(email);
     if (!user){
         throw new Error('Usuario no encontrado');
@@ -19,24 +19,38 @@ export const service_user_login = async (email, password) => {
         throw new Error('Contraseña incorrecta');
     }
 
-    return user;
+    // Generar token de inicio de sesion 
+    const token = await generateToken(user);
+    if (!token) {
+        throw new Error('mal token');
+    }
+    return { user, token };
 };
 
-export const service_user_register = async (email, name, surname, photo, password) => {
+export const service_user_register = async (name, surname, email, password) => {
     await validateEmail(email);
 
     const existingUser = await userRepository.findById(email);
     if (existingUser) {
-        throw new Error('El usuario ya está registrado.');
+        throw new Error('El correo introducido ya está registrado.');
     }
 
     await validateString(name);
     await validateString(surname);
 
     const hashedPassword = await hashPassword(password);
-    const newUser = {name: name, surname: surname, email: email, photo: photo, password: hashedPassword};
-    return await userRepository.create(newUser);
+    const newUser = {name: name, surname: surname, email: email, password: hashedPassword};
+
+    // Crear el usuario en la base de datos
+    const user = await userRepository.create(newUser);
+
+    // Generar token de inicio de sesion 
+    const token = await generateToken(user);
+
+    return { user, token };
 };
+
+
 
 export const service_user_delete = async (email, password) => {
     await validateEmail(email);

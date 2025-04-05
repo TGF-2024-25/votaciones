@@ -1,0 +1,61 @@
+/* Contenedor del formulario */
+.form-container {
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    max-width: 450px;
+    margin: auto;
+  }
+  
+  /* Mensaje de error */
+  .alert-danger {
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  
+  /* Inputs personalizados */
+  .input-custom {
+    background-color: #e9ecef !important;
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  
+  /* Asegurar que el input file también tenga fondo gris */
+  .file-input {
+    background-color: #e9ecef !important;
+    opacity: 1;
+  }
+  
+  /* Estilo de los labels */
+  .text-bold {
+    font-weight: bold;
+  }
+  
+  /* Botón amarillo para enviar */
+  .btn-warning {
+    background-color: #ffc107;
+    border: none;
+    border-radius: 10px;
+    color: black;
+  }
+  
+  .btn-warning:hover {
+    background-color: #e0a800;
+  }
+  
+  /* Botón rojo para cancelar */
+  .btn-danger {
+    border-radius: 10px;
+  }
+  
+  .btn-danger:hover {
+    background-color: #b02a37;
+  }
+  
+  /* Título centrado */
+  h3 {
+    text-align: center;
+    font-weight: bold;
+  }
+  

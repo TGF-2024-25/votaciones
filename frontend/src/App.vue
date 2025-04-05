@@ -1,3 +1,16 @@
+<script setup>
+import { RouterView } from 'vue-router';
+import DefaultLayout from './layouts/DefaultLayout.vue';
+</script>
+
+<template>
+  <DefaultLayout>
+    <RouterView />
+  </DefaultLayout>
+</template>
+
+<!-- TEST
+
 <template>
   <div>
     <h1>Aplicación Principal</h1>
@@ -27,3 +40,4 @@ h1 {
   color: #42b983;
 }
 </style>
+-->
