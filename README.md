@@ -3,7 +3,7 @@ Para lanzar el frontend:
     http://localhost:5173/
 
 Para lanzar el backend:
-    node app.js
+    node app.js     (para no tener que ejecutarlo constantemente, en vez de node, nodemon)
 
 Para entrar a la BD por consola:
     docker-compose up
