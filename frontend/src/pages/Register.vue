@@ -46,8 +46,12 @@
             email: this.email,
             password: this.password,
           });
+          
+          // Guardar el token en localStorage
+          localStorage.setItem('token', response.data.token);
+          
           console.log("✅ Registro exitoso:", response.data);
-          this.$router.push("/login"); // Redirigir al inicio de sesión después del registro
+          this.$router.push("/"); // Redirigir al inicio de sesión después del registro
         } catch (error) {
           console.error("❌ Error en el registro:", error.response?.data || error.message);
           this.errorMessage = error.response?.data?.message || "Error al registrarse";
