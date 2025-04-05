@@ -17,11 +17,33 @@ async function insertData() {
     const newUser = await User.create({
       name: 'Hannah',
       surname: 'Montana',
-      id: '000000001',
+      type: 'user',
       password: hashedPassword,
       email: 'hmontana@gmail.com',
     });
     console.log('User created:', newUser);
+
+    // Crear un admin
+    const hashedPassword2 = await bcrypt.hash('321', 10);
+    const newAdmin = await User.create({
+      name: 'Miley',
+      surname: 'Cyrus',
+      type: 'admin',
+      password: hashedPassword2,
+      email: 'mcyrus@gmail.com',
+    });
+    console.log('User created:', newAdmin);
+
+    // Crear un creador
+    const hashedPassword3 = await bcrypt.hash('456', 10);
+    const newCreator = await User.create({
+      name: 'Sabrina',
+      surname: 'Carpenter',
+      type: 'creator',
+      password: hashedPassword3,
+      email: 'scarpenter@gmail.com',
+    });
+    console.log('User created:', newCreator);
 
     // Crear una elección
     const newElection = await Election.create({

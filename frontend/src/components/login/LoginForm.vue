@@ -13,6 +13,10 @@
       <button type="submit">Iniciar sesión</button>
     </form>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+    <p class="register-link">
+      ¿No tienes cuenta? 
+      <router-link to="/register">Regístrate aquí</router-link>
+    </p>
   </div>
 </template>
 
@@ -56,7 +60,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 50vh;
 }
 form {
   display: flex;

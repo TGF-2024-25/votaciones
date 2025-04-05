@@ -20,8 +20,8 @@ export const service_user_login = async (email, password) => {
     }
     // Generar token de inicio de sesion 
     const token = jwt.sign(
-        { email: user.email, name: user.name },
-        process.env.JWT_SECRET, // Clave secreta segura
+        { user },
+        process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRATION }
     );
 
