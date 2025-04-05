@@ -12,6 +12,11 @@
     <router-link to="/search-candidacy">
       <button class="btn btn-primary mt-4">Ir a buscar Candidatura</button>
     </router-link>
+
+    <!-- Botón para ir a la página de creación de candidatura -->
+    <router-link to="/login">
+      <button class="btn btn-primary mt-4">Iniciar sesion</button>
+    </router-link>
   </div>
 </template>
 

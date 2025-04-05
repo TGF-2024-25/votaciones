@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
+import jwt from 'jsonwebtoken';
 import {Op} from 'sequelize';
 import UserRepository from '../repositories/UserRepository.js';
 import {validateEmail, validateString} from '../utils/utils.js'
@@ -8,7 +9,6 @@ const userRepository = new UserRepository();
 
 export const service_user_login = async (email, password) => {
     await validateEmail(email);
-
     const user = await userRepository.findById(email);
     if (!user){
         throw new Error('Usuario no encontrado');
@@ -18,8 +18,14 @@ export const service_user_login = async (email, password) => {
     if (!passwordCorrect) {
         throw new Error('Contraseña incorrecta');
     }
+    // Generar token de inicio de sesion 
+    const token = jwt.sign(
+        { email: user.email, name: user.name },
+        process.env.JWT_SECRET, // Clave secreta segura
+        { expiresIn: process.env.JWT_EXPIRATION }
+    );
 
-    return user;
+    return { user, token };
 };
 
 export const service_user_register = async (email, name, surname, photo, password) => {

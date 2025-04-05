@@ -1,25 +1,31 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../DB/config.js';
+import Election from './Election.js';
+import User from './User.js';
 
 const Candidacy = sequelize.define('Candidacy', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    unique: true,
     primaryKey: true,
+    autoIncrement: true,
   },
   user: {
     type: DataTypes.STRING,
     allowNull: false,
     references: {
-      model: 'users',
-      key: 'email',
+      model: User,
+      key: 'email', // Asumiendo que el correo electrónico es la clave primaria en el modelo User
     },
-    onUpdate: 'CASCADE',
-    onDelete: 'CASCADE',
   },
-  electionId: {
+  electionID: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    references: {
+      model: Election,
+      key: 'id',
+    },
   },
   slogan: {
     type: DataTypes.STRING,
@@ -31,15 +37,23 @@ const Candidacy = sequelize.define('Candidacy', {
   },
   video: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: true, // URL o ruta del video
   },
   approved: {
     type: DataTypes.BOOLEAN,
-    defaultValue: false,
+    allowNull: false,
+    defaultValue: false, // Por defecto, no está aprobado
   },
 }, {
   tableName: 'candidacies',
   timestamps: true,
 });
+
+// Definir relaciones
+Election.hasMany(Candidacy, { foreignKey: 'electionID' });
+Candidacy.belongsTo(Election, { foreignKey: 'electionID' });
+
+User.hasMany(Candidacy, { foreignKey: 'user', sourceKey: 'email' });
+Candidacy.belongsTo(User, { foreignKey: 'user', targetKey: 'email' });
 
 export default Candidacy;

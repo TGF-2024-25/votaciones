@@ -4,6 +4,7 @@ import CreateCandidacy from '../pages/candidacy/CreateCandidacy.vue';
 import SearchCandidacy from '../pages/candidacy/SearchCandidacy.vue';
 import ListCandidacies from '../pages/candidacy/ListCandidacies.vue';
 import ConsultCandidacy from '../pages/candidacy/ConsultCandidacy.vue';
+import Login from '../pages/Login.vue';
 
 // Definir las rutas
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
     path: '/consult-candidacy',
     component: ConsultCandidacy,
     props: route => ({ id: route.query.id })
-  }
+  },
+  { path: '/login', component: Login }, // Ruta de inicio de sesión
 ];
 
 // Crear el router con historia en el navegador
