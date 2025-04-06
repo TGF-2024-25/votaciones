@@ -56,8 +56,7 @@
   </template>
   
   <script>
-  import { mapState } from 'vuex'
-  import ElectionList from '../components/election/ElectionList.vue'
+  import ElectionList from '@/components/election/ElectionList.vue'
   
   export default {
     name: 'ElectionsPage',
@@ -69,6 +68,7 @@
         isLoading: true,
         elections: [],
         activeTab: 'active',
+        user: {}, // Ahora user se inicializa aquí
         tabs: [
           { value: 'active', label: 'Activas' },
           { value: 'upcoming', label: 'Próximas' },
@@ -77,7 +77,6 @@
       }
     },
     computed: {
-      ...mapState(['user']),
       filteredElections() {
         const now = new Date()
         return this.elections.filter(election => {
@@ -98,6 +97,8 @@
       }
     },
     async created() {
+      // Obtener el usuario de donde corresponda (ejemplo: this.$store.state.user)
+      this.user = this.$store.state.user || {}; // Asumiendo que está disponible en $store
       await this.loadUserElections()
       this.isLoading = false
     },
@@ -138,7 +139,7 @@
       }
     }
   }
-</script>
+  </script>
   
   <style scoped>
   .elections-page {
