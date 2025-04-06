@@ -8,6 +8,11 @@
       <button class="btn btn-primary mt-4">Ir a Crear Candidatura</button>
     </router-link>
 
+      <!-- Botón para ir a la página de creación de Eleccion -->
+    <router-link to="/create-election">
+      <button class="btn btn-primary mt-4">Ir a Crear Eleccion</button>
+    </router-link>
+
     <!-- Botón de inicio de sesión -->
     <router-link v-if="!isLoggedIn" to="/login">
       <button class="btn btn-primary mt-4">Iniciar sesión</button>
