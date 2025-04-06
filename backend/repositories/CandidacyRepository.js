@@ -53,6 +53,7 @@ export default class CandidacyRepository extends BaseRepository {
     async findByParams(params) {
         try {
             const candidacies = await Candidacy.findAll({ where: params });
+            console.log('Candidaturas encontradas: ' + candidacies);
             return candidacies;
         } catch (error) {
             console.error('Error al buscar candidaturas con parámetros:', error);

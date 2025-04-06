@@ -10,18 +10,18 @@ export const service_create_candidacy = async (candidacy) => {
     if (candidacy.video) {
         await validateString(candidacy.video);
     }
-    if (!candidacy.electionId) {
-        throw new Error('La candidatura es obligatoria.');
+    if (!candidacy.electionID) {
+        throw new Error('El id de eleccion es obligatorio.');
     }
     if (!candidacy.user) {
         throw new Error('El usuario es obligatorio.');
     }
 
     const params = {};
-    params.electionId = candidacy.electionId;
+    params.electionID = candidacy.electionID;
     params.user = candidacy.user;
     const existingCandidacy = await candidacyRepository.findByParams(params);
-    if (existingCandidacy) {
+    if (existingCandidacy.length > 0) {
         throw new Error('Ya existe una candidatura para esta elección con este usuario.');
     }
 
@@ -62,19 +62,20 @@ export const service_update_candidacy = async (candidacy) => {
 export const service_search_candidacy = async (candidacy) => {
     const params = {};
 
-    if (candidacy.electionId) {
-        params.electionId = candidacy.electionId;
+    if (candidacy.electionID) {
+        params.electionID = candidacy.electionID;
     }
     if (candidacy.slogan) {
         await validateString(candidacy.slogan);
         params.slogan = { $regex: new RegExp(candidacy.slogan, 'i') };
     }
 
-    const candidacies = [];
+    let candidacies = [];
 
     if (Object.keys(params).length !== 0) {
         candidacies = await candidacyRepository.findByParams(params);
     }
+    
 
     if (candidacies.length === 0) {
         const users = service_user_search(candidacy.email, candidacy.name, candidacy.surname);

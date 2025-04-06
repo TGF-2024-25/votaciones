@@ -48,6 +48,7 @@
           });
           
           // Guardar el token en localStorage
+          console.log(response.data.token);
           localStorage.setItem('token', response.data.token);
           
           console.log("✅ Registro exitoso:", response.data);

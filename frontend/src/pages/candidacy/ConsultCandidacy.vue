@@ -42,21 +42,21 @@ export default {
   },
   methods: {
     async fetchCandidacyDetails(id) {
-      /*
       try {
+        console.log("Buscando candidatura con id: " + id)
         const response = await axios.post(`${API_URL}candidacies/consult`, {
           id: id,
         });
 
         if (response.data) {
-          this.candidacy = response.data.candidacy;
+          this.candidacy = response.data.candidacyConsulted;
         } else {
           throw new Error('No se encontraron detalles de la candidatura.');
         }
       } catch (error) {
         console.error('Error al obtener la candidatura:', error);
       }
-      */
+      /*
       this.candidacy = {
         id: "12345-uuid",
         user: {
@@ -70,6 +70,7 @@ export default {
         video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
         approved: false,
       };
+      */
     },
   },
   mounted() {

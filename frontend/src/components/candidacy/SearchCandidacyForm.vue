@@ -60,7 +60,7 @@ export default {
       this.errorMessage = "";
       try {
         const response = await axios.post(`${API_URL}candidacies/search`, {
-          electionId: '12345', // TODO
+          electionID: '100000000', // TODO
           slogan: this.filtros.eslogan,
           name: this.filtros.nombre,
           surname: this.filtros.apellido,
@@ -71,11 +71,11 @@ export default {
           this.errorMessage = "No se encontraron candidaturas con estos filtros.";
         } else {
           this.resultados = response.data;
+          localStorage.setItem('candidaturasEncontradas', JSON.stringify(this.resultados.candidacies));
           this.$router.push({path: '/list-candidacies'});
         }
       } catch (error) {
         this.errorMessage = "Error al buscar candidaturas. Inténtalo de nuevo.";
-          this.$router.push({path: '/list-candidacies'});
       }
     }
   },

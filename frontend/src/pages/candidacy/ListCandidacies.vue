@@ -21,8 +21,8 @@
         <tr v-for="candidatura in candidaturas" :key="candidatura.id">
             <td :data-label="'Nombre'">{{ candidatura.nombre }}</td>
             <td :data-label="'Apellido'">{{ candidatura.apellido }}</td>
-            <td :data-label="'Correo'">{{ candidatura.correo }}</td>
-            <td :data-label="'Eslogan'">{{ candidatura.eslogan }}</td>
+            <td :data-label="'Correo'">{{ candidatura.user }}</td>
+            <td :data-label="'Eslogan'">{{ candidatura.slogan }}</td>
             <td :data-label="'Acción'">
             <button class="btn btn-info" @click="verCandidatura(candidatura)">
                 Ver detalles
@@ -40,8 +40,17 @@
 export default {
   computed: {
     candidaturas() {
-      //const candidaciesStore = useCandidaciesStore();
-      //return candidaciesStore.candidaturas;
+      const candidaturasEncontradas = localStorage.getItem('candidaturasEncontradas');
+      console.log("Candidaturas encontradas: " + candidaturasEncontradas);
+      try {
+        const candidaturasArray = JSON.parse(candidaturasEncontradas);
+        return candidaturasArray || []; // Retorna un array vacío si no se pudo parsear
+      } catch (error) {
+        console.error("Error al parsear las candidaturas desde localStorage:", error);
+        return []; // Si ocurre un error, retorna un array vacío
+      }
+      return candidaturasEncontradas;
+      /*
       return [
         {
           id: 1,
@@ -65,6 +74,7 @@ export default {
           eslogan: "El compromiso de siempre",
         },
       ];
+      */
     },
     hasCandidaturas() {
       return this.candidaturas && this.candidaturas.length > 0;

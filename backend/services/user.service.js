@@ -47,6 +47,8 @@ export const service_user_register = async (name, surname, email, password) => {
     // Generar token de inicio de sesion 
     const token = await generateToken(user);
 
+    console.log(token);
+
     return { user, token };
 };
 
