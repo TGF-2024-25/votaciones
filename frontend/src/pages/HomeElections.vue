@@ -57,7 +57,7 @@
   
   <script>
   import { mapState } from 'vuex'
-  import ElectionList from '@/components/election/ElectionList.vue'
+  import ElectionList from '../components/election/ElectionList.vue'
   
   export default {
     name: 'ElectionsPage',
