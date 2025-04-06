@@ -17,12 +17,17 @@
       <router-link to="/vote">
       <button class="btn btn-primary mt-4">Votar</button>
     </router-link>
-
+    election-ended
+    <router-link to="/election-ended">
+      <button class="btn btn-primary mt-4">Eleccion Finalizada</button>
+    </router-link>
 
     <!-- Botón de inicio de sesión -->
     <router-link v-if="!isLoggedIn" to="/login">
       <button class="btn btn-primary mt-4">Iniciar sesión</button>
     </router-link>
+
+    
 
     <!-- Botón de registro -->
     <router-link v-if="!isLoggedIn" to="/register">
