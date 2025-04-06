@@ -52,6 +52,7 @@
   
   <style scoped>
   .create-election-container {
+    align-items: center;
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
@@ -83,6 +84,7 @@
   .page-title {
     margin: 0;
     font-size: 1.5rem;
+    align-items: center;
     color: #333;
   }
   
