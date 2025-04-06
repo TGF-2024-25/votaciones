@@ -47,7 +47,7 @@
   
   <script>
   import axios from 'axios'
-  import { API_URL } from '@/utils/config'
+  import { API_URL } from '../utils/config'
   import { mapState } from 'vuex'
   
   export default {
