@@ -14,7 +14,7 @@ const routes = [
   { path: '/create-candidacy', component: CreateCandidacy }, // Nueva ruta para crear candidatura
   { path: '/create-election', component: CreateElection },
   { path: '/vote', component: Vote },
-  { path: '/election-ended', component: EleccionFin},
+  //{ path: '/election-ended', component: EleccionFin},
 ];
 
 const router = createRouter({

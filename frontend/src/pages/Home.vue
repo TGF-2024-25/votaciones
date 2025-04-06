@@ -15,12 +15,12 @@
 
       <!-- Botón para ir a la página de creación de Eleccion -->
       <router-link to="/vote">
-      <button class="btn btn-primary mt-4">Votar</button>
+      <button class="btn btn-vote mt-4">Votar</button>
     </router-link>
-    election-ended
-    <router-link to="/election-ended">
+    
+    <!--<router-link to="/election-ended">
       <button class="btn btn-primary mt-4">Eleccion Finalizada</button>
-    </router-link>
+    </router-link>-->
 
     <!-- Botón de inicio de sesión -->
     <router-link v-if="!isLoggedIn" to="/login">
@@ -92,6 +92,13 @@ button {
 
 .btn-primary:hover {
   background-color: #0056b3;
+}
+.btn-vote {
+  background-color: #ff8800;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .btn-success {
