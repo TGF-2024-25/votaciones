@@ -81,7 +81,8 @@ button {
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15);
 }
 
 .btn-primary:hover {
