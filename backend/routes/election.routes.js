@@ -2,7 +2,7 @@ import express from 'express';
 import { 
     controller_election_create, 
     controller_election_delete, 
-    controller_election_modify, 
+    controller_election_update, 
     controller_election_search, 
     controller_election_consult, 
     controller_election_vote, 
@@ -15,7 +15,7 @@ const router = express.Router();
 
 //CRUD
 router.post('/createElection', controller_election_create);
-router.post('/modifyElection/:id', controller_election_modify);
+router.post('/modifyElection/:id', controller_election_update);
 router.post('/deleteElection/:id', controller_election_delete);
 router.get('/searchElection/:id', controller_election_search);
 router.get('/consultElection/:id', controller_election_consult);
