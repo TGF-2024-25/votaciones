@@ -1,0 +1,130 @@
+/* General */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Contenedor principal */
+  div {
+    padding: 10px;
+    margin: 0 auto;
+    max-width: 100%;
+  }
+  
+  /* Títulos */
+  h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  /* Mensaje de error */
+  .alert {
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: 5px;
+    background-color: #f8d7da;
+    color: #721c24;
+    font-size: 1rem;
+    text-align: center;
+  }
+  
+  /* Estilos de la tabla */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f1f1f1;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  td {
+    background-color: #ffffff;
+  }
+  
+  /* Estilos de los botones */
+  button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #17a2b8;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #138496;
+  }
+  
+  /* Adaptabilidad para pantallas móviles */
+  /* Adaptabilidad para pantallas móviles */
+@media (max-width: 768px) {
+  /* Ajustar la tabla */
+  table {
+    font-size: 0.9rem;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+
+  button {
+    font-size: 0.8rem;
+    padding: 8px 12px;
+  }
+
+  /* Hacer que las filas de la tabla sean más fáciles de leer */
+  tr {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+  }
+
+  /* Asegurarnos de que los encabezados no ocupen espacio y no se vean */
+  thead {
+    display: none !important; /* Ocultamos el encabezado */
+  }
+
+  /* Aseguramos que las celdas sean visibles y no tengan borde en dispositivos móviles */
+  td {
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    padding: 10px 0;
+    position: relative;
+    border: none;
+  }
+
+  /* Agregar una etiqueta antes de cada valor */
+  td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+  }
+
+  /* Mejorar la visualización de las celdas como bloques en móviles */
+  table, th, td {
+    display: block;
+    width: 100%;
+  }
+}
+
+  

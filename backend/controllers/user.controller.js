@@ -23,7 +23,7 @@ export const controller_user_register = async (req, res) => {
         const { user, token } = await service_user_register(name, surname, email, password);
         
         res.status(201).json({
-            message: 'Usuario registrado con éxito',
+            message: 'Usuario registrado con éxito ' + token,
             user,
             token
         });

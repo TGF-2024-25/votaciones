@@ -1,8 +1,6 @@
 <template>
   <nav class="layout">
-    <ul>
-      <li><RouterLink to="/">Home</RouterLink></li>
-    </ul>
+    <RouterLink to="/" class="home-link">Home</RouterLink>
   </nav>
 </template>
 

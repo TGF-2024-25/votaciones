@@ -8,7 +8,12 @@
     </router-link>
     <!-- Botón para ir a la página de creación de candidatura -->
     <router-link to="/create-candidacy">
-      <button class="btn btn-primary mt-4">Ir a Crear Candidatura</button>
+      <button class="btn btn-primary mt-4">Ir a crear Candidatura</button>
+    </router-link>
+
+    <!-- Botón para ir a la página de búsqueda de candidatura -->
+    <router-link to="/search-candidacy">
+      <button class="btn btn-primary mt-4">Ir a buscar Candidatura</button>
     </router-link>
 
       <!-- Botón para ir a la página de creación de Eleccion -->

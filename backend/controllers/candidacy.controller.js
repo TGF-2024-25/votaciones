@@ -9,8 +9,8 @@ import {
 
 export const controller_create_candidacy = async (req, res) => {
     try {
-        const { electionId, slogan, text, user, video } = req.body;
-        const candidacy = {user, electionId, slogan, text, video, approved: false};
+        const { electionID, slogan, text, user, video } = req.body;
+        const candidacy = {user, electionID, slogan, text, video, approved: false};
         console.log("Candidatura recibida: ", candidacy);
         const newCandidacy = await service_create_candidacy(candidacy);
         res.status(201).json({ message: 'Candidatura creada con éxito', newCandidacy });
@@ -45,7 +45,6 @@ export const controller_update_candidacy = async (req, res) => {
 
 export const controller_search_candidacy = async (req, res) => {
     try {
-        const { electionId, slogan, name, surname, email } = req.body;
         const candidacies = await service_search_candidacy(req.body);
         res.status(200).json({ message: 'Candidaturas encontradas con éxito', candidacies });
     } catch (error) {

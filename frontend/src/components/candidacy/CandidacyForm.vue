@@ -1,8 +1,7 @@
 <template>
-  <div class="container mt-4">
-    <div class="card p-4 shadow-lg form-container">
+    <div class="form-container">
       <h3 class="text-center mb-4">
-        {{ isEditing ? "Modificar Candidatura" : "Postularme como Candidato" }}
+        {{ isEditing ? "Modificar candidatura" : "Postularme como Candidato" }}
       </h3>
 
       <!-- Mensaje de error (si existe) -->
@@ -40,12 +39,12 @@
 
       </form>
     </div>
-  </div>
 </template>
 
 <script>
 import axios from "axios";
 import { API_URL } from "../../utils/config";
+import { jwtDecode } from 'jwt-decode';
 
 export default {
   props: {
@@ -105,13 +104,21 @@ export default {
             video: this.form.video,
           });
         } else {
-          response = await axios.post(`${API_URL}candidacies/create`, {
-            electionId: "12345",
-            slogan: this.form.eslogan,
-            text: this.form.descripcion,
-            user: "test@email.com",
-            video: this.form.video,
-          });
+          const token = localStorage.getItem('token');
+          if (token) {
+            const decoded = jwtDecode(token);
+            console.log(decoded)
+            response = await axios.post(`${API_URL}candidacies/create`, {
+              electionID: "100000000",
+              slogan: this.form.eslogan,
+              text: this.form.descripcion,
+              user: decoded.user.email,
+              video: this.form.video,
+            });
+          }
+          else {
+            this.errorMessage = "Usuario no logeado.";
+          }
         }
 
         console.log("✅ Candidatura enviada con éxito:", response.data);
