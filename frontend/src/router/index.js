@@ -3,7 +3,8 @@ import Home from '../pages/Home.vue';
 import Login from '../pages/Login.vue';
 import Register from '../pages/Register.vue';
 import CreateCandidacy from '../pages/CreateCandidacy.vue'; // Asegúrate de que la ruta sea correcta
-import CreateElection from '../pages/CreateElection.vue'; 
+import CreateElection from '../pages/CreateElection.vue';
+import Vote from '../pages/Vote.vue';
 
 const routes = [
   { path: '/', component: Home },
@@ -11,6 +12,7 @@ const routes = [
   { path: '/register', component: Register }, // Ruta de registro
   { path: '/create-candidacy', component: CreateCandidacy }, // Nueva ruta para crear candidatura
   { path: '/create-election', component: CreateElection },
+  { path: '/vote', component: Vote },
 ];
 
 const router = createRouter({
