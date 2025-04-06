@@ -70,7 +70,7 @@
         this.$router.push("/elections");
       },
       goBack() {
-        this.$router.go(-1);
+        this.$router.push({ name: "home" });
       },
       formatDate(dateString) {
         const options = { 

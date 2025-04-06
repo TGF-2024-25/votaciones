@@ -44,7 +44,7 @@
         //   .catch(error => showError(error))
       },
       goBack() {
-        this.$router.go(-1); // Vuelve a la página anterior
+        this.$router.push({ name: "home" }); // Vuelve a la página anterior
       }
     }
   }
