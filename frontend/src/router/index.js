@@ -5,6 +5,7 @@ import Register from '../pages/Register.vue';
 import CreateCandidacy from '../pages/CreateCandidacy.vue'; // Asegúrate de que la ruta sea correcta
 import CreateElection from '../pages/CreateElection.vue';
 import Vote from '../pages/Vote.vue';
+import HomeElections from '../pages/HomeElections.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
   { path: '/create-candidacy', component: CreateCandidacy }, // Nueva ruta para crear candidatura
   { path: '/create-election', component: CreateElection },
   { path: '/vote', component: Vote },
+  { path: '/home-elections', component: HomeElections },
   //{ path: '/election-ended', component: EleccionFin},
 ];
 

@@ -3,6 +3,9 @@
     <h1>Bienvenido al Home</h1>
     <p>Esta es la página de inicio.</p>
 
+    <router-link to="/home-elections">
+      <button class="btn btn-primary mt-4">Incio Elecciones</button>
+    </router-link>
     <!-- Botón para ir a la página de creación de candidatura -->
     <router-link to="/create-candidacy">
       <button class="btn btn-primary mt-4">Ir a Crear Candidatura</button>
