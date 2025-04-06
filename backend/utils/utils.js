@@ -1,4 +1,5 @@
 import validator from 'validator';
+import jwt from 'jsonwebtoken';
 
 export const validateEmail = async (email) => {
     await validateString(email);
@@ -20,4 +21,12 @@ export const validateBoolean = async (booleano) => {
     if (typeof booleano !== 'boolean') {
         throw new Error('La variable no es booleana');
     }
+}
+
+export const generateToken = async (user) => {
+    return jwt.sign(
+        { user },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRATION }
+    );
 }

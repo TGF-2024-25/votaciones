@@ -10,7 +10,7 @@ export const controller_user_login = async (req, res) => {
         res.status(200).json({
             message: 'Login exitoso',
             user,
-            token, // Enviar el token al frontend
+            token // Enviar el token al frontend
         });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -19,9 +19,14 @@ export const controller_user_login = async (req, res) => {
 
 export const controller_user_register = async (req, res) => {
     try {
-        const { email, name, surname, photo, password } = req.body;
-        const newUser = await service_user_register(email, name, surname, photo, password);
-        res.status(201).json({ message: 'Usuario registrado con éxito', newUser });
+        const { name, surname, email, password } = req.body;
+        const { user, token } = await service_user_register(name, surname, email, password);
+        
+        res.status(201).json({
+            message: 'Usuario registrado con éxito',
+            user,
+            token
+        });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
