@@ -122,6 +122,7 @@ export default {
         }
 
         console.log("✅ Candidatura enviada con éxito:", response.data);
+        this.$router.back();
       } catch (error) {
         console.error("❌ Error:", error.response?.data || error.message);
         this.errorMessage = "Error al enviar la candidatura. Inténtalo de nuevo.";
