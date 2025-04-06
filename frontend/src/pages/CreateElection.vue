@@ -18,7 +18,7 @@
   </template>
   
   <script>
-  import ElectionForm from "@/components/election/ElectionForm.vue";
+  import ElectionForm from "../components/election/ElectionForm.vue"
   
   export default {
     name: "CreateElection",
