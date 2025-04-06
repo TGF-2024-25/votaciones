@@ -28,7 +28,7 @@
   
   <script>
   import VoteForm from "../components/election/VoteForm.vue";
-  import { API_URL } from "@/utils/config";
+  import { API_URL } from "../utils/config";
   
   export default {
     name: "VotePage",
