@@ -1,0 +1,54 @@
+/* Estilos compartidos entre Navbar y Footer */
+.layout {
+  background-color: orange;
+  color: white;
+  text-align: center;
+  padding: 10px;
+}
+
+.home-link {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-top: 5px;
+  border: 2px solid #ff6600;
+  outline: none;
+}
+
+.home-link:hover {
+  background-color: #ff6600;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  border: 2px solid #ff6600;
+}
+
+@media (max-width: 768px) {
+  .home-link {
+    padding: 15px 30px;
+    font-size: 1.4rem;
+    border-radius: 30px;
+    background-color: #ff6600;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .home-link:hover {
+    background-color: #ff6600;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ff6600;
+  }
+
+  .home-link:active {
+    background-color: #ff6600;
+    box-shadow: none;
+    border: 2px solid #ff6600;
+    transform: none;
+    transition: none;
+  }
+}

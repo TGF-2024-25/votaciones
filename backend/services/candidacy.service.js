@@ -1,24 +1,27 @@
 import CandidacyRepository from '../repositories/CandidacyRepository.js';
 import { validateString, validateBoolean } from '../utils/utils.js';
+import { service_user_search, service_user_consult } from './user.service.js';
 
 const candidacyRepository = new CandidacyRepository();
 
 export const service_create_candidacy = async (candidacy) => {
     await validateString(candidacy.slogan);
     await validateString(candidacy.text);
-    await validateString(candidacy.video);
-    if (!candidacy.electionId) {
-        throw new Error('La candidatura es obligatoria.');
+    if (candidacy.video) {
+        await validateString(candidacy.video);
+    }
+    if (!candidacy.electionID) {
+        throw new Error('El id de eleccion es obligatorio.');
     }
     if (!candidacy.user) {
         throw new Error('El usuario es obligatorio.');
     }
 
     const params = {};
-    params.electionId = candidacy.electionId;
+    params.electionID = candidacy.electionID;
     params.user = candidacy.user;
     const existingCandidacy = await candidacyRepository.findByParams(params);
-    if (existingCandidacy) {
+    if (existingCandidacy.length > 0) {
         throw new Error('Ya existe una candidatura para esta elección con este usuario.');
     }
 
@@ -48,44 +51,49 @@ export const service_update_candidacy = async (candidacy) => {
         throw new Error('La candidatura no existe.');
     }
 
-    await validateString(candidacy.slogan);
-    await validateString(candidacy.text);
-    await validateString(candidacy.video);
-    await validateBoolean(candidacy.approved);
+    if (typeof candidacy.slogan !== 'undefined') {
+        await validateString(candidacy.slogan);
+        existingCandidacy.slogan = candidacy.slogan;
+    }
+    if (typeof candidacy.text !== 'undefined') {
+        await validateString(candidacy.text);
+        existingCandidacy.text = candidacy.text;
+    }
+    if (typeof candidacy.video !== 'undefined') {
+        // await validateString(candidacy.video); TODO
+        // existingCandidacy.video = candidacy.video;
+    }
+    if (typeof candidacy.approved !== 'undefined') {
+        await validateBoolean(candidacy.approved);
+        existingCandidacy.approved = candidacy.approved;
+    }
 
-    return await candidacyRepository.update(candidacy.id, candidacy);
+    return await candidacyRepository.update(candidacy.id, existingCandidacy);
 };
 
 export const service_search_candidacy = async (candidacy) => {
     const params = {};
 
-    if (candidacy.id) {
-        params.id = candidacy.id;
-    }
-    if (candidacy.electionId) {
-        params.electionId = candidacy.electionId;
+    if (candidacy.electionID) {
+        params.electionID = candidacy.electionID;
     }
     if (candidacy.slogan) {
         await validateString(candidacy.slogan);
-        params.slogan = { $regex: new RegExp(candidacy.slogan, 'i') };
-    }
-    if (candidacy.text) {
-        await validateString(candidacy.text);
-        params.text = { $regex: new RegExp(candidacy.text, 'i') };
-    }
-    if (candidacy.user) {
-        params.user = candidacy.user;
-    }
-    if (candidacy.video) {
-        await validateString(candidacy.video);
-        params.video = candidacy.video;
-    }
-    if (candidacy.approved) {
-        await validateBoolean(candidacy.approved);
-        params.approved = candidacy.approved;
+        params.slogan = candidacy.slogan;
     }
 
-    const candidacies = await candidacyRepository.findByParams(params);
+    let candidacies = [];
+
+    if (Object.keys(params).length !== 0) {
+        candidacies = await candidacyRepository.findByParams(params);
+    }
+
+    const users = await service_user_search(candidacy.email, candidacy.name, candidacy.surname);
+    if (users.length === 1) {
+        const userEmail = users[0].email;
+        candidacies = candidacies.filter(c => c.user === userEmail);
+    }
+
     if (candidacies.length === 0) {
         throw new Error('No se han encontrado candidaturas.');
     }
@@ -98,9 +106,14 @@ export const service_consult_candidacy = async (id) => {
         throw new Error('El ID de la candidatura es obligatorio.');
     }
 
-    const foundCandidacy = await candidacyRepository.findById(id);
+    let foundCandidacy = await candidacyRepository.findById(id);
     if (!foundCandidacy) {
         throw new Error('La candidatura no existe.');
+    }
+
+    foundCandidacy.user = await service_user_consult(foundCandidacy.user);
+    if (!foundCandidacy.user) {
+        throw new Error('Error al guardar la información del candidato.');
     }
 
     return foundCandidacy;

@@ -7,7 +7,8 @@ export const testRegister = async () => {
     try {
         const response = await axios.post(`${API_URL}/register`, {
             email: 'test@email.com',
-            name: 'Usuario Prueba1',
+            name: 'Nombre',
+            surname: 'Apellidos',
             photo: 'foto.jpg',
             password: '123456',
         });
@@ -60,6 +61,7 @@ export const testUpdate = async () => {
             email: 'test@email.com',
             oldPassword: '123456',
             name: 'Usuario Actualizado',
+            surname: 'Apellidos actualizados',
             newPassword: '654321',
         });
         console.log('✅ Update exitoso:', response.data);
@@ -72,8 +74,8 @@ export const testUpdate = async () => {
 export const testSearch = async () => {
     try {
         const response = await axios.post(`${API_URL}/searchUsers`, {
-            email: 'test@email.com',
-            name: 'Usuario Nuevo',
+            //email: 'test@email.com',
+            name: 'Nombre',
         });
         console.log('✅ Search exitoso:', response.data);
     } catch (error) {
@@ -90,5 +92,23 @@ export const testConsult = async () => {
         console.log('✅ Consult exitoso:', response.data);
     } catch (error) {
         console.error('❌ Error en consult:', error.response?.data || error.message);
+    }
+};
+
+// Probar subida de archivo
+export const testUploadFile = async (file) => {
+    try {
+        const formData = new FormData();
+        formData.append('file', file); // Añadir el archivo al FormData
+
+        const response = await axios.post(`${API_URL}/uploadFile`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data', // Especificar el tipo de contenido
+            },
+        });
+
+        console.log('✅ Archivo subido exitosamente:', response.data);
+    } catch (error) {
+        console.error('❌ Error al subir el archivo:', error.response?.data || error.message);
     }
 };

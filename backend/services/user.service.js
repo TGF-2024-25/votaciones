@@ -1,41 +1,58 @@
 import bcrypt from 'bcrypt';
 import validator from 'validator';
-import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
+import {Op} from 'sequelize';
 import UserRepository from '../repositories/UserRepository.js';
-import {validateEmail, validateString} from '../utils/utils.js'
+import {validateEmail, validateString, generateToken} from '../utils/utils.js'
 
 const userRepository = new UserRepository();
 
 export const service_user_login = async (email, password) => {
     await validateEmail(email);
-
     const user = await userRepository.findById(email);
     if (!user){
         throw new Error('Usuario no encontrado');
     } 
 
-    const passwordCorrect = verifyPassword(password, user.password)
+    const passwordCorrect = await verifyPassword(password, user.password);
     if (!passwordCorrect) {
         throw new Error('Contraseña incorrecta');
     }
 
-    return user;
+    // Generar token de inicio de sesion 
+    const token = await generateToken(user);
+    if (!token) {
+        throw new Error('mal token');
+    }
+    return { user, token };
 };
 
-export const service_user_register = async (email, name, photo, password) => {
+export const service_user_register = async (name, surname, email, password) => {
     await validateEmail(email);
 
     const existingUser = await userRepository.findById(email);
     if (existingUser) {
-        throw new Error('El usuario ya está registrado.');
+        throw new Error('El correo introducido ya está registrado.');
     }
 
     await validateString(name);
+    await validateString(surname);
 
-    const hashedPassword = hashPassword(password);
-    const newUser = new User(name, email, photo, hashedPassword);
-    return await userRepository.create(newUser);
+    const hashedPassword = await hashPassword(password);
+    const newUser = {name: name, surname: surname, email: email, password: hashedPassword};
+
+    // Crear el usuario en la base de datos
+    const user = await userRepository.create(newUser);
+
+    // Generar token de inicio de sesion 
+    const token = await generateToken(user);
+
+    console.log(token);
+
+    return { user, token };
 };
+
+
 
 export const service_user_delete = async (email, password) => {
     await validateEmail(email);
@@ -45,7 +62,7 @@ export const service_user_delete = async (email, password) => {
         throw new Error('El usuario no existe.');
     }
 
-    const passwordCorrect = verifyPassword(password, user.password)
+    const passwordCorrect = verifyPassword(password, existingUser.password)
     if (!passwordCorrect) {
         throw new Error('Contraseña incorrecta');
     }
@@ -53,7 +70,7 @@ export const service_user_delete = async (email, password) => {
     return await userRepository.delete(email);
 };
 
-export const service_user_update = async (email, oldPassword, name, photo, newPassword) => {
+export const service_user_update = async (email, oldPassword, name, surname, photo, newPassword) => {
     await validateEmail(email);
 
     const existingUser = await userRepository.findById(email);
@@ -66,18 +83,33 @@ export const service_user_update = async (email, oldPassword, name, photo, newPa
         throw new Error('Contraseña incorrecta');
     }
 
-    const hashedPassword = existingUser.password;
+    let hashedPassword = existingUser.password;
     if (newPassword) {
-        hashedPassword = hashPassword(password);
+        hashedPassword = await hashPassword(newPassword);
     }
 
-    await validateString(name);
+    let newName = existingUser.name;
+    if (name) {
+        await validateString(name);
+        newName = name;
+    }
+
+    let newSurname = existingUser.surname;
+    if (surname) {
+        await validateString(surname);
+        newSurname = surname;
+    }
+
+    let newPhoto = existingUser.photo;
+    if (photo) {
+        newPhoto = photo;
+    }
     
-    const newUser = new User(name, email, photo, hashedPassword);
-    return await userRepository.update(id, newUser);
+    const newUser = {name: newName, surname: newSurname, email: email, photo: newPhoto, password: hashedPassword};
+    return await userRepository.update(email, newUser);
 };
 
-export const service_user_search = async (email, name) => {
+export const service_user_search = async (email, name, surname) => {
     const params = {};
     
     if (email) {
@@ -87,7 +119,12 @@ export const service_user_search = async (email, name) => {
 
     if (name) {
         await validateString(name);
-        params.name = { $regex: new RegExp(validator.escape(name), 'i') };
+        params.name = { [Op.like]: `%${validator.escape(name)}%` };
+    }
+
+    if (surname) {
+        await validateString(surname);
+        params.surname = { [Op.like]: `%${validator.escape(surname)}%` };
     }
 
     const users = await userRepository.findByParams(params);
@@ -111,9 +148,15 @@ export const service_user_consult = async (email) => {
 
 const hashPassword = async (password) => {
     const saltRounds = 10;
+    if (!password) {
+        throw new Error('Se debe especificar una contraseña');
+    }
     return await bcrypt.hash(password, saltRounds);
 };
 
 const verifyPassword = async (password, hash) => {
+    if (!password) {
+        throw new Error('Se debe especificar una contraseña');
+    } 
     return await bcrypt.compare(password, hash);
 };

@@ -8,22 +8,25 @@ const User = sequelize.define('User', {
   },
   surname: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
     primaryKey: true,
   },
-  image:
-  {
+  image: {
     type: DataTypes.STRING,
     allowNull: true,
   },
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+  },
+  type: {
+    type: DataTypes.ENUM('admin', 'creator', 'user'),
+    allowNull: false,
+    defaultValue: 'user',
   }
 }, {
   tableName: 'users',

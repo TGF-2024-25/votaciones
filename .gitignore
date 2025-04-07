@@ -30,3 +30,5 @@ yarn-error.log*
 
 backend/DB/mysql
 node_modules
+backend/files
+package-lock.json

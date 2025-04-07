@@ -1,4 +1,5 @@
 import BaseRepository from './BaseRepository.js';
+import User from '../models/User.js';
 
 export default class UserRepository extends BaseRepository {
 
@@ -35,7 +36,7 @@ export default class UserRepository extends BaseRepository {
             const user = await User.findByPk(email);
             return user;
         } catch (error) {
-            console.error('Error al buscar el usuario por ID:', error);
+            console.error('Error al buscar el usuario por email:', error);
             throw error;
         }
     }
@@ -46,6 +47,16 @@ export default class UserRepository extends BaseRepository {
             return users;
         } catch (error) {
             console.error('Error al buscar todos los usuarios:', error);
+            throw error;
+        }
+    }
+
+    async findByParams(params) {
+        try {
+            const users = await User.findAll({ where: params });
+            return users;
+        } catch (error) {
+            console.error('Error al buscar usuarios con parámetros:', error);
             throw error;
         }
     }

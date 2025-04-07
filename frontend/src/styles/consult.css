@@ -1,0 +1,91 @@
+.consult-candidacy {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .consult-candidacy h3 {
+    font-size: 1.8rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .consult-candidacy p {
+    font-size: 1rem;
+    color: #333;
+    margin: 10px 0;
+  }
+  
+  .consult-candidacy p strong {
+    font-weight: bold;
+    color: #007bff;
+  }
+  
+  .consult-candidacy .alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-top: 20px;
+  }
+  
+  .consult-candidacy img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-top: 15px;
+  }
+  
+  .consult-candidacy a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .consult-candidacy a:hover {
+    text-decoration: underline;
+  }
+  
+  .consult-candidacy .video-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .video-container iframe {
+    width: 100%;
+    max-width: 560px;
+    height: 315px;
+    border: none;
+    border-radius: 10px;
+  }
+  
+  @media (max-width: 768px) {
+    .consult-candidacy {
+      margin: 10px;
+      padding: 15px;
+    }
+  
+    .consult-candidacy h3 {
+      font-size: 1.5rem;
+    }
+  
+    .consult-candidacy p {
+      font-size: 0.9rem;
+    }
+  
+    .consult-candidacy img {
+      width: 120px;
+      height: 120px;
+    }
+  
+    .video-container iframe {
+      max-width: 100%;
+      height: auto;
+    }
+  }
+  
