@@ -4,6 +4,7 @@ import CreateCandidacy from '../pages/candidacy/CreateCandidacy.vue';
 import SearchCandidacy from '../pages/candidacy/SearchCandidacy.vue';
 import ListCandidacies from '../pages/candidacy/ListCandidacies.vue';
 import ConsultCandidacy from '../pages/candidacy/ConsultCandidacy.vue';
+import ModifyCandidacy from '../pages/candidacy/ModifyCandidacy.vue';
 import Login from '../pages/Login.vue';
 import Register from '../pages/Register.vue';
 import CreateElection from '../pages/CreateElection.vue';
@@ -21,6 +22,11 @@ const routes = [
   {
     path: '/consult-candidacy',
     component: ConsultCandidacy,
+    props: route => ({ id: route.query.id })
+  },
+  {
+    path: '/modify-candidacy',
+    component: ModifyCandidacy,
     props: route => ({ id: route.query.id })
   },
   { path: '/login', component: Login }, // Ruta de inicio de sesión

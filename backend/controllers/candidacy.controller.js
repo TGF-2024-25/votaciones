@@ -32,11 +32,8 @@ export const controller_delete_candidacy = async (req, res) => {
 
 export const controller_update_candidacy = async (req, res) => {
     try {
-        const { electionId, slogan, text, user, video, id } = req.body;
-        if (!id) throw new Error('ID de candidatura es requerido para actualizar');
-        const candidacy = new Candidacy(id, user, electionId, slogan, text, video, false);
-        candidacy.id = id; // Asignamos el ID para actualizar el registro
-        const updatedCandidacy = await service_update_candidacy(candidacy);
+        if (!req.body.id) throw new Error('ID de candidatura es requerido para actualizar');
+        const updatedCandidacy = await service_update_candidacy(req.body);
         res.status(200).json({ message: 'Candidatura modificada con éxito', updatedCandidacy });
     } catch (error) {
         res.status(400).json({ error: error.message });

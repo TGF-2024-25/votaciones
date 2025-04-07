@@ -97,8 +97,9 @@ export default {
 
       try {
         let response;
-        if (this.isEditing) {// TODO
-          response = await axios.put(`${API_URL}candidacies/update/${this.candidatura.id}`, {
+        if (this.isEditing) {
+          response = await axios.post(`${API_URL}candidacies/update`, {
+            id: this.candidatura.id,
             slogan: this.form.eslogan,
             text: this.form.descripcion,
             video: this.form.video,
@@ -107,7 +108,6 @@ export default {
           const token = localStorage.getItem('token');
           if (token) {
             const decoded = jwtDecode(token);
-            console.log(decoded)
             response = await axios.post(`${API_URL}candidacies/create`, {
               electionID: "100000000",
               slogan: this.form.eslogan,

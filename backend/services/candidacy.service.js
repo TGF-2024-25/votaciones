@@ -51,12 +51,24 @@ export const service_update_candidacy = async (candidacy) => {
         throw new Error('La candidatura no existe.');
     }
 
-    await validateString(candidacy.slogan);
-    await validateString(candidacy.text);
-    await validateString(candidacy.video);
-    await validateBoolean(candidacy.approved);
+    if (typeof candidacy.slogan !== 'undefined') {
+        await validateString(candidacy.slogan);
+        existingCandidacy.slogan = candidacy.slogan;
+    }
+    if (typeof candidacy.text !== 'undefined') {
+        await validateString(candidacy.text);
+        existingCandidacy.text = candidacy.text;
+    }
+    if (typeof candidacy.video !== 'undefined') {
+        // await validateString(candidacy.video); TODO
+        // existingCandidacy.video = candidacy.video;
+    }
+    if (typeof candidacy.approved !== 'undefined') {
+        await validateBoolean(candidacy.approved);
+        existingCandidacy.approved = candidacy.approved;
+    }
 
-    return await candidacyRepository.update(candidacy.id, candidacy);
+    return await candidacyRepository.update(candidacy.id, existingCandidacy);
 };
 
 export const service_search_candidacy = async (candidacy) => {
@@ -67,7 +79,7 @@ export const service_search_candidacy = async (candidacy) => {
     }
     if (candidacy.slogan) {
         await validateString(candidacy.slogan);
-        params.slogan = { $regex: new RegExp(candidacy.slogan, 'i') };
+        params.slogan = candidacy.slogan;
     }
 
     let candidacies = [];
@@ -75,14 +87,11 @@ export const service_search_candidacy = async (candidacy) => {
     if (Object.keys(params).length !== 0) {
         candidacies = await candidacyRepository.findByParams(params);
     }
-    
 
-    if (candidacies.length === 0) {
-        const users = service_user_search(candidacy.email, candidacy.name, candidacy.surname);
-        if (users.length === 1) {
-            params.email = validator.escape(users[0].email);
-            candidacies = await candidacyRepository.findByParams(params);
-        }
+    const users = await service_user_search(candidacy.email, candidacy.name, candidacy.surname);
+    if (users.length === 1) {
+        const userEmail = users[0].email;
+        candidacies = candidacies.filter(c => c.user === userEmail);
     }
 
     if (candidacies.length === 0) {

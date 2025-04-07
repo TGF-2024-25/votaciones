@@ -53,7 +53,6 @@ export default class CandidacyRepository extends BaseRepository {
     async findByParams(params) {
         try {
             const candidacies = await Candidacy.findAll({ where: params });
-            console.log('Candidaturas encontradas: ' + candidacies);
             return candidacies;
         } catch (error) {
             console.error('Error al buscar candidaturas con parámetros:', error);
@@ -65,7 +64,15 @@ export default class CandidacyRepository extends BaseRepository {
         try {
             const candidacy = await Candidacy.findByPk(id);
             if (candidacy) {
-                await candidacy.update(entity);
+            
+                candidacy.slogan = entity.slogan || candidacy.slogan;
+                candidacy.text = entity.text || candidacy.text;
+                candidacy.video = entity.video || candidacy.video;
+                candidacy.approved = entity.approved;
+            
+                await candidacy.save(); // Guarda los cambios
+            
+                console.log("Candidatura actualizada");
                 return candidacy;
             }
             return null;

@@ -20,6 +20,32 @@
       </div>
 
       <p><strong>Aprobada:</strong> {{ candidacy.approved ? 'Sí' : 'No' }}</p>
+
+      <!-- Botón para aprobar/desaprobar la candidatura -->
+      <div class="text-center mt-3" v-if="mostrarBotonAprobacion">
+        <button
+          class="btn"
+          :class="candidacy.approved ? 'btn-danger' : 'btn-success'"
+          @click="toggleAprobacion"
+        >
+          {{ candidacy.approved ? 'Desaprobar' : 'Aprobar' }} candidatura
+        </button>
+      </div>
+
+      <!-- Botón para modificar la candidatura -->
+      <div class="text-center mt-3" v-if="mostrarBotonModificarYBorrar">
+        <button class="btn btn-primary" @click="editarCandidatura">
+          Modificar candidatura
+        </button>
+      </div>
+
+      <!-- Botón para borrar la candidatura -->
+      <div class="text-center mt-3" v-if="mostrarBotonModificarYBorrar">
+        <button class="btn btn-danger" @click="confirmarBorrarCandidatura">
+          Borrar candidatura
+        </button>
+      </div>
+
     </div>
 
     <!-- Si no hay datos mostramos un mensaje de error -->
@@ -29,16 +55,35 @@
   </div>
 </template>
 
-
 <script>
 import axios from 'axios';
 import { API_URL } from "../../utils/config";
+import { jwtDecode } from 'jwt-decode';
 
 export default {
   data() {
     return {
       candidacy: null,
     };
+  },
+  computed: {
+    mostrarBotonAprobacion() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        console.log("Permisos del usuario: " + decoded.user.type);
+        return decoded.user.type == 'admin' || decoded.user.type == 'creator';
+      }
+      return false;
+    },
+    mostrarBotonModificarYBorrar() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        return decoded.user.type == 'admin' || decoded.user.type == 'creator' || decoded.user.email === this.candidacy.user.email;
+      }
+      return false;
+    },
   },
   methods: {
     async fetchCandidacyDetails(id) {
@@ -56,21 +101,54 @@ export default {
       } catch (error) {
         console.error('Error al obtener la candidatura:', error);
       }
-      /*
-      this.candidacy = {
-        id: "12345-uuid",
-        user: {
-          name: "Juan",
-          surname: "Pérez",
-          email: "user@example.com",
-        },
-        electionId: 1,
-        slogan: "Un futuro mejor",
-        text: "Aquí va el texto de la candidatura",
-        video: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-        approved: false,
-      };
-      */
+    },
+    async toggleAprobacion() {
+      try {
+        const updated = !this.candidacy.approved;
+
+        console.log("Nuevo valor de approved: " + updated);
+
+        const response = await axios.post(`${API_URL}candidacies/update`, {
+          id: this.candidacy.id,
+          approved: updated,
+        });
+
+        if (response.data) {
+          this.candidacy.approved = updated;
+        } else {
+          throw new Error('No se pudo actualizar el estado de aprobación.');
+        }
+      } catch (error) {
+        console.error('Error al actualizar la aprobación:', error);
+        alert('Error al cambiar el estado de la candidatura.');
+      }
+    },
+    editarCandidatura() {
+      this.$router.push({ path: '/modify-candidacy', query: { id: this.candidacy.id } });
+    },
+    // Confirmación antes de borrar la candidatura
+    confirmarBorrarCandidatura() {
+      if (confirm('¿Estás seguro de que quieres eliminar esta candidatura? Esta acción no se puede deshacer.')) {
+        this.borrarCandidatura();
+      }
+    },
+    // Borrar la candidatura después de la confirmación
+    async borrarCandidatura() {
+      try {
+        const response = await axios.post(`${API_URL}candidacies/delete`, {
+          id: this.candidacy.id,
+        });
+
+        if (response.data) {
+          alert('Candidatura eliminada correctamente');
+          this.$router.push('/'); // Redirigir a la lista de candidaturas, o a donde sea necesario
+        } else {
+          throw new Error('No se pudo eliminar la candidatura.');
+        }
+      } catch (error) {
+        console.error('Error al eliminar la candidatura:', error);
+        alert('Error al eliminar la candidatura.');
+      }
     },
   },
   mounted() {
