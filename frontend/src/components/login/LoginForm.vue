@@ -46,7 +46,7 @@
       localStorage.setItem('token', response.data.token);
 
       console.log('✅ Login exitoso:', response.data);
-      router.push('/');
+      router.push('/').then(() => router.go(0));
     } catch (error) {
       console.error('❌ Error en el login:', error.response?.data || error.message);
       errorMessage.value = error.response?.data?.message || 'Error al iniciar sesión';

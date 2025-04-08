@@ -10,6 +10,7 @@ import Register from '../pages/Register.vue';
 import CreateElection from '../pages/CreateElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
+import SearchPage from '../pages/SearchPage.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 // Definir las rutas
@@ -34,6 +35,7 @@ const routes = [
   { path: '/create-election', component: CreateElection },
   { path: '/vote', component: Vote },
   { path: '/home-elections', component: HomeElections },
+  { path: '/search', component: SearchPage },
   //{ path: '/election-ended', component: EleccionFin},
 ];
 

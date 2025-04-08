@@ -70,7 +70,7 @@ export default {
       // Eliminar el token de localStorage
       localStorage.removeItem("token");
       this.isLoggedIn = false; // Actualizar el estado de autenticación
-      this.$router.push("/login"); // Redirigir al usuario a la página de inicio de sesión
+      this.$router.go(0);
     },
   },
   mounted() {
