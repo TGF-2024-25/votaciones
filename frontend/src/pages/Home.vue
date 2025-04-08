@@ -11,11 +11,6 @@
       <button class="btn btn-primary mt-4">Ir a crear Candidatura</button>
     </router-link>
 
-    <!-- Botón para ir a la página de búsqueda de candidatura -->
-    <router-link to="/search-candidacy">
-      <button class="btn btn-primary mt-4">Ir a buscar Candidatura</button>
-    </router-link>
-
       <!-- Botón para ir a la página de creación de Eleccion -->
     <router-link to="/create-election">
       <button class="btn btn-primary mt-4">Ir a Crear Eleccion</button>
