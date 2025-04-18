@@ -11,6 +11,7 @@ import CreateElection from '../pages/CreateElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
+import UserSettings from '../pages/UserSettings.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 // Definir las rutas
@@ -36,6 +37,7 @@ const routes = [
   { path: '/vote', component: Vote },
   { path: '/home-elections', component: HomeElections },
   { path: '/search', component: SearchPage },
+  { path: '/user-settings', component: UserSettings },
   //{ path: '/election-ended', component: EleccionFin},
 ];
 
