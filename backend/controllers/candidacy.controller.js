@@ -11,7 +11,6 @@ export const controller_create_candidacy = async (req, res) => {
     try {
         const { electionID, slogan, text, user, video } = req.body;
         const candidacy = {user, electionID, slogan, text, video, approved: false};
-        console.log("Candidatura recibida: ", candidacy);
         const newCandidacy = await service_create_candidacy(candidacy);
         res.status(201).json({ message: 'Candidatura creada con éxito', newCandidacy });
     } catch (error) {
