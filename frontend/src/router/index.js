@@ -5,13 +5,19 @@ import SearchCandidacy from '../pages/candidacy/SearchCandidacy.vue';
 import ListCandidacies from '../pages/candidacy/ListCandidacies.vue';
 import ConsultCandidacy from '../pages/candidacy/ConsultCandidacy.vue';
 import ModifyCandidacy from '../pages/candidacy/ModifyCandidacy.vue';
-import Login from '../pages/Login.vue';
+
 import Register from '../pages/Register.vue';
+import Login from '../pages/Login.vue';
+import UserSettings from '../pages/user/UserSettings.vue';
+import SearchUser from '../pages/user/SearchUser.vue';
+//import ConsultUser from '../pages/user/ConsultUser.vue';
+//import ModifyUser from '../pages/user/ModifyUser.vue';
+import ListUsers from '../pages/user/ListUsers.vue';
+
 import CreateElection from '../pages/CreateElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
-import UserSettings from '../pages/UserSettings.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 // Definir las rutas
@@ -21,6 +27,9 @@ const routes = [
   { path: '/create-candidacy', component: CreateCandidacy },
   { path: '/search-candidacy', component: SearchCandidacy },
   { path: '/list-candidacies', component: ListCandidacies },
+  { path: '/search-user', component: SearchUser },
+  { path: '/list-user', component: ListCandidacies },
+  
   {
     path: '/consult-candidacy',
     component: ConsultCandidacy,
@@ -29,6 +38,11 @@ const routes = [
   {
     path: '/modify-candidacy',
     component: ModifyCandidacy,
+    props: route => ({ id: route.query.id })
+  },
+  {
+    path: '/consult-candidacy',
+    component: ConsultCandidacy,
     props: route => ({ id: route.query.id })
   },
   { path: '/login', component: Login }, // Ruta de inicio de sesión
