@@ -14,7 +14,9 @@ import {
 const router = express.Router();
 
 //CRUD
-router.post('/createElection', controller_election_create);
+//router.post('/createElection', controller_election_create);
+router.post('/elections/create', controller_election_create);
+
 router.post('/modifyElection/:id', controller_election_update);
 router.post('/deleteElection/:id', controller_election_delete);
 router.get('/searchElection/:id', controller_election_search);
