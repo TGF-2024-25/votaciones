@@ -10,7 +10,13 @@ export const service_election_create = async (imageUrl, participants, title, vot
     await validateDate(voteInitialDate); 
     await validateDate(voteFinalDate);
 
-    const newElection = new Election(imageUrl, participants, title, voteInitialDate, voteFinalDate);
+    const newElection = {
+        title,
+        image: imageUrl,
+        init_date: voteInitialDate,
+        end_date: voteFinalDate,
+      };
+      
     return await ElectionRepository.create(newElection);
 };
 
