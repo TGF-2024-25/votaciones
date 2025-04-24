@@ -105,13 +105,30 @@
     methods: {
       async loadUserElections() {
         try {
-          // Aquí debes reemplazar con tu llamada API real
-          const response = await this.$api.get(`/users/${this.user.id}/elections`)
-          this.elections = response.data
-        } catch (error) {
-          console.error('Error loading elections:', error)
-          this.$toast.error('Error al cargar elecciones')
-        }
+      // Verificar que el ID del usuario esté disponible
+      console.log('Usuario:', this.user);
+      
+      if (!this.user.id) {
+        throw new Error('El ID del usuario no está disponible');
+      }
+
+      // Realizar la llamada a la API
+      const response = await this.$api.get(`/users/${this.user.id}/elections`);
+      
+      // Verificar si la respuesta tiene la estructura esperada
+      console.log('Respuesta de la API:', response);
+      
+      if (response.data) {
+        this.elections = response.data;
+      } else {
+        throw new Error('La respuesta de la API no contiene elecciones');
+      }
+      
+    } catch (error) {
+      console.error('Error al cargar elecciones:', error);
+      this.$toast.error(`Error al cargar elecciones: ${error.message}`);
+    }
+
       },
       getTabText(tab) {
         return {

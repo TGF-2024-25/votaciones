@@ -39,9 +39,9 @@
         this.$router.push({ name: "election-list" });
         
         // Aquí deberías llamar a tu API:
-        // this.$api.elections.create(election)
-        //   .then(() => this.$router.push(...))
-        //   .catch(error => showError(error))
+        this.$api.elections.create(election)
+           .then(() => this.$router.push({ name: "election-list" }))
+           .catch(error => showError(error))
       },
       goBack() {
         this.$router.push({ name: "home" }); // Vuelve a la página anterior
