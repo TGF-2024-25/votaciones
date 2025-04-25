@@ -5,7 +5,7 @@ import { validateString, validateDate } from '../utils/utils.js';
 
 const electionRepository = new ElectionRepository();
 
-export const service_election_create = async (imageUrl, participants, title, voteInitialDate, voteFinalDate) => {
+export const service_election_create = async (imageUrl, /*participants,*/ title, voteInitialDate, voteFinalDate) => {
     await validateString(title);
     await validateDate(voteInitialDate); 
     await validateDate(voteFinalDate);
