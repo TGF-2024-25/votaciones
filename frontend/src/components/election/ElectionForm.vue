@@ -190,7 +190,7 @@ export default {
           );
         } else {
           response = await axios.post(
-            `${API_URL}elections/create`,
+            `${API_URL}elections/createElection`,
             formData,
             { headers: { 'Content-Type': 'multipart/form-data' } }
           );
