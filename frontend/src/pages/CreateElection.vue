@@ -36,12 +36,12 @@
         console.log("Elección a crear:", election);
         
         // Ejemplo de redirección después de crear
-        this.$router.push({ name: "election-list" });
+        //this.$router.push({ name: "election-list" });
         
         // Aquí deberías llamar a tu API:
         this.$api.elections.create(election)
            .then(() => this.$router.push({ name: "election-list" }))
-           .catch(error => showError(error))
+           .catch(console.error('La API no está disponible'))
       },
       goBack() {
         this.$router.push({ name: "home" }); // Vuelve a la página anterior
