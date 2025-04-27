@@ -8,10 +8,15 @@
       <p><strong>Email:</strong> {{ candidacy.user.email }}</p>
       <p><strong>Eslogan:</strong> {{ candidacy.slogan }}</p>
       <p><strong>Texto:</strong> {{ candidacy.text }}</p>
-
-      <!-- Mostrar video si existe -->
+      <p><strong>Video:</strong></p>
       <div v-if="candidacy.video">
-        <p><strong>Video:</strong> <a :href="candidacy.video" target="_blank">Ver Video</a></p>
+        <video v-if="candidacy.video" width="200" controls>
+          <source :src="candidacy.video" type="video/mp4" />
+          Tu navegador no soporta la etiqueta de video.
+        </video>
+      </div>
+      <div v-else>
+        <p><strong>   No disponible</strong></p>
       </div>
 
       <!-- Mostrar foto de perfil si existe -->
@@ -104,7 +109,7 @@ export default {
         }
       } catch (error) {
       } finally {
-        this.isLoading = false; // ✅ Terminó la carga
+        this.isLoading = false;
       }
     },
     async toggleAprobacion() {

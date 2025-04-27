@@ -4,7 +4,8 @@ import electionRoutes from './routes/election.routes.js';
 import candidacyRoutes from './routes/candidacy.routes.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
-
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 const app = express();
@@ -14,6 +15,11 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const uploadsPath = path.join(__dirname, 'uploads');
+app.use('/uploads', express.static(uploadsPath));
 
 app.use('/api/users', userRoutes);
 app.use('/api/candidacies', candidacyRoutes);

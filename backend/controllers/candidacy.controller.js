@@ -1,4 +1,3 @@
-import Candidacy from '../models/Candidacy.js';
 import {
     service_create_candidacy,
     service_delete_candidacy,
@@ -9,7 +8,8 @@ import {
 
 export const controller_create_candidacy = async (req, res) => {
     try {
-        const { electionID, slogan, text, user, video } = req.body;
+        const { user, electionID, slogan, text } = req.body;
+        const video = req.file;
         const candidacy = {user, electionID, slogan, text, video, approved: false};
         const newCandidacy = await service_create_candidacy(candidacy);
         res.status(201).json({ message: 'Candidatura creada con éxito', newCandidacy });
@@ -32,7 +32,8 @@ export const controller_delete_candidacy = async (req, res) => {
 export const controller_update_candidacy = async (req, res) => {
     try {
         if (!req.body.id) throw new Error('ID de candidatura es requerido para actualizar');
-        const updatedCandidacy = await service_update_candidacy(req.body);
+        const video = req.file;
+        const updatedCandidacy = await service_update_candidacy(req.body, video);
         res.status(200).json({ message: 'Candidatura modificada con éxito', updatedCandidacy });
     } catch (error) {
         res.status(400).json({ error: error.message });

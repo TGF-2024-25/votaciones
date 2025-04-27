@@ -98,22 +98,32 @@ export default {
       try {
         let response;
         if (this.isEditing) {
-          response = await axios.post(`${API_URL}candidacies/update`, {
-            id: this.candidatura.id,
-            slogan: this.form.eslogan,
-            text: this.form.descripcion,
-            video: this.form.video,
+          const formData = new FormData();
+          formData.append('id', this.candidatura.id);
+          formData.append('slogan', this.form.eslogan);
+          formData.append('text', this.form.descripcion);
+          formData.append('video', this.form.video);
+
+          response = await axios.post(API_URL + 'candidacies/update', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           });
         } else {
           const token = localStorage.getItem('token');
           if (token) {
             const decoded = jwtDecode(token);
-            response = await axios.post(`${API_URL}candidacies/create`, {
-              electionID: "100000000",
-              slogan: this.form.eslogan,
-              text: this.form.descripcion,
-              user: decoded.user.email,
-              video: this.form.video,
+            const formData = new FormData();
+            formData.append('user', decoded.user.email);
+            formData.append('electionID', '100000000'); // TODO
+            formData.append('slogan', this.form.eslogan);
+            formData.append('text', this.form.descripcion);
+            formData.append('video', this.form.video);
+
+            response = await axios.post(API_URL + 'candidacies/create', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
             });
           }
           else {
