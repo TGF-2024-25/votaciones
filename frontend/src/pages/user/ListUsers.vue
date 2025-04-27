@@ -38,7 +38,7 @@
   export default {
     data() {
       return {
-        usuarios: [], // Se llena en mounted()
+        usuarios: []
       };
     },
     computed: {

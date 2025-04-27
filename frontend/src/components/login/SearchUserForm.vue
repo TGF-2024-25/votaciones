@@ -53,7 +53,7 @@
       async buscarUsuarios() {
         this.errorMessage = "";
         try {
-          const response = await axios.post(`${API_URL}users/search-user`, {
+          const response = await axios.post(`${API_URL}users/searchUser`, {
             name: this.filtros.nombre,
             surname: this.filtros.apellido,
             email: this.filtros.correo,
@@ -64,7 +64,7 @@
           } else {
             this.resultados = response.data;
             localStorage.setItem('usuariosEncontrados', JSON.stringify(this.resultados));
-            this.$router.push({ path: '/list-users' });
+            this.$router.push({ path: '/list-user' });
           }
         } catch (error) {
           this.errorMessage = "Error al buscar usuarios. Inténtalo de nuevo.";

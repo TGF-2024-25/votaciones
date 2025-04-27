@@ -28,7 +28,7 @@ const routes = [
   { path: '/search-candidacy', component: SearchCandidacy },
   { path: '/list-candidacies', component: ListCandidacies },
   { path: '/search-user', component: SearchUser },
-  { path: '/list-user', component: ListCandidacies },
+  { path: '/list-user', component: ListUsers },
   
   {
     path: '/consult-candidacy',
