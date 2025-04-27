@@ -39,7 +39,7 @@
   <script>
   import axios from 'axios';
   import { API_URL } from "../../utils/config";
-  import jwtDecode from 'jwt-decode';
+  import { jwtDecode } from 'jwt-decode';
   
   export default {
     data() {
@@ -58,14 +58,14 @@
       },
     },
     methods: {
-      async fetchUserDetails(id) {
+      async fetchUserDetails(email) {
         try {
-          const response = await axios.post(`${API_URL}users/consult`, {
-            id: id,
+          const response = await axios.post(`${API_URL}users/consultUser`, {
+            email: email,
           });
   
           if (response.data) {
-            this.user = response.data.userConsulted;
+            this.user = response.data.user;
           } else {
             throw new Error('No se encontraron detalles del usuario.');
           }
@@ -74,7 +74,7 @@
         }
       },
       editarUsuario() {
-        this.$router.push({ path: '/modify-user', query: { id: this.user.id } });
+        this.$router.push({ path: '/modify-user', query: { id: this.user.email } });
       },
       confirmarBorrarUsuario() {
         if (confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.')) {
@@ -83,13 +83,13 @@
       },
       async borrarUsuario() {
         try {
-          const response = await axios.post(`${API_URL}users/delete`, {
-            id: this.user.id,
+          const response = await axios.post(`${API_URL}users/deleteUser`, {
+            email: this.user.email,
           });
   
           if (response.data) {
             alert('Usuario eliminado correctamente');
-            this.$router.push('/list-user'); // Redirigir a la lista de usuarios
+            this.$router.push('/search'); // Redirigir a la pagina de busqueda
           } else {
             throw new Error('No se pudo eliminar el usuario.');
           }

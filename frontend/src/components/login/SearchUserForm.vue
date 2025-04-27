@@ -58,11 +58,11 @@
             surname: this.filtros.apellido,
             email: this.filtros.correo,
           });
-  
+          
           if (Array.isArray(response.data) && response.data.length === 0) {
             this.errorMessage = "No se encontraron usuarios con estos filtros.";
           } else {
-            this.resultados = response.data;
+            this.resultados = response.data.users || response.data;
             localStorage.setItem('usuariosEncontrados', JSON.stringify(this.resultados));
             this.$router.push({ path: '/list-user' });
           }

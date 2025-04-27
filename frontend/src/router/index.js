@@ -10,10 +10,9 @@ import Register from '../pages/Register.vue';
 import Login from '../pages/Login.vue';
 import UserSettings from '../pages/user/UserSettings.vue';
 import SearchUser from '../pages/user/SearchUser.vue';
-//import ConsultUser from '../pages/user/ConsultUser.vue';
-//import ModifyUser from '../pages/user/ModifyUser.vue';
 import ListUsers from '../pages/user/ListUsers.vue';
 import ConsultUser from '../pages/user/ConsultUser.vue';
+import ModifyUser from '../pages/user/ModifyUser.vue';
 
 
 import CreateElection from '../pages/CreateElection.vue';
@@ -45,6 +44,11 @@ const routes = [
   {
     path: '/consult-user',
     component: ConsultUser,
+    props: route => ({ id: route.query.id })
+  },
+  {
+    path: '/modify-user',
+    component: ModifyUser,
     props: route => ({ id: route.query.id })
   },
   { path: '/login', component: Login }, // Ruta de inicio de sesión

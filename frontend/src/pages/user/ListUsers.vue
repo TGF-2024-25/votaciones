@@ -16,7 +16,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="usuario in usuarios" :key="usuario.id">
+          <tr v-for="usuario in usuarios" :key="usuario.email">
             <td :data-label="'Nombre'">{{ usuario.name || 'N/A' }}</td>
             <td :data-label="'Apellido'">{{ usuario.surname || 'N/A' }}</td>
             <td :data-label="'Correo'">{{ usuario.email || 'N/A' }}</td>
@@ -43,33 +43,33 @@
     },
     computed: {
       hasUsuarios() {
+        console.log(this.usuarios.length);
         return this.usuarios.length > 0;
       },
     },
     methods: {
       verUsuario(usuario) {
-        console.log(usuario);
-        this.$router.push({ path: '/consult-user', query: { id: usuario.id } });
+        console.log(usuario.email);
+        this.$router.push({ path: '/consult-user', query: { id: usuario.email } });
       },
       async cargarUsuarios() {
         const usuariosEncontrados = localStorage.getItem('usuariosEncontrados');
         console.log("Usuarios encontrados (raw):", usuariosEncontrados);
-  
+
         try {
           const usuariosArray = JSON.parse(usuariosEncontrados) || [];
   
           for (let i = 0; i < usuariosArray.length; i++) {
-            const id = usuariosArray[i].id;
+            const email = usuariosArray[i].email;
   
             try {
-              const response = await axios.post(`${API_URL}users/consult`, {
-                id: id,
+              const response = await axios.post(`${API_URL}users/consultUser`, {
+                email: email,
               });
-  
               // Guardamos la versión completa
-              usuariosArray[i] = response.data.userConsulted;
+              usuariosArray[i] = response.data.user;
             } catch (err) {
-              console.error(`Error al consultar el usuario con id ${id}:`, err);
+              console.error(`Error al consultar el usuario con id ${email}:`, err);
             }
           }
   
