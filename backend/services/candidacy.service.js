@@ -124,7 +124,7 @@ export const service_consult_candidacy = async (id) => {
     }
 
     if (foundCandidacy.video) {
-      foundCandidacy.video = `http://localhost:3000/uploads/${encodeURIComponent(foundCandidacy.video)}`;
+      foundCandidacy.video = `http://localhost:3000/files/${encodeURIComponent(foundCandidacy.video)}`;
       console.log("Video encontrado: ", foundCandidacy.video);
     }
 

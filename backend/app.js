@@ -18,8 +18,8 @@ app.use(express.json());
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const uploadsPath = path.join(__dirname, 'uploads');
-app.use('/uploads', express.static(uploadsPath));
+const filesPath = path.join(__dirname, 'files');
+app.use('/files', express.static(filesPath));
 
 app.use('/api/users', userRoutes);
 app.use('/api/candidacies', candidacyRoutes);
