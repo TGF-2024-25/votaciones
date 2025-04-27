@@ -13,6 +13,8 @@ import SearchUser from '../pages/user/SearchUser.vue';
 //import ConsultUser from '../pages/user/ConsultUser.vue';
 //import ModifyUser from '../pages/user/ModifyUser.vue';
 import ListUsers from '../pages/user/ListUsers.vue';
+import ConsultUser from '../pages/user/ConsultUser.vue';
+
 
 import CreateElection from '../pages/CreateElection.vue';
 import Vote from '../pages/Vote.vue';
@@ -41,8 +43,8 @@ const routes = [
     props: route => ({ id: route.query.id })
   },
   {
-    path: '/consult-candidacy',
-    component: ConsultCandidacy,
+    path: '/consult-user',
+    component: ConsultUser,
     props: route => ({ id: route.query.id })
   },
   { path: '/login', component: Login }, // Ruta de inicio de sesión
