@@ -35,7 +35,7 @@ const routes = [
   { path: '/register', component: Register }, // Ruta de registro
   { path: '/create-election', component: CreateElection },
   { path: '/vote', component: Vote },
-  { path: '/home-elections', component: HomeElections },
+  { path: '/home-elections', component: HomeElections },    //Lista de elecciones
   { path: '/search', component: SearchPage },
   { path: '/user-settings', component: UserSettings },
   //{ path: '/election-ended', component: EleccionFin},

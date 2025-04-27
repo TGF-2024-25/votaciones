@@ -3,14 +3,41 @@ import { service_election_create, service_election_delete, service_election_modi
 
 
 export const controller_election_create = async (req, res) => {
-    try {
+    try {/*
         //const { imageUrl, participants, title, voteInitialDate, voteFinalDate } = req.body;
+        console.log("MUESTRAAAA ALGO");
+        //console.log("Datos recibidos del backendd:", req);
+        
         const { imageUrl, title, voteInitialDate, voteFinalDate } = req.body;
+
+        const election = { imageUrl, title, voteInitialDate, voteFinalDate };
         //const newElection = await service_election_create(imageUrl, participants, title, voteInitialDate, voteFinalDate);
-        const newElection = await service_election_create(imageUrl, title, voteInitialDate, voteFinalDate);
-        res.status(201).json({ message: 'Elección creada con éxito', newElection });
+        console.log("Datos recibidos del backendd:", req.body);
+        const newElection = await service_election_create(election);
+        
+        res.status(201).json({ message: 'Elección creada con éxito', newElection });*/
+        {
+            console.log("MUESTRAAAA ALGO");
+    
+            const { image, title, init_date, end_date } = req.body;
+            
+            const election = {
+              imageUrl: image,
+              title,
+              voteInitialDate: init_date,
+              voteFinalDate: end_date
+            };
+    
+            console.log("Datos recibidos en el backend:", election);
+    
+            //const newElection = await service_election_create(election);
+            const newElection = await service_election_create(image, title, init_date, end_date);
+            
+            res.status(201).json({ message: 'Elección creada con éxito', newElection });
+        } 
         } catch (error) {
             res.status(400).json({ error: error.message });
+            console.log("MUESTRAAAA ALGO ERRONEO CRACK");
         }
 };
 

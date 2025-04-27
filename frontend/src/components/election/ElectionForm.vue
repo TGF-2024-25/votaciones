@@ -1,18 +1,18 @@
 <template>
-    <div class="container mt-4">
-      <div class="card p-4 shadow-lg form-container">
-        <h3 class="text-center mb-4">
-          {{ isEditing ? "Modificar Elección" : "Crear Nueva Elección" }}
-        </h3>
-  
-        <!-- Mensaje de error (si existe) -->
-        <div v-if="errorMessage" class="alert alert-danger text-center">
-          {{ errorMessage }}
-        </div>
-  
-        <form @submit.prevent="submitForm">
-          
-          <!-- Título de la elección -->
+  <div class="container mt-4">
+    <div class="card p-4 shadow-lg form-container">
+      <h3 class="text-center mb-4">
+        {{ isEditing ? "Modificar Elección" : "Crear Nueva Elección" }}
+      </h3>
+
+      <!-- Mensaje de error (si existe) -->
+      <div v-if="errorMessage" class="alert alert-danger text-center">
+        {{ errorMessage }}
+      </div>
+
+      <form @submit.prevent="submitForm">
+        
+        <!-- Título de la elección -->
         <div class="mb-3 d-flex flex-column">
           <label for="title" class="form-label text-bold">Título de la elección</label>
           <input type="text" id="title" v-model="form.title" class="form-control input-custom" maxlength="100" required>
@@ -25,7 +25,7 @@
           <small class="text-muted">Formatos aceptados: JPG, PNG, GIF</small>
         </div>
 
-        <!-- Fechas -->
+        <!-- Fechas
         <div class="row mb-3">
           <div class="col-md-6">
             <label for="init_date" class="form-label text-bold">Fecha de inicio</label>
@@ -35,7 +35,20 @@
             <label for="end_date" class="form-label text-bold">Fecha de fin</label>
             <input type="datetime-local" id="end_date" v-model="form.end_date" class="form-control input-custom" required>
           </div>
+        </div> -->
+
+        <!-- Fechas -->
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label for="init_date" class="form-label text-bold">Fecha de inicio</label>
+            <input type="date" id="init_date" v-model="form.init_date" class="form-control input-custom" required>
+          </div>
+          <div class="col-md-6">
+            <label for="end_date" class="form-label text-bold">Fecha de fin</label>
+            <input type="date" id="end_date" v-model="form.end_date" class="form-control input-custom" required>
+          </div>
         </div>
+
 
         <!-- Participantes (solo en edición) -->
         <div v-if="isEditing" class="mb-3">
@@ -47,16 +60,16 @@
           </div>
         </div>
           
-          <!-- Botones finales -->
+        <!-- Botones finales -->
         <div class="d-flex flex-column align-items-center mt-4 w-100">
           <button type="submit" class="btn btn-warning btn-lg w-100 mb-2">
             {{ isEditing ? "Guardar Cambios" : "Crear Elección" }}
           </button>
           <button type="button" class="btn btn-danger btn-lg w-100" @click="$emit('close')">Cancelar</button>
         </div>
-    </form>
+      </form>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -108,9 +121,9 @@ export default {
   },
   methods: {
     formatDateForInput(dateString) {
-      if (!dateString) return "";
+      if (!dateString) return null;
       const date = new Date(dateString);
-      return date.toISOString().slice(0, 16);
+      return date;
     },
     handleImageUpload(event) {
       const file = event.target.files[0];
@@ -138,7 +151,7 @@ export default {
     },
     async cargarParticipantes(electionId) {
       try {
-        const response = await axios.get(`${API_URL}elections/${electionId}/participants`);   //¿Podria acceder a una pagina con todos los participantes?
+        const response = await axios.get(`${API_URL}elections/${electionId}/participants`);
         this.participantes = response.data;
       } catch (error) {
         console.error("Error cargando participantes:", error);
@@ -171,29 +184,49 @@ export default {
         this.errorMessage = "La fecha de fin debe ser posterior a la de inicio";
         return;
       }
+      if (!this.form.title || this.form.title.trim() === "") {
+         this.errorMessage = "El título no puede estar vacío.";
+         return;
+     }
+      console.log("Título antes de añadir a formData:", this.form.title);
 
-      const formData = new FormData();
+      const electionData = {
+      title: this.form.title,
+      init_date: new Date (this.form.init_date),//formatDateForInput(this.form.init_date),
+      end_date: new Date (this.form.end_date),
+      image: null //this.form.image
+      };
+
+      /*const formData = new FormData();
       formData.append('title', this.form.title);
       formData.append('init_date', this.form.init_date);
       formData.append('end_date', this.form.end_date);
       if (this.form.image) {
         formData.append('image', this.form.image);
-      }
+      }*/
+      console.log("Título tras añadir a formData:", this.form.title);
+      //console.log("Contenido de formData:", Object.fromEntries(electionData.entries()));
 
       try {
         let response;
         if (this.isEditing) {
           response = await axios.put(
-            `${API_URL}elections/update/${this.election.id}`,
-            formData,
+            `${API_URL}elections/modifyElection/${this.election.id}`,
+            electionData,
             { headers: { 'Content-Type': 'multipart/form-data' } }
           );
         } else {
+          console.log("Fechas Date Validos- INICIO:", typeof init_date);
+          console.log("Fechas Date Validos- FIN:", typeof electionData.end_date);
+          console.log(" ", electionData.end_date);
           response = await axios.post(
             `${API_URL}elections/createElection`,
-            formData,
-            { headers: { 'Content-Type': 'multipart/form-data' } }
+            //formData,
+            electionData,
+            //{ headers: { 'Content-Type': 'multipart/form-data' } }
+            { headers: { 'Content-Type': 'application/json' } }
           );
+          console.log("Título despueeeees de añadir a formData:", this.form.title);
         }
 
         console.log("✅ Elección guardada:", response.data);

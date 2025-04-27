@@ -10,14 +10,58 @@ export const service_election_create = async (imageUrl, /*participants,*/ title,
     await validateDate(voteInitialDate); 
     await validateDate(voteFinalDate);
 
+
+    if (title === undefined || title == null) {
+        throw new Error('El título de la elección es obligatorio y no puede ser null o undefined.');
+    }
+    if (voteInitialDate === undefined || voteInitialDate == null) {
+        throw new Error('La fecha inicial de la elección es obligatoria y no puede ser null o undefined.');
+    }
+    if (voteFinalDate === undefined || voteFinalDate == null) {
+        throw new Error('La fecha final de la elección es obligatoria y no puede ser null o undefined.');
+    }
+
+    // Asegúrate de que los valores son cadenas cuando sea necesario (como title e imageUrl)
+    if (typeof title != 'string') {
+        throw new Error('El título de la elección debe ser una cadena válida.');
+    }
+    /*if (typeof imageUrl != 'string') {
+        throw new Error('La URL de la imagen debe ser una cadena válida.');
+    }*/
+        console.log("Fechas Date Validos- INICIO:", typeof voteInitialDate);
+        console.log("Fechas Date Validos- FIN:", typeof voteFinalDate);
+    // Asegúrate de que las fechas sean instancias de Date válidas
+    /*if (!(voteInitialDate instanceof Date) || !(voteFinalDate instanceof Date)) {
+        throw new Error('Las fechas inicial y final deben ser objetos Date válidos.');
+    }*/
+        voteInitialDate= new Date(voteInitialDate);
+        voteFinalDate= new Date(voteFinalDate);
+
+
+    // Verifica si ya existe una elección con el mismo título
+    const existingElections = await electionRepository.findByParams({ title: title });
+    if (existingElections.length > 0) {
+        throw new Error('Ya existe una elección con ese título.');
+    }
+
+    // Verifica que la fecha de inicio sea menor que la fecha de fin
+    if (voteInitialDate >= voteFinalDate) {
+        throw new Error('La fecha de inicio no puede ser mayor o igual a la fecha de fin.');
+    }
+
+    // Crea el objeto con los datos para la nueva elección
     const newElection = {
-        title,
         image: imageUrl,
+        title: title,
         init_date: voteInitialDate,
-        end_date: voteFinalDate,
-      };
-      
-    return await ElectionRepository.create(newElection);
+        end_date: voteFinalDate
+    };
+
+    // Imprime los datos de la nueva elección para verificar
+    console.log("New Election Data:", newElection);
+
+    // Crea la nueva elección en la base de datos
+    return await electionRepository.create(newElection);
 };
 
 
@@ -38,13 +82,13 @@ export const service_election_modify = async (id, imageUrl, participants, title,
     await validateDate(voteInitialDate);
     await validateDate(voteFinalDate);
 
-    const existingElection = await ElectionRepository.findById(id);
+    const existingElection = await electionRepository.findById(id);
     if (!existingElection) {
         throw new Error('La Elección que quiere modificar no existe.');
     }
 
     const updatedElection = new Election(imageUrl, participants, title, voteInitialDate, voteFinalDate);
-    return await ElectionRepository.update(id, updatedElection);
+    return await electionRepository.update(id, updatedElection);
 }
 
 export const service_election_search = async (imageUrl, participants, title, voteInitialDate, voteFinalDate) => {
@@ -75,7 +119,7 @@ export const service_election_vote = async (candidate, voterHashId) => {
       if (!voterHashId) {      //Comprobar que el ID no sea nulo
         throw new Error('El ID del voto es obligatorio.');
     }
-    const election = await ElectionRepository.findBy(candidate);
+    const election = await electionRepository.findBy(candidate);
     if (!election) {
         throw new Error('La Elección asociada al candidato establecido no existe.');
     }
