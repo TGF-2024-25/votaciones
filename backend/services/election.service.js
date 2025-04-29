@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import Election from '../models/Election.js';
 import ElectionRepository from '../repositories/ElectionRepository.js';
 import { validateString, validateDate } from '../utils/utils.js';
@@ -9,7 +8,6 @@ export const service_election_create = async (imageUrl, title, voteInitialDate, 
     await validateString(title);
     await validateDate(voteInitialDate); 
     await validateDate(voteFinalDate);
-
 
     if (title === undefined || title == null) {
         throw new Error('El título de la elección es obligatorio y no puede ser null o undefined.');
@@ -25,18 +23,8 @@ export const service_election_create = async (imageUrl, title, voteInitialDate, 
     if (typeof title != 'string') {
         throw new Error('El título de la elección debe ser una cadena válida.');
     }
-    /*if (typeof imageUrl != 'string') {
-        throw new Error('La URL de la imagen debe ser una cadena válida.');
-    }*/
-        console.log("Fechas Date Validos- INICIO:", typeof voteInitialDate);
-        console.log("Fechas Date Validos- FIN:", typeof voteFinalDate);
-    // Asegúrate de que las fechas sean instancias de Date válidas
-    /*if (!(voteInitialDate instanceof Date) || !(voteFinalDate instanceof Date)) {
-        throw new Error('Las fechas inicial y final deben ser objetos Date válidos.');
-    }*/
-        voteInitialDate= new Date(voteInitialDate);
-        voteFinalDate= new Date(voteFinalDate);
-
+    voteInitialDate= new Date(voteInitialDate);
+    voteFinalDate= new Date(voteFinalDate);
 
     // Verifica si ya existe una elección con el mismo título
     const existingElections = await electionRepository.findByParams({ title: title });
@@ -62,14 +50,15 @@ export const service_election_create = async (imageUrl, title, voteInitialDate, 
         title: title,
         init_date: voteInitialDate,
         end_date: voteFinalDate,
-        participantes: participantes
     };
 
-    // Imprime los datos de la nueva elección para verificar
-    console.log("New Election Data:", newElection);
-
     // Crea la nueva elección en la base de datos
-    return await electionRepository.create(newElection);
+    const electionCreated = await electionRepository.create(newElection);
+    if (!await electionRepository.createParticipants(participantes, electionCreated.id)) {
+        await electionRepository.delete(electionCreated.id);
+        return false;
+    }
+    return true;
 };
 
 

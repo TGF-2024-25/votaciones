@@ -11,24 +11,48 @@
       </div>
 
       <form @submit.prevent="submitForm">
-        
         <!-- Título de la elección -->
         <div class="mb-3 d-flex flex-column">
-          <label for="title" class="form-label text-bold">Título de la elección</label>
-          <input type="text" id="title" v-model="form.title" class="form-control input-custom" maxlength="100" required>
+          <label for="title" class="form-label text-bold"
+            >Título de la elección</label
+          >
+          <input
+            type="text"
+            id="title"
+            v-model="form.title"
+            class="form-control input-custom"
+            maxlength="100"
+            required
+          />
         </div>
 
         <!-- Lista de Participantes -->
         <div class="mb-3 d-flex flex-column">
-          <label for="participants" class="form-label text-bold">Participantes (separados por coma)</label>
-          <input type="text" id="participants" v-model="newParticipantNames" class="form-control input-custom" placeholder="Escribe los nombres de los participantes" />
-          <button type="button" class="btn btn-info mt-2" @click="addParticipants">Añadir Participantes</button>
+          <label for="participants" class="form-label text-bold"
+            >Participantes (separados por coma)</label
+          >
+          <input
+            type="text"
+            id="participants"
+            v-model="newParticipantNames"
+            class="form-control input-custom"
+            placeholder="Escribe los nombres de los participantes"
+          />
+          <!-- <button type="button" class="btn btn-info mt-2" @click="addParticipants">Añadir Participantes</button> -->
         </div>
 
         <!-- Imagen (opcional) -->
         <div class="mb-3 d-flex flex-column">
-          <label for="image" class="form-label text-bold">Imagen (opcional)</label>
-          <input type="file" id="image" @change="handleImageUpload" class="form-control input-custom file-input" accept="image/*">
+          <label for="image" class="form-label text-bold"
+            >Imagen (opcional)</label
+          >
+          <input
+            type="file"
+            id="image"
+            @change="handleImageUpload"
+            class="form-control input-custom file-input"
+            accept="image/*"
+          />
           <small class="text-muted">Formatos aceptados: JPG, PNG, GIF</small>
         </div>
 
@@ -47,32 +71,66 @@
         <!-- Fechas -->
         <div class="row mb-3">
           <div class="col-md-6">
-            <label for="init_date" class="form-label text-bold">Fecha de inicio</label>
-            <input type="date" id="init_date" v-model="form.init_date" class="form-control input-custom" required>
+            <label for="init_date" class="form-label text-bold"
+              >Fecha de inicio</label
+            >
+            <input
+              type="date"
+              id="init_date"
+              v-model="form.init_date"
+              class="form-control input-custom"
+              required
+            />
           </div>
           <div class="col-md-6">
-            <label for="end_date" class="form-label text-bold">Fecha de fin</label>
-            <input type="date" id="end_date" v-model="form.end_date" class="form-control input-custom" required>
+            <label for="end_date" class="form-label text-bold"
+              >Fecha de fin</label
+            >
+            <input
+              type="date"
+              id="end_date"
+              v-model="form.end_date"
+              class="form-control input-custom"
+              required
+            />
           </div>
         </div>
-
 
         <!-- Participantes (solo en edición) -->
         <div v-if="isEditing" class="mb-3">
           <h5 class="text-bold mb-3">Participantes</h5>
-          <div v-if="participantes.length === 0" class="text-muted">No hay participantes aún</div>
-          <div v-for="participante in participantes" :key="participante.id" class="d-flex justify-content-between align-items-center mb-2">
+          <div v-if="participantes.length === 0" class="text-muted">
+            No hay participantes aún
+          </div>
+          <div
+            v-for="participante in participantes"
+            :key="participante.id"
+            class="d-flex justify-content-between align-items-center mb-2"
+          >
             <span>{{ participante.name || participante.email }}</span>
-            <button type="button" class="btn btn-sm btn-danger" @click="eliminarParticipante(participante.id)">Eliminar</button>
+            <button
+              type="button"
+              class="btn btn-sm btn-danger"
+              @click="eliminarParticipante(participante.id)"
+            >
+              Eliminar
+            </button>
+            -->
           </div>
         </div>
-          
+
         <!-- Botones finales -->
         <div class="d-flex flex-column align-items-center mt-4 w-100">
           <button type="submit" class="btn btn-warning btn-lg w-100 mb-2">
             {{ isEditing ? "Guardar Cambios" : "Crear Elección" }}
           </button>
-          <button type="button" class="btn btn-danger btn-lg w-100" @click="$emit('close')">Cancelar</button>
+          <button
+            type="button"
+            class="btn btn-danger btn-lg w-100"
+            @click="$emit('close')"
+          >
+            Cancelar
+          </button>
         </div>
       </form>
     </div>
@@ -94,7 +152,7 @@ export default {
         image: null,
         init_date: "",
         end_date: "",
-        participantes: []
+        participantes: [],
       },
       newParticipantNames: "",
       errorMessage: "",
@@ -111,21 +169,27 @@ export default {
       handler(nuevaEleccion) {
         if (nuevaEleccion) {
           this.form.title = nuevaEleccion.title || "";
-          this.form.init_date = this.formatDateForInput(nuevaEleccion.init_date);
+          this.form.init_date = this.formatDateForInput(
+            nuevaEleccion.init_date
+          );
           this.form.end_date = this.formatDateForInput(nuevaEleccion.end_date);
           this.cargarParticipantes(nuevaEleccion.id);
         } else {
           this.resetForm();
         }
-      }
+      },
     },
-    "form.end_date": function(newVal) {
-      if (newVal && this.form.init_date && new Date(newVal) <= new Date(this.form.init_date)) {
+    "form.end_date": function (newVal) {
+      if (
+        newVal &&
+        this.form.init_date &&
+        new Date(newVal) <= new Date(this.form.init_date)
+      ) {
         this.errorMessage = "La fecha de fin debe ser posterior a la de inicio";
       } else {
         this.errorMessage = "";
       }
-    }
+    },
   },
   methods: {
     formatDateForInput(dateString) {
@@ -137,7 +201,7 @@ export default {
       const file = event.target.files[0];
       if (!file) return;
 
-      const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      const validTypes = ["image/jpeg", "image/png", "image/gif"];
       if (!validTypes.includes(file.type)) {
         this.errorMessage = "Formato de imagen no válido (solo JPG, PNG, GIF)";
         event.target.value = "";
@@ -158,19 +222,25 @@ export default {
       reader.readAsDataURL(file);
     },
     addParticipants() {
-    const names = this.newParticipantNames.split(",").map(n => n.trim()).filter(Boolean);
-    if (names.length) {
-      this.form.participantes.push(...names);
-      this.newParticipantNames = "";
-      this.errorMessage = "";
-    } else {
-      this.errorMessage = "Por favor, ingresa al menos un nombre válido";
-    }
-  },
+      this.form.participantes = [];
+      const names = this.newParticipantNames
+        .split(",")
+        .map((n) => n.trim())
+        .filter(Boolean);
+      if (names.length) {
+        this.form.participantes.push(...names);
+        this.newParticipantNames = "";
+        this.errorMessage = "";
+      } else {
+        this.errorMessage = "Por favor, ingresa al menos un nombre válido";
+      }
+    },
 
     async cargarParticipantes(electionId) {
       try {
-        const response = await axios.get(`${API_URL}elections/${electionId}/participants`);
+        const response = await axios.get(
+          `${API_URL}elections/${electionId}/participants`
+        );
         this.participantes = response.data;
       } catch (error) {
         console.error("Error cargando participantes:", error);
@@ -179,10 +249,12 @@ export default {
     },
     async eliminarParticipante(userId) {
       if (!confirm("¿Estás seguro de eliminar este participante?")) return;
-      
+
       try {
-        await axios.delete(`${API_URL}elections/${this.election.id}/participants/${userId}`);
-        this.participantes = this.participantes.filter(p => p.id !== userId);
+        await axios.delete(
+          `${API_URL}elections/${this.election.id}/participants/${userId}`
+        );
+        this.participantes = this.participantes.filter((p) => p.id !== userId);
       } catch (error) {
         console.error("Error eliminando participante:", error);
         this.errorMessage = "No se pudo eliminar el participante";
@@ -194,7 +266,7 @@ export default {
         image: null,
         init_date: "",
         end_date: "",
-        participantes: []
+        participantes: [],
       };
       this.newParticipantNames = "";
       this.errorMessage = "";
@@ -205,28 +277,18 @@ export default {
         return;
       }
       if (!this.form.title || this.form.title.trim() === "") {
-         this.errorMessage = "El título no puede estar vacío.";
-         return;
-     }
-      console.log("Título antes de añadir a formData:", this.form.title);
+        this.errorMessage = "El título no puede estar vacío.";
+        return;
+      }
 
+      this.addParticipants();
       const electionData = {
-      title: this.form.title,
-      init_date: new Date (this.form.init_date),//formatDateForInput(this.form.init_date),
-      end_date: new Date (this.form.end_date),
-      participantes: this.form.participantes,
-      image: null //this.form.image
+        title: this.form.title,
+        init_date: new Date(this.form.init_date), //formatDateForInput(this.form.init_date),
+        end_date: new Date(this.form.end_date),
+        participantes: this.form.participantes,
+        image: null, //this.form.image
       };
-
-      /*const formData = new FormData();
-      formData.append('title', this.form.title);
-      formData.append('init_date', this.form.init_date);
-      formData.append('end_date', this.form.end_date);
-      if (this.form.image) {
-        formData.append('image', this.form.image);
-      }*/
-      console.log("Título tras añadir a formData:", this.form.title);
-      //console.log("Contenido de formData:", Object.fromEntries(electionData.entries()));
 
       try {
         let response;
@@ -234,98 +296,29 @@ export default {
           response = await axios.put(
             `${API_URL}elections/modifyElection/${this.election.id}`,
             electionData,
-            { headers: { 'Content-Type': 'multipart/form-data' } }
+            { headers: { "Content-Type": "multipart/form-data" } }
           );
         } else {
-          console.log("Fechas Date Validos- INICIO:", typeof init_date);
-          console.log("Fechas Date Validos- FIN:", typeof electionData.end_date);
-          console.log(" ", electionData.end_date);
           response = await axios.post(
             `${API_URL}elections/createElection`,
-            //formData,
             electionData,
-            //{ headers: { 'Content-Type': 'multipart/form-data' } }
-            { headers: { 'Content-Type': 'application/json' } }
+            { headers: { "Content-Type": "application/json" } }
           );
-          console.log("Título despueeeees de añadir a formData:", this.form.title);
         }
 
         console.log("✅ Elección guardada:", response.data);
-        this.$emit('saved', response.data);
-        this.$emit('close');
+        this.$emit("saved", response.data);
+        this.$emit("close");
       } catch (error) {
         console.error("❌ Error:", error.response?.data || error.message);
-        this.errorMessage = error.response?.data?.message || "Error al guardar la elección";
+        this.errorMessage =
+          error.response?.data?.message || "Error al guardar la elección";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Contenedor del formulario */
-.form-container {
-  background-color: #f8f9fa; /* Fondo gris claro */
-  border-radius: 15px;
-  max-width: 450px;
-  margin: auto;
-}
-
-/* Mensaje de error */
-.alert-danger {
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 10px;
-}
-
-/* Inputs personalizados */
-.input-custom {
-  background-color: #e9ecef !important;
-  border: 2px solid #007bff;
-  border-radius: 10px;
-  padding: 10px;
-}
-
-/* Asegurar que el input file también tenga fondo gris */
-.file-input {
-  background-color: #e9ecef !important;
-  opacity: 1;
-}
-
-/* Estilo de los labels para que sean más notorios */
-.text-bold {
-  font-weight: bold;
-}
-
-/* Botón amarillo para enviar postulación */
-.btn-warning {
-  background-color: #ffc107;
-  border: none;
-  border-radius: 10px;
-  color: black;
-}
-
-.btn-warning:hover {
-  background-color: #e0a800;
-}
-
-
-
-/* Botón rojo para cancelar */
-.btn-danger {
-  border-radius: 10px;
-}
-
-.btn-danger:hover {
-  background-color: #b02a37;
-}
-
-/* Título centrado y en negrita */
-h3 {
-  text-align: center;
-  font-weight: bold;
-}
-
-
-
+@import "../../styles/form.css";
 </style>

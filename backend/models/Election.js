@@ -56,4 +56,4 @@ const UserElection = sequelize.define('UserElections', {
 Election.belongsToMany(User, { through: UserElection, foreignKey: 'electionId' });
 User.belongsToMany(Election, { through: UserElection, foreignKey: 'userId' });
 
-export default Election;
+export { Election as default, UserElection };
