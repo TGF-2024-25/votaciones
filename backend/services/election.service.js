@@ -66,7 +66,7 @@ export const service_election_delete = async (id) => {
     if (!id) {      //Comprobar que el ID no sea nulo
         throw new Error('El ID de la Elección es obligatorio.');
     }
-    const existingElection = await ElectionRepository.findById(id);
+    const existingElection = await electionRepository.findById(id);
     
     if (!existingElection) {
         throw new Error('La Elección no existe.');
@@ -90,14 +90,14 @@ export const service_election_modify = async (id, imageUrl, participants, title,
 
 export const service_election_search = async (imageUrl, participants, title, voteInitialDate, voteFinalDate) => {
     const searchCriteria = { imageUrl, participants, title, voteInitialDate, voteFinalDate };       //const params = {}; fijarse en Candidatures
-    return await ElectionRepository.findByParams(searchCriteria);
+    return await electionRepository.findByParams(searchCriteria);
 }
 
 export const service_election_consult = async (id) => {
     if (!id) {      //Comprobar que el ID no sea nulo
         throw new Error('El ID de la Elección es obligatorio.');
     }
-    const election = await ElectionRepository.findById(id);
+    const election = await electionRepository.findById(id);
     if (!election) {
         throw new Error('La Elección no existe.');
     }
@@ -130,7 +130,7 @@ export const service_election_verifyVote = async (voterHashId) => {
     if (!voterHashId) {      //Comprobar que el ID no sea nulo
         throw new Error('El ID del voto es obligatorio.');
     }
-    const vote = await ElectionRepository; //buscar el voto
+    const vote = await electionRepository; //buscar el voto
     if (!vote) {
         throw new Error('Voto no existente.');
     }
@@ -143,7 +143,7 @@ export const service_election_addCandidate = async (candidacy) => {     //PUEDE 
 
 export const service_election_deleteCandidate = async (candidate, id) => {       //PUEDE QUE NO SE NECESITE AQUI
     //deleteCandidate(id);
-    return await ElectionRepository.update(candidate, id);
+    return await electionRepository.update(candidate, id);
 }; //Esta aqui pero no en Controller
 
 export const service_election_countVotes = async (id) => {

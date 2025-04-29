@@ -17,7 +17,7 @@ const router = express.Router();
 router.post('/createElection', controller_election_create);
 //router.post('/create', controller_election_create);
 
-router.post('/consultElection', controller_election_consult);   //COMO estan en Candidacies
+router.post('/consult', controller_election_consult);   //COMO estan en Candidacies
 router.post('/searchElection', controller_election_search);
 router.post('/modifyElection', controller_election_update);
 router.post('/deleteElection', controller_election_delete);

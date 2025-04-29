@@ -38,7 +38,7 @@ export const controller_election_update = async (req, res) => {
 export const controller_election_search = async (req, res) => {
     try {
         const { id, imageUrl, participants, title, voteInitialDate, voteFinalDate } = req.body;
-        const elections = await service_election_search(id, imageUrl, participants, title, voteInitialDate, voteFinalDate);
+        const elections = await service_election_search(/*id,*/ imageUrl, participants, title, voteInitialDate, voteFinalDate);
         res.status(201).json({ message: 'Elecciones encontradas con éxito', elections });
     } catch (error) {
         res.status(400).json({ error: error.message });

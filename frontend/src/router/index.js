@@ -15,6 +15,7 @@ import SearchPage from '../pages/SearchPage.vue';
 import UserSettings from '../pages/UserSettings.vue';
 import ElectionConsult from '../components/election/ElectionConsult.vue';
 import ModifyElection from '../pages/ModifyElection.vue';
+import ConsultElection from '../pages/ConsultElection.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 // Definir las rutas
@@ -55,6 +56,17 @@ const routes = [
   
   { path: '/vote', component: Vote },
   { path: '/home-elections', component: HomeElections },    //Lista de elecciones
+
+  {
+    path: '/consult-election/:userId',
+    name: 'ConsultElection',
+    component: ConsultElection,
+  },
+  {
+    path: '/consult-election',
+    component: ConsultElection,
+    props: route => ({ id: route.query.id })
+  },
   
   { path: '/search', component: SearchPage },
   { path: '/user-settings', component: UserSettings },
