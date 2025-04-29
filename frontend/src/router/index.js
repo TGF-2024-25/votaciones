@@ -8,10 +8,13 @@ import ModifyCandidacy from '../pages/candidacy/ModifyCandidacy.vue';
 import Login from '../pages/Login.vue';
 import Register from '../pages/Register.vue';
 import CreateElection from '../pages/CreateElection.vue';
+import SearchElection from '../components/election/SearchElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
 import UserSettings from '../pages/UserSettings.vue';
+import ElectionConsult from '../components/election/ElectionConsult.vue';
+import ModifyElection from '../pages/ModifyElection.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 // Definir las rutas
@@ -31,11 +34,28 @@ const routes = [
     component: ModifyCandidacy,
     props: route => ({ id: route.query.id })
   },
+
+  //CRUD ELECTIONS
+  { path: '/create-election', component: CreateElection },
+  { path: '/search-elections', component: SearchElection },
+  {
+    path: '/consult-elections', // Usamos :id para capturar el ID de la elección
+    component: ElectionConsult,
+    props: route => ({ id: route.query.id }) // Pasamos el id como prop al componente
+  },
+  {
+    path: '/modify-elections',
+    component: ModifyElection,
+    props: route => ({ id: route.query.id })
+  },
+  
+
   { path: '/login', component: Login }, // Ruta de inicio de sesión
   { path: '/register', component: Register }, // Ruta de registro
-  { path: '/create-election', component: CreateElection },
+  
   { path: '/vote', component: Vote },
   { path: '/home-elections', component: HomeElections },    //Lista de elecciones
+  
   { path: '/search', component: SearchPage },
   { path: '/user-settings', component: UserSettings },
   //{ path: '/election-ended', component: EleccionFin},

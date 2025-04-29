@@ -5,7 +5,7 @@ import { validateString, validateDate } from '../utils/utils.js';
 
 const electionRepository = new ElectionRepository();
 
-export const service_election_create = async (imageUrl, /*participants,*/ title, voteInitialDate, voteFinalDate) => {
+export const service_election_create = async (imageUrl, title, voteInitialDate, voteFinalDate, participantes) => {
     await validateString(title);
     await validateDate(voteInitialDate); 
     await validateDate(voteFinalDate);
@@ -49,12 +49,20 @@ export const service_election_create = async (imageUrl, /*participants,*/ title,
         throw new Error('La fecha de inicio no puede ser mayor o igual a la fecha de fin.');
     }
 
+    if (!Array.isArray(participantes)) {
+        throw new Error('Los participantes deben enviarse en un array.');
+      }
+      if (participantes.length === 0) {
+        throw new Error('Debe haber al menos un participante.');
+      }
+
     // Crea el objeto con los datos para la nueva elección
     const newElection = {
         image: imageUrl,
         title: title,
         init_date: voteInitialDate,
-        end_date: voteFinalDate
+        end_date: voteFinalDate,
+        participantes: participantes
     };
 
     // Imprime los datos de la nueva elección para verificar

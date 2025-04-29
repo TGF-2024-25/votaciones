@@ -28,7 +28,7 @@ export default {
       this.$router.push('/search-candidacy');
     },
     irABusquedaElecciones() {
-      this.$router.push('/search-election');
+      this.$router.push('/search-elections');
     }
   }
 }

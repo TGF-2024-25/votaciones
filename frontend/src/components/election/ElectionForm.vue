@@ -18,6 +18,13 @@
           <input type="text" id="title" v-model="form.title" class="form-control input-custom" maxlength="100" required>
         </div>
 
+        <!-- Lista de Participantes -->
+        <div class="mb-3 d-flex flex-column">
+          <label for="participants" class="form-label text-bold">Participantes (separados por coma)</label>
+          <input type="text" id="participants" v-model="newParticipantNames" class="form-control input-custom" placeholder="Escribe los nombres de los participantes" />
+          <button type="button" class="btn btn-info mt-2" @click="addParticipants">Añadir Participantes</button>
+        </div>
+
         <!-- Imagen (opcional) -->
         <div class="mb-3 d-flex flex-column">
           <label for="image" class="form-label text-bold">Imagen (opcional)</label>
@@ -86,9 +93,10 @@ export default {
         title: "",
         image: null,
         init_date: "",
-        end_date: ""
+        end_date: "",
+        participantes: []
       },
-      participantes: [],
+      newParticipantNames: "",
       errorMessage: "",
     };
   },
@@ -149,13 +157,24 @@ export default {
       };
       reader.readAsDataURL(file);
     },
+    addParticipants() {
+    const names = this.newParticipantNames.split(",").map(n => n.trim()).filter(Boolean);
+    if (names.length) {
+      this.form.participantes.push(...names);
+      this.newParticipantNames = "";
+      this.errorMessage = "";
+    } else {
+      this.errorMessage = "Por favor, ingresa al menos un nombre válido";
+    }
+  },
+
     async cargarParticipantes(electionId) {
       try {
         const response = await axios.get(`${API_URL}elections/${electionId}/participants`);
         this.participantes = response.data;
       } catch (error) {
         console.error("Error cargando participantes:", error);
-        this.participantes = [];
+        this.form.participantes = [];
       }
     },
     async eliminarParticipante(userId) {
@@ -174,9 +193,10 @@ export default {
         title: "",
         image: null,
         init_date: "",
-        end_date: ""
+        end_date: "",
+        participantes: []
       };
-      this.participantes = [];
+      this.newParticipantNames = "";
       this.errorMessage = "";
     },
     async submitForm() {
@@ -194,6 +214,7 @@ export default {
       title: this.form.title,
       init_date: new Date (this.form.init_date),//formatDateForInput(this.form.init_date),
       end_date: new Date (this.form.end_date),
+      participantes: this.form.participantes,
       image: null //this.form.image
       };
 
@@ -288,6 +309,8 @@ export default {
   background-color: #e0a800;
 }
 
+
+
 /* Botón rojo para cancelar */
 .btn-danger {
   border-radius: 10px;
@@ -302,4 +325,7 @@ h3 {
   text-align: center;
   font-weight: bold;
 }
+
+
+
 </style>

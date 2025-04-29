@@ -16,6 +16,11 @@
       <button class="btn btn-primary mt-4">Ir a Crear Eleccion</button>
     </router-link>
 
+    <!-- Botón para ir a la página de creación de Eleccion -->
+    <router-link to="/consult-election">
+      <button class="btn btn-primary mt-4">Ir a Consultar Eleccion</button>
+    </router-link>
+
       <!-- Botón para ir a la página de creación de Eleccion -->
       <router-link to="/vote">
       <button class="btn btn-vote mt-4">Votar</button>

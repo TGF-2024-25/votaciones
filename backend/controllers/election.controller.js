@@ -19,19 +19,20 @@ export const controller_election_create = async (req, res) => {
         {
             console.log("MUESTRAAAA ALGO");
     
-            const { image, title, init_date, end_date } = req.body;
+            const { image, title, init_date, end_date, participantes } = req.body;
             
             const election = {
               imageUrl: image,
               title,
               voteInitialDate: init_date,
-              voteFinalDate: end_date
+              voteFinalDate: end_date,
+              participantes
             };
     
             console.log("Datos recibidos en el backend:", election);
     
             //const newElection = await service_election_create(election);
-            const newElection = await service_election_create(image, title, init_date, end_date);
+            const newElection = await service_election_create(image, title, init_date, end_date, participantes);
             
             res.status(201).json({ message: 'Elección creada con éxito', newElection });
         } 
@@ -74,13 +75,26 @@ export const controller_election_search = async (req, res) => {
 
 export const controller_election_consult = async (req, res) => {
     try {
-        const { id } = req.body;
-        const election = await service_election_consult(id);
-        res.status(201).json({ message: 'Elección encontrada con éxito', election });
+      const { id } = req.body;  // Obtener el ID de la elección desde el cuerpo de la solicitud
+      if (!id) throw new Error('ID de la elección es requerido');
+  
+      // Llamar al servicio para consultar la elección en base al ID
+      const electionConsulted = await service_election_consult(id);
+  
+      // Si la elección no existe, devolver un error
+      if (!electionConsulted) {
+        return res.status(404).json({ message: 'Elección no encontrada' });
+      }
+      console.log("Datos recibidos en el backend en consult:", id);
+      // Devolver la respuesta con los detalles de la elección
+      res.status(200).json({
+        message: 'Elección consultada con éxito',
+        election: electionConsulted
+      });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+      res.status(400).json({ error: error.message });
     }
-};
+  };
 
 export const controller_election_vote = async (req, res) => {
     try {
