@@ -4,8 +4,8 @@
 
     <div v-if="election">
       <p><strong>Título:</strong> {{ election.title }}</p>
-      <p><strong>Inicio:</strong> {{ formatDateTime(election.voteInitialDate) }}</p>
-      <p><strong>Fin:</strong> {{ formatDateTime(election.voteFinalDate) }}</p>
+      <p><strong>Inicio:</strong> {{ formatDateTime(election.init_date) }}</p>    <!-- Comprobar Fechas -->
+      <p><strong>Fin:</strong> {{ formatDateTime(election.end_date) }}</p>
       <p><strong>Estado:</strong> {{ getStatusText(election) }}</p>
 
       <!-- Mostrar imagen si existe -->
@@ -66,7 +66,7 @@ export default {
       try {
         const response = await axios.post(`${API_URL}elections/consult`, { id })
         if (response.data) {
-          this.election = response.data.electionConsulted
+          this.election = response.data.election
         } else {
           throw new Error('No se encontraron detalles.')
         }
@@ -108,8 +108,8 @@ export default {
     },
     getStatusText(election) {
       const now = new Date()
-      if (new Date(election.voteInitialDate) > now) return 'PRÓXIMA'
-      if (new Date(election.voteFinalDate) < now) return 'FINALIZADA'
+      if (new Date(election.init_date) > now) return 'PRÓXIMA'
+      if (new Date(election.end_date) < now) return 'FINALIZADA'
       return 'EN CURSO'
     },
   },

@@ -20,8 +20,8 @@
         <tr v-for="election in elections" :key="election.id">
           <td :data-label="'Título'">{{ election.title }}</td>
           <td :data-label="'Estado'">{{ getStatusText(election) }}</td>
-          <td :data-label="'Inicio'">{{ formatDateTime(election.voteInitialDate) }}</td>
-          <td :data-label="'Fin'">{{ formatDateTime(election.voteFinalDate) }}</td>
+          <td :data-label="'Inicio'">{{ formatWithDayjs(election.init_date) }}</td>
+          <td :data-label="'Fin'">{{ formatWithDayjs(election.end_date) }}</td>
           <td :data-label="'Acción'">
             <button class="btn btn-info" @click="verEleccion(election)">
               Ver detalles
@@ -35,6 +35,7 @@
 
 <script>
 import axios from 'axios';
+import dayjs from 'dayjs';
 import { API_URL } from '../utils/config';
 
 export default {
@@ -77,6 +78,7 @@ export default {
           }
         }
         console.log(eleccionesArray[0].init_date);
+        console.log(eleccionesArray[0].end_date);
         this.elections = eleccionesArray;
       } catch (error) {
         console.error("Error al parsear las elecciones desde localStorage:", error);
@@ -84,8 +86,8 @@ export default {
     },
     getStatusText(election) {
       const now = new Date();
-      if (new Date(election.voteInitialDate) > now) return 'PRÓXIMA';
-      if (new Date(election.voteFinalDate) < now) return 'FINALIZADA';
+      if (new Date(election.init_date) > now) return 'PRÓXIMA';
+      if (new Date(election.end_date) < now) return 'FINALIZADA';
       return 'EN CURSO';
     },
       //console.log(election.voteInitialDate);
@@ -93,27 +95,28 @@ export default {
     //aux= dateString.toString().split('T')[0];
     //console.log(aux);
     //return dateString.split('T')[0];
-    formatDateTime(dateString) {
-  // Validar si la entrada es una cadena en formato YYYY-MM-DD
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
-    console.error('Formato de fecha no válido:', dateString);
-    return 'Invalid Date';
-  }
 
-  // Convertir la cadena a un objeto Date
-  const date = new Date(dateString);
+    formatWithDayjs(dateInput){
+      const parsed = dayjs(dateInput);
+    if (!parsed.isValid()) {
+      console.error("Fecha inválida:", dateInput);
+      return '';
+    }
+    return dayjs(dateInput).format('DD-MM-YYYY');
+  },
+    formatDateTime(dateI) {
+      const date = new Date(dateI);
 
-  // Verificar si la conversión fue exitosa
-  if (isNaN(date.getTime())) {
-    console.error('No se pudo convertir la fecha:', dateString);
-    return 'Invalid Date';
-  }
+    if (isNaN(date)) {
+      console.error("Fecha inválida:", date);
+      return "";
+    }
 
-  // Formatear la fecha como YYYY-MM-DD
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Mes en formato 2 dígitos
-  const day = String(date.getDate()).padStart(2, '0'); // Día en formato 2 dígitos
-  return `${year}-${month}-${day}`;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // meses 0-11
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 },
     
   },
