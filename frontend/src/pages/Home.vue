@@ -6,20 +6,26 @@
     <router-link to="/list-elections">
       <button class="btn btn-primary mt-4">Incio Elecciones</button>
     </router-link>
+
+    <span style="display: inline-block; width: 5px;"></span>
     <!-- Botón para ir a la página de creación de candidatura -->
     <router-link to="/create-candidacy">
       <button class="btn btn-primary mt-4">Ir a crear Candidatura</button>
     </router-link>
 
+    <span style="display: inline-block; width: 5px;"></span>
+
       <!-- Botón para ir a la página de creación de Eleccion -->
     <router-link to="/create-election">
       <button class="btn btn-primary mt-4">Ir a Crear Eleccion</button>
     </router-link>
+    <span style="display: inline-block; width: 5px;"></span>
 
     <!-- Botón para ir a la página de creación de Eleccion -->
     <router-link to="/consult-election">
       <button class="btn btn-primary mt-4">Ir a Consultar Eleccion</button>
     </router-link>
+    <span style="display: inline-block; width: 5px;"></span>
 
       <!-- Botón para ir a la página de creación de Eleccion -->
       <router-link to="/vote">
@@ -35,7 +41,7 @@
       <button class="btn btn-primary mt-4">Iniciar sesión</button>
     </router-link>
 
-    
+    <span style="display: inline-block; width: 15px;"></span>
 
     <!-- Botón de registro -->
     <router-link v-if="!isLoggedIn" to="/register">

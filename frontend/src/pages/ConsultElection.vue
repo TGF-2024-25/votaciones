@@ -21,10 +21,14 @@
 
       <!-- Botones -->
       <div class="text-center mt-3" v-if="mostrarBotonModificarYBorrar">
-        <button class="btn btn-primary" @click="editarElection">
+        <button class="btn btn-warning" @click="editarElection">
           Modificar elección
         </button>
-        <button class="btn btn-danger ml-2" @click="confirmarEliminar">
+
+        <!-- Espacio entre los botones -->
+        <span style="display: inline-block; width: 25px;"></span>
+
+        <button class="btn btn-danger" @click="confirmarEliminar">
           Borrar elección
         </button>
       </div>
