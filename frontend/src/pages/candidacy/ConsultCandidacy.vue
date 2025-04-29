@@ -8,10 +8,15 @@
       <p><strong>Email:</strong> {{ candidacy.user.email }}</p>
       <p><strong>Eslogan:</strong> {{ candidacy.slogan }}</p>
       <p><strong>Texto:</strong> {{ candidacy.text }}</p>
-
-      <!-- Mostrar video si existe -->
+      <p><strong>Video:</strong></p>
       <div v-if="candidacy.video">
-        <p><strong>Video:</strong> <a :href="candidacy.video" target="_blank">Ver Video</a></p>
+        <video v-if="candidacy.video" width="200" controls>
+          <source :src="candidacy.video" type="video/mp4" />
+          Tu navegador no soporta la etiqueta de video.
+        </video>
+      </div>
+      <div v-else>
+        <p><strong>   No disponible</strong></p>
       </div>
 
       <!-- Mostrar foto de perfil si existe -->
@@ -48,6 +53,10 @@
 
     </div>
 
+    <div v-else-if="isLoading" class="text-center">
+      <p>Cargando datos...</p>
+    </div>
+
     <!-- Si no hay datos mostramos un mensaje de error -->
     <div v-else class="alert alert-info text-center">
       <p>No hay detalles a mostrar</p>
@@ -64,6 +73,7 @@ export default {
   data() {
     return {
       candidacy: null,
+      isLoading: true,
     };
   },
   computed: {
@@ -71,7 +81,6 @@ export default {
       const token = localStorage.getItem('token');
       if (token) {
         const decoded = jwtDecode(token);
-        console.log("Permisos del usuario: " + decoded.user.type);
         return decoded.user.type == 'admin' || decoded.user.type == 'creator';
       }
       return false;
@@ -88,7 +97,7 @@ export default {
   methods: {
     async fetchCandidacyDetails(id) {
       try {
-        console.log("Buscando candidatura con id: " + id)
+        this.isLoading = true;
         const response = await axios.post(`${API_URL}candidacies/consult`, {
           id: id,
         });
@@ -99,14 +108,13 @@ export default {
           throw new Error('No se encontraron detalles de la candidatura.');
         }
       } catch (error) {
-        console.error('Error al obtener la candidatura:', error);
+      } finally {
+        this.isLoading = false;
       }
     },
     async toggleAprobacion() {
       try {
         const updated = !this.candidacy.approved;
-
-        console.log("Nuevo valor de approved: " + updated);
 
         const response = await axios.post(`${API_URL}candidacies/update`, {
           id: this.candidacy.id,
@@ -119,7 +127,6 @@ export default {
           throw new Error('No se pudo actualizar el estado de aprobación.');
         }
       } catch (error) {
-        console.error('Error al actualizar la aprobación:', error);
         alert('Error al cambiar el estado de la candidatura.');
       }
     },
@@ -146,7 +153,6 @@ export default {
           throw new Error('No se pudo eliminar la candidatura.');
         }
       } catch (error) {
-        console.error('Error al eliminar la candidatura:', error);
         alert('Error al eliminar la candidatura.');
       }
     },
