@@ -20,7 +20,6 @@ import SearchElection from '../pages/election/SearchElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
-import UserSettings from '../pages/UserSettings.vue';
 import ElectionConsult from '../components/election/ElectionConsult.vue';
 import ModifyElection from '../pages/ModifyElection.vue';
 import ConsultElection from '../pages/ConsultElection.vue';
