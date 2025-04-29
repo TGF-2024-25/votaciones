@@ -48,7 +48,8 @@ import { jwtDecode } from 'jwt-decode';
 
 export default {
   props: {
-    candidatura: Object, // Datos de candidatura si se está editando
+    candidatura: Object,
+    electionId: String,
   },
   data() {
     return {
@@ -115,7 +116,7 @@ export default {
             const decoded = jwtDecode(token);
             const formData = new FormData();
             formData.append('user', decoded.user.email);
-            formData.append('electionID', '100000000'); // TODO
+            formData.append('electionID', this.electionId);
             formData.append('slogan', this.form.eslogan);
             formData.append('text', this.form.descripcion);
             formData.append('video', this.form.video);

@@ -15,10 +15,21 @@ const router = express.Router();
 
 //CRUD
 router.post('/createElection', controller_election_create);
+//router.post('/create', controller_election_create);
+
+router.post('/consult', controller_election_consult);   //COMO estan en Candidacies
+router.post('/search', controller_election_search);
+router.post('/modifyElection', controller_election_update);
+router.post('/delete', controller_election_delete);
+
+
+router.get('/searchElection/:id', controller_election_search);
+router.post('/searchElection/:id', controller_election_search);
+
 router.post('/modifyElection/:id', controller_election_update);
 router.post('/deleteElection/:id', controller_election_delete);
-router.get('/searchElection/:id', controller_election_search);
-router.get('/consultElection/:id', controller_election_consult);
+
+
 
 router.post('/vote/:id', controller_election_vote);
 router.get('/verifyVote/:voterHashId', controller_election_verifyVote);

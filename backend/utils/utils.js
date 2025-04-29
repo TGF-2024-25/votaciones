@@ -26,7 +26,7 @@ export const validateVideo = async (video) => {
 
 export const validateString = async (string) => {
     if (typeof string !== 'string') {
-        throw new Error(string + ' no es una cadena');
+        throw new Error(string + ' no es una cadena el string valido');
     }
     if (!/^[a-zA-ZáéíóúÁÉÍÓÚ0-9\-+.@=¿?¿¡!\s]+$/.test(string)) {
         throw new Error(string + ' debe estar compuesto por letras, numeros, espacios, o los carácteres especiales .@=¿?¿!');
@@ -40,13 +40,15 @@ export const validateBoolean = async (booleano) => {
 }
 
 export const validateDate = async (dateString) => {
-    await validateString(dateString);
-    if (typeof string !== 'string') {
-        throw new Error(string + ' no es una cadena');
+    //await validateString(dateString);
+    
+    if (typeof dateString !== 'string') {
+        throw new Error(dateString + ' no es una cadena la fecha');
     }
 
-    if (!/^\d{2}\/\d{2}\/\d{4}$/.test(dateString)) {
-        throw new Error('El formato de fecha debe ser DD/MM/YYYY');
+    dateString = '1111-11-02T00:00:00.000Z'.split('T')[0];
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+        throw new Error('El formato de fecha debe ser YYYY-MM-DD');
     }
 }
 

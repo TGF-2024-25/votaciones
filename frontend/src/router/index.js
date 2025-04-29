@@ -16,16 +16,25 @@ import ModifyUser from '../pages/user/ModifyUser.vue';
 
 
 import CreateElection from '../pages/CreateElection.vue';
+import SearchElection from '../pages/election/SearchElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
+import UserSettings from '../pages/UserSettings.vue';
+import ElectionConsult from '../components/election/ElectionConsult.vue';
+import ModifyElection from '../pages/ModifyElection.vue';
+import ConsultElection from '../pages/ConsultElection.vue';
 //import EleccionFin '../pages/ElectionEnded.vue';
 
 // Definir las rutas
 const routes = [
   { path: '/', component: Home },
   { path: '/home', component: Home },
-  { path: '/create-candidacy', component: CreateCandidacy },
+  { 
+    path: '/create-candidacy', 
+    component: CreateCandidacy, 
+    props: route => ({ id: route.query.id })
+  },
   { path: '/search-candidacy', component: SearchCandidacy },
   { path: '/list-candidacies', component: ListCandidacies },
   { path: '/search-user', component: SearchUser },
@@ -51,11 +60,38 @@ const routes = [
     component: ModifyUser,
     props: route => ({ id: route.query.id })
   },
+
+  //CRUD ELECTIONS
+  { path: '/create-election', component: CreateElection },
+  { path: '/search-elections', component: SearchElection },
+  {
+    path: '/consult-elections', // Usamos :id para capturar el ID de la elección
+    component: ElectionConsult,
+    props: route => ({ id: route.query.id }) // Pasamos el id como prop al componente
+  },
+  {
+    path: '/modify-election',
+    component: ModifyElection,
+    props: route => ({ id: route.query.id })
+  },
   { path: '/login', component: Login }, // Ruta de inicio de sesión
   { path: '/register', component: Register }, // Ruta de registro
-  { path: '/create-election', component: CreateElection },
+  
   { path: '/vote', component: Vote },
-  { path: '/home-elections', component: HomeElections },
+  { path: '/list-elections', component: HomeElections },    //Lista de elecciones
+  
+
+  {
+    path: '/consult-election/:userId',
+    name: 'ConsultElection',
+    component: ConsultElection,
+  },
+  {
+    path: '/consult-election',
+    component: ConsultElection,
+    props: route => ({ id: route.query.id })
+  },
+  
   { path: '/search', component: SearchPage },
   { path: '/user-settings', component: UserSettings },
   //{ path: '/election-ended', component: EleccionFin},

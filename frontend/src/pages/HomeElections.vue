@@ -1,291 +1,131 @@
 <template>
-    <div class="elections-page">
-      <!-- Header con título y acciones -->
-      <div class="page-header">
-        <div class="header-content">
-          <h1 class="page-title">
-            <i class="fas fa-vote-yea header-icon"></i>
-            Mis Elecciones
-          </h1>
-          <button 
-            v-if="user.isAdmin"
-            @click="createNewElection"
-            class="create-button"
-          >
-            <i class="fas fa-plus"></i> Nueva Elección
-          </button>
-        </div>
-        <div class="filter-tabs">
-          <button
-            v-for="tab in tabs"
-            :key="tab.value"
-            @click="activeTab = tab.value"
-            :class="{ active: activeTab === tab.value }"
-          >
-            {{ tab.label }}
-          </button>
-        </div>
-      </div>
-  
-      <!-- Estado de carga -->
-      <div v-if="isLoading" class="loading-state">
-        <div class="spinner"></div>
-        <p>Cargando elecciones...</p>
-      </div>
-  
-      <!-- Mensaje cuando no hay elecciones -->
-      <div v-else-if="filteredElections.length === 0" class="empty-state">
-        <i class="fas fa-calendar-times empty-icon"></i>
-        <h3>No tienes elecciones {{ getTabText(activeTab) }}</h3>
-        <p v-if="activeTab === 'upcoming' && user.isAdmin">
-          <button @click="createNewElection" class="text-button">
-            Crea una nueva elección
-          </button>
-          para comenzar
-        </p>
-      </div>
-  
-      <!-- Listado de elecciones -->
-      <ElectionList
-        v-else
-        :elections="filteredElections"
-        :user-role="user.role"
-        @select-election="goToElection"
-      />
+  <div>
+    <h3 class="text-center mb-4">Mis Elecciones asignadas</h3>
+
+    <div v-if="!hasElections" class="alert alert-info text-center">
+      No hay votaciones disponibles para mostrar.
     </div>
-  </template>
-  
-  <script>
-  import ElectionList from '../components/election/ElectionList.vue'
-  
-  export default {
-    name: 'ElectionsPage',
-    components: {
-      ElectionList
+
+    <table v-if="hasElections" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Estado</th>
+          <th>Inicio</th>
+          <th>Fin</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="election in elections" :key="election.id">
+          <td :data-label="'Título'">{{ election.title }}</td>
+          <td :data-label="'Estado'">{{ getStatusText(election) }}</td>
+          <td :data-label="'Inicio'">{{ formatWithDayjs(election.init_date) }}</td>
+          <td :data-label="'Fin'">{{ formatWithDayjs(election.end_date) }}</td>
+          <td :data-label="'Acción'">
+            <button class="btn btn-info" @click="verEleccion(election)">
+              Ver detalles
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
+
+<script>
+import axios from 'axios';
+import dayjs from 'dayjs';
+import { API_URL } from '../utils/config';
+
+export default {
+  name: 'UserElectionList',
+  data() {
+    return {
+      elections: [], // Se llena en mounted()
+    };
+  },
+  computed: {
+    hasElections() {
+      return this.elections.length > 0;
     },
-    data() {
-      return {
-        isLoading: true,
-        elections: [],
-        activeTab: 'active',
-        user: {}, // Ahora user se inicializa aquí
-        tabs: [
-          { value: 'active', label: 'Activas' },
-          { value: 'upcoming', label: 'Próximas' },
-          { value: 'ended', label: 'Finalizadas' }
-        ]
-      }
+  },
+  methods: {
+    verEleccion(election) {
+      //console.log(election);
+      this.$router.push({ path: '/consult-election', query: { id: election.id } });
     },
-    computed: {
-      filteredElections() {
-        const now = new Date()
-        return this.elections.filter(election => {
-          const startDate = new Date(election.voteInitialDate)
-          const endDate = new Date(election.voteFinalDate)
-  
-          switch (this.activeTab) {
-            case 'active':
-              return startDate <= now && endDate >= now
-            case 'upcoming':
-              return startDate > now
-            case 'ended':
-              return endDate < now
-            default:
-              return true
+    async cargarElecciones() {
+      const eleccionesGuardadas = localStorage.getItem('eleccionesEncontradas');
+      //console.log("Elecciones guardadas (raw):", eleccionesGuardadas);
+
+      try {
+        const eleccionesArray = JSON.parse(eleccionesGuardadas) || [];
+
+        for (let i = 0; i < eleccionesArray.length; i++) {
+          const id = eleccionesArray[i].id;
+
+          try {
+            const response = await axios.post(`${API_URL}elections/consult`, {
+              id: id,
+            });
+
+            // Guardamos la versión completa
+            //console.log(response);
+            eleccionesArray[i] = response.data.election;
+          } catch (err) {
+            console.error(`Error al consultar la elección con id ${id}:`, err);
           }
-        })
+        }
+        console.log(eleccionesArray[0].init_date);
+        console.log(eleccionesArray[0].end_date);
+        this.elections = eleccionesArray;
+      } catch (error) {
+        console.error("Error al parsear las elecciones desde localStorage:", error);
       }
     },
-    async created() {
-      // Obtener el usuario de donde corresponda (ejemplo: this.$store.state.user)
-      this.user = this.$store.state.user || {}; // Asumiendo que está disponible en $store
-      await this.loadUserElections()
-      this.isLoading = false
+    getStatusText(election) {
+      const now = new Date();
+      if (new Date(election.init_date) > now) return 'PRÓXIMA';
+      if (new Date(election.end_date) < now) return 'FINALIZADA';
+      return 'EN CURSO';
     },
-    methods: {
-      async loadUserElections() {
-        try {
-          // Aquí debes reemplazar con tu llamada API real
-          const response = await this.$api.get(`/users/${this.user.id}/elections`)
-          this.elections = response.data
-        } catch (error) {
-          console.error('Error loading elections:', error)
-          this.$toast.error('Error al cargar elecciones')
-        }
-      },
-      getTabText(tab) {
-        return {
-          active: 'activas',
-          upcoming: 'programadas',
-          ended: 'finalizadas'
-        }[tab]
-      },
-      createNewElection() {
-        if (this.user.isAdmin) {
-          // Aquí puedes implementar la lógica para crear una nueva elección
-          // Por ejemplo, redirigir a una página de creación
-          this.$router.push('/elections/new')
-        }
-      },
-      goToElection(election) {
-        const now = new Date()
-        const endDate = new Date(election.voteFinalDate)
-        
-        if (endDate < now) {
-          this.$router.push(`/elections/${election.id}/results`)
-        } else {
-          this.$router.push(`/elections/${election.id}`)
-        }
-      }
+      //console.log(election.voteInitialDate);
+    // Asegurarse de que el formato sea YYYY-MM-DD
+    //aux= dateString.toString().split('T')[0];
+    //console.log(aux);
+    //return dateString.split('T')[0];
+
+    formatWithDayjs(dateInput){
+      const parsed = dayjs(dateInput);
+    if (!parsed.isValid()) {
+      console.error("Fecha inválida:", dateInput);
+      return '';
     }
-  }
-  </script>
-  
-  <style scoped>
-  .elections-page {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .page-header {
-    margin-bottom: 30px;
-  }
-  
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .page-title {
-    font-size: 2rem;
-    color: #2c3e50;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .header-icon {
-    color: #4a89dc;
-  }
-  
-  .create-button {
-    background-color: #4a89dc;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background-color 0.3s;
-  }
-  
-  .create-button:hover {
-    background-color: #3a70c2;
-  }
-  
-  .filter-tabs {
-    display: flex;
-    border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .filter-tabs button {
-    padding: 12px 20px;
-    background: none;
-    border: none;
-    border-bottom: 3px solid transparent;
-    font-weight: 500;
-    color: #666;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-  
-  .filter-tabs button.active {
-    color: #4a89dc;
-    border-bottom-color: #4a89dc;
-  }
-  
-  .filter-tabs button:hover {
-    color: #3a70c2;
-  }
-  
-  .loading-state {
-    text-align: center;
-    padding: 50px 0;
-  }
-  
-  .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-radius: 50%;
-    border-top: 4px solid #4a89dc;
-    width: 40px;
-    height: 40px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-  }
-  
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    margin-top: 20px;
-  }
-  
-  .empty-icon {
-    font-size: 3rem;
-    color: #adb5bd;
-    margin-bottom: 15px;
-  }
-  
-  .empty-state h3 {
-    color: #555;
-    margin-bottom: 10px;
-  }
-  
-  .text-button {
-    background: none;
-    border: none;
-    color: #4a89dc;
-    text-decoration: underline;
-    cursor: pointer;
-    padding: 0;
-  }
-  
-  .text-button:hover {
-    color: #3a70c2;
-  }
-  
-  @media (max-width: 768px) {
-    .header-content {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 15px;
+    return dayjs(dateInput).format('DD-MM-YYYY');
+  },
+    formatDateTime(dateI) {
+      const date = new Date(dateI);
+
+    if (isNaN(date)) {
+      console.error("Fecha inválida:", date);
+      return "";
     }
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // meses 0-11
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+},
     
-    .page-title {
-      font-size: 1.6rem;
-    }
-    
-    .filter-tabs {
-      overflow-x: auto;
-      white-space: nowrap;
-      padding-bottom: 5px;
-    }
-    
-    .filter-tabs button {
-      padding: 10px 15px;
-    }
-  }
-  </style>
+  },
+  async mounted() {
+    await this.cargarElecciones();
+  },
+};
+</script>
+
+<style>
+/* Puedes agregar estilos personalizados aquí */
+</style>

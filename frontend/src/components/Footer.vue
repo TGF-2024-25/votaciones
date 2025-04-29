@@ -1,6 +1,6 @@
 <template>
   <footer class="layout">
-    <p>&copy; {{ new Date().getFullYear() }} Mi Aplicación. Todos los derechos reservados.</p>
+    <p>&copy; {{ new Date().getFullYear() }} DCD-eVoting. Todos los derechos reservados.</p>
   </footer>
 </template>
 
