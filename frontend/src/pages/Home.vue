@@ -3,38 +3,17 @@
     <h1>Bienvenido al Home</h1>
     <p>Esta es la página de inicio.</p>
 
-    <router-link to="/list-elections">
-      <button class="btn btn-primary mt-4">Incio Elecciones</button>
-    </router-link>
-
-    <span style="display: inline-block; width: 5px;"></span>
-    <!-- Botón para ir a la página de creación de candidatura -->
-    <router-link to="/create-candidacy">
-      <button class="btn btn-primary mt-4">Ir a crear Candidatura</button>
-    </router-link>
-
-    <span style="display: inline-block; width: 5px;"></span>
-
       <!-- Botón para ir a la página de creación de Eleccion -->
-    <router-link to="/create-election">
+    <router-link v-if="electionCreator()" to="/create-election">
       <button class="btn btn-primary mt-4">Ir a Crear Eleccion</button>
     </router-link>
     <span style="display: inline-block; width: 5px;"></span>
 
-    <!-- Botón para ir a la página de creación de Eleccion -->
-    <router-link to="/consult-election">
-      <button class="btn btn-primary mt-4">Ir a Consultar Eleccion</button>
+      <!-- Botón para ir a la página de búsqueda de Eleccion -->
+    <router-link v-if="searchElection()" to="/search-elections">
+      <button class="btn btn-primary mt-4">Ir a buscar eleccion</button>
     </router-link>
     <span style="display: inline-block; width: 5px;"></span>
-
-      <!-- Botón para ir a la página de creación de Eleccion -->
-      <router-link to="/vote">
-      <button class="btn btn-vote mt-4">Votar</button>
-    </router-link>
-    
-    <!--<router-link to="/election-ended">
-      <button class="btn btn-primary mt-4">Eleccion Finalizada</button>
-    </router-link>-->
 
     <!-- Botón de inicio de sesión -->
     <router-link v-if="!isLoggedIn" to="/login">
@@ -54,6 +33,8 @@
 </template>
 
 <script>
+import { jwtDecode } from 'jwt-decode';
+
 export default {
   data() {
     return {
@@ -64,6 +45,22 @@ export default {
     checkAuth() {
       // Verificar si existe un token en localStorage
       this.isLoggedIn = !!localStorage.getItem("token");
+    },
+    electionCreator() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        return decoded.user.type === 'admin' || decoded.user.type === 'creator';
+      }
+      return false; 
+    },
+    searchElection() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        return decoded.user.type === 'user';
+      }
+      return false; 
     },
     confirmLogout() {
       // Mostrar una alerta de confirmación

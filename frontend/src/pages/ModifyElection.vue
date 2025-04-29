@@ -1,6 +1,6 @@
 <template>
     <div class="modify-election-container">
-      <!--<CandidacyForm :candidatura="candidatura" @close="goBack" />-->
+      <ElectionForm :election="election" @close="goBack" />
     </div>
   </template>
   

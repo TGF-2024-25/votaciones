@@ -22,7 +22,11 @@ import ConsultElection from '../pages/ConsultElection.vue';
 const routes = [
   { path: '/', component: Home },
   { path: '/home', component: Home },
-  { path: '/create-candidacy', component: CreateCandidacy },
+  { 
+    path: '/create-candidacy', 
+    component: CreateCandidacy, 
+    props: route => ({ id: route.query.id })
+  },
   { path: '/search-candidacy', component: SearchCandidacy },
   { path: '/list-candidacies', component: ListCandidacies },
   {
@@ -45,7 +49,7 @@ const routes = [
     props: route => ({ id: route.query.id }) // Pasamos el id como prop al componente
   },
   {
-    path: '/modify-elections',
+    path: '/modify-election',
     component: ModifyElection,
     props: route => ({ id: route.query.id })
   },

@@ -9,9 +9,9 @@ export const controller_election_create = async (req, res) => {
         const newElection = await service_election_create(image, title, init_date, end_date, participantes);
         
         res.status(201).json({ message: 'Elección creada con éxito', newElection });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
 export const controller_election_delete = async (req, res) => {
@@ -37,9 +37,9 @@ export const controller_election_update = async (req, res) => {
 
 export const controller_election_search = async (req, res) => {
     try {
-        const { id, title, voteInitialDate, voteFinalDate } = req.body;
+        const { id, title, email, voteInitialDate, voteFinalDate } = req.body;
         console.log(id);
-        const elections = await service_election_search(id, title, voteInitialDate, voteFinalDate);
+        const elections = await service_election_search(id, title, email, voteInitialDate, voteFinalDate);
         console.log(elections);
         res.status(201).json({ message: 'Elecciones encontradas con éxito', elections });
     } catch (error) {
@@ -59,7 +59,6 @@ export const controller_election_consult = async (req, res) => {
       if (!electionConsulted) {
         return res.status(404).json({ message: 'Elección no encontrada' });
       }
-      console.log("Datos recibidos en el backend en consult:", id);
       // Devolver la respuesta con los detalles de la elección
       res.status(200).json({
         message: 'Elección consultada con éxito',

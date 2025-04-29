@@ -48,7 +48,8 @@ import { jwtDecode } from 'jwt-decode';
 
 export default {
   props: {
-    candidatura: Object, // Datos de candidatura si se está editando
+    candidatura: Object,
+    electionId: String,
   },
   data() {
     return {
@@ -108,8 +109,10 @@ export default {
           const token = localStorage.getItem('token');
           if (token) {
             const decoded = jwtDecode(token);
+            console.log("Id de eleccion:");
+            console.log(this.electionId);
             response = await axios.post(`${API_URL}candidacies/create`, {
-              electionID: "100000000",
+              electionID: this.electionId, // TODO
               slogan: this.form.eslogan,
               text: this.form.descripcion,
               user: decoded.user.email,

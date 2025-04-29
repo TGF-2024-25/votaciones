@@ -31,6 +31,7 @@
   <script>
   import axios from "axios";
   import { API_URL } from "../../utils/config";
+  import { jwtDecode } from 'jwt-decode';
   
   export default {
     data() {
@@ -47,11 +48,19 @@
       async buscarElecciones() {
         this.errorMessage = "";
         try {
+          const token = localStorage.getItem('token');
+          let email = null;
+          if (token) {
+            const decoded = jwtDecode(token);
+            if (decoded.user.type === 'user') {
+              email = decoded.user.email;
+            }
+          }
           const response = await axios.post(`${API_URL}elections/search`, {
             id: this.filtros.id,
             title: this.filtros.titulo,
+            email: email,
           });
-          //console.log("response:", response.data);
           if (Array.isArray(response.data) && response.data.length === 0) {
             this.errorMessage = "No se encontraron elecciones con estos filtros.";
           } else {

@@ -60,7 +60,7 @@ export default {
       this.errorMessage = "";
       try {
         const response = await axios.post(`${API_URL}candidacies/search`, {
-          electionID: '100000000', // TODO
+          electionID: null, // TODO
           slogan: this.filtros.eslogan,
           name: this.filtros.nombre,
           surname: this.filtros.apellido,

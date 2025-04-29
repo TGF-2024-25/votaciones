@@ -19,6 +19,19 @@
         {{ election.creatorUser.name }} {{ election.creatorUser.surname }} ({{ election.creatorUser.email }})
       </p>
 
+      <div v-if="postulable(election)" class="text-center mt-3">
+        <button class="btn btn-primary" @click="postularCandidatura">
+          Postularme como candidato
+        </button>
+      </div>
+      
+      <!-- Botón para consultar candidaturas -->
+      <div class="text-center mt-3">
+        <button class="btn btn-primary" @click="consultarCandidaturas">
+          Consultar candidaturas
+        </button>
+      </div>
+
       <!-- Botones -->
       <div class="text-center mt-3" v-if="mostrarBotonModificarYBorrar">
         <button class="btn btn-warning" @click="editarElection">
@@ -78,6 +91,31 @@ export default {
         console.error('Error al obtener la elección:', error)
       }
     },
+    postularCandidatura() {
+      this.$router.push({path: '/create-candidacy', query: { id: this.election.id } });
+    },
+    async consultarCandidaturas() {
+      this.errorMessage = "";
+      try {
+        const response = await axios.post(`${API_URL}candidacies/search`, {
+          electionID: this.election.id,
+          slogan: null,
+          name: null,
+          surname: null,
+          email: null,
+        });
+
+        if (Array.isArray(response.data) && response.data.length === 0) {
+          this.errorMessage = "No se encontraron candidaturas con estos filtros.";
+        } else {
+          this.resultados = response.data;
+          localStorage.setItem('candidaturasEncontradas', JSON.stringify(this.resultados.candidacies));
+          this.$router.push({path: '/list-candidacies'});
+        }
+      } catch (error) {
+        this.errorMessage = "Error al buscar candidaturas. Inténtalo de nuevo.";
+      }
+    },
     editarElection() {
       this.$router.push({ path: '/modify-election', query: { id: this.election.id } })
     },
@@ -109,6 +147,10 @@ export default {
         month: 'short',
         year: 'numeric',
       }) + ' ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+    },
+    postulable(election) {
+      const now = new Date()
+      return new Date(election.init_date) < now && new Date(election.end_date) > now;
     },
     getStatusText(election) {
       const now = new Date()

@@ -25,6 +25,17 @@ export default class ElectionRepository extends BaseRepository {
             return true;
         } catch (error) {
             console.error('Error al crear los participantes:', error);
+            return false;
+        }
+    }
+    
+    async searchUserElections(email) {
+        try {
+            let params = {userId: email};
+            const elections = await UserElection.findAll({ where: params });
+            return elections;
+        } catch (error) {
+            console.error('Error al buscar elecciones con parámetros:', error);
             throw error;
         }
     }

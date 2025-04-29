@@ -53,10 +53,13 @@ export const service_election_create = async (imageUrl, title, voteInitialDate, 
     };
 
     // Crea la nueva elección en la base de datos
+    console.log("Intentando crear eleccion...");
     const electionCreated = await electionRepository.create(newElection);
+    console.log("Eleccion creada, intentando añadir el censo...");
     if (!await electionRepository.createParticipants(participantes, electionCreated.id)) {
+        console.log("El censo no se ha podido crear! Eliminando eleccion...");
         await electionRepository.delete(electionCreated.id);
-        return false;
+        throw new Error("Error al crear el censo");
     }
     return true;
 };
@@ -88,9 +91,28 @@ export const service_election_modify = async (id, imageUrl, participants, title,
     return await electionRepository.update(id, updatedElection);
 }
 
-export const service_election_search = async (id, title, voteInitialDate, voteFinalDate) => {
-    const searchCriteria = { id, title};       //const params = {}; fijarse en Candidatures
-    return await electionRepository.findByParams(searchCriteria);
+export const service_election_search = async (id, title, email, voteInitialDate, voteFinalDate) => {
+    let params = {}
+    if (id) {
+        await validateString(id);
+        params.id = id;
+    }
+    if (title) {
+        await validateString(title);
+        params.title = title;
+    }
+    let elections = await electionRepository.findByParams(params);
+    if (email) {
+        await validateString(email);
+        let userElections = await electionRepository.searchUserElections(email);
+        console.log("Elecciones:");
+        console.log(elections);
+        console.log("UserElections:");
+        console.log(userElections);
+        const userElectionIds = new Set(userElections.map(e => e.electionId));
+        elections = elections.filter(e => userElectionIds.has(e.id));
+    }
+    return elections;
 }
 
 export const service_election_consult = async (id) => {
