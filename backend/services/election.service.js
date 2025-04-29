@@ -88,8 +88,8 @@ export const service_election_modify = async (id, imageUrl, participants, title,
     return await electionRepository.update(id, updatedElection);
 }
 
-export const service_election_search = async (imageUrl, participants, title, voteInitialDate, voteFinalDate) => {
-    const searchCriteria = { imageUrl, participants, title, voteInitialDate, voteFinalDate };       //const params = {}; fijarse en Candidatures
+export const service_election_search = async (id, title, voteInitialDate, voteFinalDate) => {
+    const searchCriteria = { id, title};       //const params = {}; fijarse en Candidatures
     return await electionRepository.findByParams(searchCriteria);
 }
 

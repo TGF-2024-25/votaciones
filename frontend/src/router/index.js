@@ -8,7 +8,7 @@ import ModifyCandidacy from '../pages/candidacy/ModifyCandidacy.vue';
 import Login from '../pages/Login.vue';
 import Register from '../pages/Register.vue';
 import CreateElection from '../pages/CreateElection.vue';
-import SearchElection from '../components/election/SearchElection.vue';
+import SearchElection from '../pages/election/SearchElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
@@ -55,7 +55,8 @@ const routes = [
   { path: '/register', component: Register }, // Ruta de registro
   
   { path: '/vote', component: Vote },
-  { path: '/home-elections', component: HomeElections },    //Lista de elecciones
+  { path: '/list-elections', component: HomeElections },    //Lista de elecciones
+  
 
   {
     path: '/consult-election/:userId',

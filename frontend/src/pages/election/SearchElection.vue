@@ -47,16 +47,16 @@
       async buscarElecciones() {
         this.errorMessage = "";
         try {
-          const response = await axios.post(`${API_URL}elections/search-elections`, {
+          const response = await axios.post(`${API_URL}elections/search`, {
             id: this.filtros.id,
             title: this.filtros.titulo,
           });
-  
+          //console.log("response:", response.data);
           if (Array.isArray(response.data) && response.data.length === 0) {
             this.errorMessage = "No se encontraron elecciones con estos filtros.";
           } else {
-            this.resultados = response.data;
-            localStorage.setItem('eleccionesEncontradas', JSON.stringify(this.resultados.elections));
+            this.resultados = response.data.elections;
+            localStorage.setItem('eleccionesEncontradas', JSON.stringify(this.resultados));
             this.$router.push({ path: '/list-elections' });
           }
         } catch (error) {

@@ -18,9 +18,9 @@ router.post('/createElection', controller_election_create);
 //router.post('/create', controller_election_create);
 
 router.post('/consult', controller_election_consult);   //COMO estan en Candidacies
-router.post('/searchElection', controller_election_search);
+router.post('/search', controller_election_search);
 router.post('/modifyElection', controller_election_update);
-router.post('/deleteElection', controller_election_delete);
+router.post('/delete', controller_election_delete);
 
 
 router.get('/searchElection/:id', controller_election_search);
