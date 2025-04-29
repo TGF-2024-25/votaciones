@@ -1,5 +1,5 @@
 import BaseRepository from './BaseRepository.js';
-import Election from '../models/Election.js';
+import Election, { UserElection } from '../models/Election.js';
 
 export default class ElectionRepository extends BaseRepository {
     constructor() {
@@ -12,6 +12,19 @@ export default class ElectionRepository extends BaseRepository {
             return newElection;
         } catch (error) {
             console.error('Error al crear la elección:', error);
+            throw error;
+        }
+    }
+
+    async createParticipants(participants, electionId) {
+        try {
+            for (const participant of participants) {
+                const row = { userId: participant, electionId };
+                await UserElection.create(row);
+            }
+            return true;
+        } catch (error) {
+            console.error('Error al crear los participantes:', error);
             throw error;
         }
     }
