@@ -38,8 +38,8 @@ export const controller_user_logout = async (req, res) => {
 
 export const controller_user_delete = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const newUser = await service_user_delete(email, password);
+        const { email } = req.body;
+        const newUser = await service_user_delete(email);
         res.status(201).json({ message: 'Usuario eliminado con éxito', newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });

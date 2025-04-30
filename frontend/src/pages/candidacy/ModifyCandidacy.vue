@@ -30,7 +30,6 @@ export default {
         });
         this.candidatura = response.data.candidacyConsulted;
       } catch (error) {
-        console.error("Error al obtener la candidatura:", error);
       }
     },
   },

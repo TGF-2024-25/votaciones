@@ -50,12 +50,10 @@ export default {
   },
   methods: {
     verCandidatura(candidatura) {
-      console.log(candidatura);
       this.$router.push({ path: '/consult-candidacy', query: { id: candidatura.id } });
     },
     async cargarCandidaturas() {
       const candidaturasEncontradas = localStorage.getItem('candidaturasEncontradas');
-      console.log("Candidaturas encontradas (raw):", candidaturasEncontradas);
 
       try {
         const candidaturasArray = JSON.parse(candidaturasEncontradas) || [];
@@ -71,13 +69,11 @@ export default {
             // Guardamos la versión completa
             candidaturasArray[i] = response.data.candidacyConsulted;
           } catch (err) {
-            console.error(`Error al consultar la candidatura con id ${id}:`, err);
           }
         }
 
         this.candidaturas = candidaturasArray;
       } catch (error) {
-        console.error("Error al parsear las candidaturas desde localStorage:", error);
       }
     },
   },

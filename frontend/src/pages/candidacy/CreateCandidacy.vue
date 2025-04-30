@@ -1,5 +1,5 @@
 <template>
-  <CandidacyForm :candidatura="candidatura" @close="goBack" />
+  <CandidacyForm :electionId="electionId" :candidatura="candidatura" @close="goBack" />
 </template>
 
 <script>
@@ -12,6 +12,7 @@ export default {
   data() {
     return {
       candidatura: null,
+      electionId: null,
     };
   },
   methods: {
@@ -19,6 +20,9 @@ export default {
       this.$router.back();
     },
   },
+  mounted() {
+    this.electionId = this.$route.query.id;
+  }
 };
 </script>
 

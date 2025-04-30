@@ -50,7 +50,7 @@ async function insertData() {
       title: 'Votación de clase',
       id: '100000000',
       init_date: new Date(),
-      end_date: new Date('2025-04-10'),
+      end_date: new Date('2025-10-10'),
     });
     console.log('Election created:', newElection);
 
