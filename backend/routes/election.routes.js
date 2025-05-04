@@ -10,6 +10,7 @@ import {
   controller_election_addCandidate,
   controller_election_countVotes,
   controller_election_participants,
+  controller_participant_delete,
 } from "../controllers/election.controller.js";
 
 
@@ -23,6 +24,7 @@ router.post("/createElection", controller_election_create);
 
 router.post("/search", controller_election_search);
 router.post("/modifyElection", controller_election_update);
+//router.put("/modifyElection", controller_election_update);
 router.post("/delete", controller_election_delete);
 
 
@@ -43,6 +45,8 @@ router.get("/countVotes/:id", controller_election_countVotes);
 
 
 router.post("/addCandidate/:id", controller_election_addCandidate); // Añadir un candidato a la Election
+
+router.delete("/:id/participants/", controller_participant_delete);
 
 
 export default router;

@@ -85,6 +85,32 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
+  async deleteParticipant(id, email) {
+    try {
+      const participant = await UserElection.findByPk(id, {
+        include: [
+          {
+            model: User,
+            where: { email },
+            through: { attributes: [] },
+          },
+        ],
+      });
+
+      if (!participant) {
+        throw new Error("Elección no encontrada o usuario no participante");
+      }
+      console.log('\n\n\n', type(participant), { participant });
+      //await participant.destroy();
+    } catch (error) {
+      console.error(
+        "Error al eliminar el participante de la elección:",
+        type(participant)
+      );
+      throw error;
+    }
+  }
+
 
   async findById(id) {
     try {
@@ -114,6 +140,30 @@ export default class ElectionRepository extends BaseRepository {
       return elections;
     } catch (error) {
       console.error("Error al buscar elecciones con parámetros:", error);
+      throw error;
+    }
+  }
+
+  async findParticipantByElectionIdAndEmail(electionId, email) {
+    try {
+      const election = await Election.findByPk(electionId, {
+        include: [
+          {
+            model: User,
+            where: { email },
+            through: { attributes: [] },
+          },
+        ],
+      });
+      if (!election) {
+        throw new Error("Elección no encontrada o usuario no participante");
+      }
+      return election.Users;
+    } catch (error) {
+      console.error(
+        "Error al buscar el participante por ID de elección y correo electrónico:",
+        error
+      );
       throw error;
     }
   }

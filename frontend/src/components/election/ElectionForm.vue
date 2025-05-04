@@ -26,22 +26,6 @@
           />
         </div>
 
-        <!-- Lista de Participantes Actuales -->
-        <div class="mb-3 d-flex flex-column">
-          <label for="participants" class="form-label text-bold"
-            >Participantes actuales (separados por coma)</label
-          >
-          <input
-            readonly
-            type="text"
-            id="participants"
-            v-model="newParticipantNames"
-            class="form-control input-custom"
-            placeholder="Lista de participantes"
-          />
-          <!-- <button type="button" class="btn btn-info mt-2" @click="addParticipants">Añadir Participantes</button> -->
-        </div>
-
         <!-- Lista de Participantes Nuevos -->
         <div class="mb-3 d-flex flex-column">
           <label for="new-participants" class="form-label text-bold"
@@ -114,19 +98,19 @@
         <!-- Participantes (solo en edición) -->
         <div v-if="isEditing" class="mb-3">
           <h5 class="text-bold mb-3">Participantes</h5>
-          <div v-if="participantes.length === 0" class="text-muted">
+          <div v-if="this.form.participantes.length === 0" class="text-muted">
             No hay participantes aún
           </div>
           <div
-            v-for="participante in participantes"
+            v-for="participante in this.form.participantes"
             :key="participante.id"
             class="d-flex justify-content-between align-items-center mb-2"
           >
-            <span>{{ participante.name || participante.email }}</span>
+            <span>{{ `${participante.name} ${participante.surname} <${participante.email}>` }}</span>
             <button
               type="button"
               class="btn btn-sm btn-danger"
-              @click="eliminarParticipante(participante.id)"
+              @click="eliminarParticipante(participante.email)"
             >
               Eliminar
             </button>
@@ -154,6 +138,7 @@
 <script>
 import axios from "axios";
 import { API_URL } from "../../utils/config";
+//import dayjs from "dayjs";
 
 export default {
   props: {
@@ -187,10 +172,9 @@ export default {
       handler(nuevaEleccion) {
         if (nuevaEleccion) {
           this.form.title = nuevaEleccion.title || "";
-          this.form.init_date = this.formatDateForInput(
-            nuevaEleccion.init_date
-          );
+          this.form.init_date = this.formatDateForInput(nuevaEleccion.init_date);
           this.form.end_date = this.formatDateForInput(nuevaEleccion.end_date);
+          this.form.participantes = nuevaEleccion.participants || [];
           this.cargarParticipantes(nuevaEleccion.id);
         } else {
           this.resetForm();
@@ -211,9 +195,12 @@ export default {
   },
   methods: {
     formatDateForInput(dateString) {
-      if (!dateString) return null;
-      const date = new Date(dateString);
-      return date;
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`; // Formato YYYY-MM-DD
     },
     handleImageUpload(event) {
       const file = event.target.files[0];
@@ -259,22 +246,22 @@ export default {
         const response = await axios.get(
           `${API_URL}elections/consultElection/${electionId}/participants`
         );
-        const participantes = response.data.map(p => `${p.name} ${p.surname} <${p.email}>`);
-        console.log({participantes})
-        this.form.participantes = participantes
+        this.form.participantes = response.data;        
       } catch (error) {
         console.error("Error cargando participantes:", error);
         this.form.participantes = [];
       }
     },
-    async eliminarParticipante(userId) {
+    async eliminarParticipante(email) {
       if (!confirm("¿Estás seguro de eliminar este participante?")) return;
 
       try {
         await axios.delete(
-          `${API_URL}elections/${this.election.id}/participants/${userId}`
+          `${API_URL}elections/${this.election.id}/participants/`, 
+          { data: { email } }	
         );
-        this.participantes = this.participantes.filter((p) => p.id !== userId);
+
+        this.form.participantes = this.form.participantes.filter((p) => p.id !== email);
       } catch (error) {
         console.error("Error eliminando participante:", error);
         this.errorMessage = "No se pudo eliminar el participante";
@@ -304,16 +291,17 @@ export default {
       this.addParticipants();
       const electionData = {
         title: this.form.title,
-        init_date: new Date(this.form.init_date), //formatDateForInput(this.form.init_date),
-        end_date: new Date(this.form.end_date),
+        voteInitialDate: new Date(this.form.init_date), //formatDateForInput(this.form.init_date),
+        voteFinalDate: new Date(this.form.end_date),
         participantes: this.form.participantes,
         image: null, //this.form.image
       };
+      console.log("Datos de la elección:", electionData);
 
       try {
         let response;
         if (this.isEditing) {
-          response = await axios.put(
+          response = await axios.post(
             `${API_URL}elections/modifyElection/${this.election.id}`,
             electionData,
             { headers: { "Content-Type": "multipart/form-data" } }

@@ -92,8 +92,8 @@ export const service_election_delete = async (id) => {
 };
 export const service_election_modify = async (id, imageUrl, participants, title, voteInitialDate, voteFinalDate) => {       //Update
     await validateString(title);
-    await validateDate(voteInitialDate);
-    await validateDate(voteFinalDate);
+    //await validateDate(voteInitialDate);
+    //await validateDate(voteFinalDate);
 
 
     const existingElection = await electionRepository.findById(id);
@@ -212,3 +212,22 @@ export const service_election_countVotes = async (id) => {
 
     return service_election_consult(id) ;
 };
+
+export const service_participant_delete = async (id, email) => {
+    if (!id) {      //Comprobar que el ID no sea nulo
+        throw new Error('El ID de la Elección es obligatorio.');
+    }
+    if (!email) {      //Comprobar que el ID no sea nulo
+        throw new Error('El email del participante es obligatorio.');
+    }
+    const election = await electionRepository.findById(id);
+    if (!election) {
+        throw new Error('La Elección no existe.');
+    }
+    const participant = await electionRepository.findParticipantByElectionIdAndEmail(id, email);
+    // Comprobar si el participante existe
+    if (!participant) {
+        throw new Error('El participante no existe.');
+    }
+    return await electionRepository.deleteParticipant(id, email);
+}

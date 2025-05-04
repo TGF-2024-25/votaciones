@@ -10,6 +10,7 @@ import {
     service_election_countVotes,
     service_election_deleteCandidate,
     service_election_participants,
+    service_participant_delete,
   } from "../services/election.service.js";
   
   
@@ -48,10 +49,11 @@ import {
   
   
   export const controller_election_update = async (req, res) => {
+
     try {
+      const id = req.params.id; // Obtener el ID de la elección desde el cuerpo de la solicitud
       const {
-        id,
-        imageUrl,
+        image,
         participants,
         title,
         voteInitialDate,
@@ -59,7 +61,7 @@ import {
       } = req.body;
       const modifiedElection = await service_election_modify(
         id,
-        imageUrl,
+        image,
         participants,
         title,
         voteInitialDate,
@@ -176,6 +178,23 @@ import {
       res.status(400).json({ error: error.message });
     }
   };
+
+  export const controller_participant_delete = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { email } = req.body; // Obtener el email del participante a eliminar desde el cuerpo de la solicitud
+      const deletedParticipant = await service_participant_delete(
+        id,
+        email
+      );
+      res
+        .status(200)
+        .json({ message: "Participante eliminado con éxito", deletedParticipant });
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  }
+  
   
   
   export const controller_election_countVotes = async (req, res) => {
