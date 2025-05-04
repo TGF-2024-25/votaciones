@@ -26,19 +26,34 @@
           />
         </div>
 
-        <!-- Lista de Participantes -->
+        <!-- Lista de Participantes Actuales -->
         <div class="mb-3 d-flex flex-column">
           <label for="participants" class="form-label text-bold"
-            >Participantes (separados por coma)</label
+            >Participantes actuales (separados por coma)</label
           >
           <input
+            readonly
             type="text"
             id="participants"
             v-model="newParticipantNames"
             class="form-control input-custom"
-            placeholder="Escribe los nombres de los participantes"
+            placeholder="Lista de participantes"
           />
           <!-- <button type="button" class="btn btn-info mt-2" @click="addParticipants">Añadir Participantes</button> -->
+        </div>
+
+        <!-- Lista de Participantes Nuevos -->
+        <div class="mb-3 d-flex flex-column">
+          <label for="new-participants" class="form-label text-bold"
+            >Nuevos participantes (separados por coma)</label
+          >
+          <input
+            type="text"
+            id="new-participants"
+            v-model="newParticipantNames"
+            class="form-control input-custom"
+            placeholder="Escribe los nombres de los participantes"
+          />
         </div>
 
         <!-- Imagen (opcional) -->
@@ -115,7 +130,6 @@
             >
               Eliminar
             </button>
-            -->
           </div>
         </div>
 
@@ -143,7 +157,11 @@ import { API_URL } from "../../utils/config";
 
 export default {
   props: {
-    election: Object, // Datos de elección si se está editando
+    election: Object,
+    participantes: {
+      type: Array,
+      default: []
+    }
   },
   data() {
     return {
@@ -239,9 +257,11 @@ export default {
     async cargarParticipantes(electionId) {
       try {
         const response = await axios.get(
-          `${API_URL}elections/${electionId}/participants`
+          `${API_URL}elections/consultElection/${electionId}/participants`
         );
-        this.participantes = response.data;
+        const participantes = response.data.map(p => `${p.name} ${p.surname} <${p.email}>`);
+        console.log({participantes})
+        this.form.participantes = participantes
       } catch (error) {
         console.error("Error cargando participantes:", error);
         this.form.participantes = [];

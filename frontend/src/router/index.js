@@ -54,6 +54,7 @@ const routes = [
     props: route => ({ id: route.query.id })
   },
   
+  
 
   { path: '/login', component: Login }, // Ruta de inicio de sesión
   { path: '/register', component: Register }, // Ruta de registro
@@ -76,6 +77,10 @@ const routes = [
   { path: '/search', component: SearchPage },
   { path: '/user-settings', component: UserSettings },
   //{ path: '/election-ended', component: EleccionFin},
+  {
+    path: '/test-elections',
+    component: () => import('../components/ElectionTest.vue'),
+  }
 ];
 
 // Crear el router con historia en el navegador

@@ -24,7 +24,7 @@
           Postularme como candidato
         </button>
       </div>
-      
+
       <!-- Botón para consultar candidaturas -->
       <div class="text-center mt-3">
         <button class="btn btn-primary" @click="consultarCandidaturas">
@@ -81,7 +81,7 @@ export default {
   methods: {
     async fetchElectionDetails(id) {
       try {
-        const response = await axios.post(`${API_URL}elections/consult`, { id })
+        const response = await axios.get(`${API_URL}elections/consultElection/${id}`)
         if (response.data) {
           this.election = response.data.election
         } else {
