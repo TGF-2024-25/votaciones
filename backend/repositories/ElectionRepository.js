@@ -47,7 +47,7 @@ export default class ElectionRepository extends BaseRepository {
       if (!election) {
         throw new Error("Elección no encontrada");
       }
-      console.log({election})
+      console.log({ election });
       return election.Users;
     } catch (error) {
       console.error(
@@ -85,6 +85,7 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
+
   async deleteParticipant(id, email) {
     try {
       const participant = await UserElection.findByPk(id, {
@@ -97,10 +98,11 @@ export default class ElectionRepository extends BaseRepository {
         ],
       });
 
+
       if (!participant) {
         throw new Error("Elección no encontrada o usuario no participante");
       }
-      console.log('\n\n\n', type(participant), { participant });
+      console.log("\n\n\n", type(participant), { participant });
       //await participant.destroy();
     } catch (error) {
       console.error(
@@ -144,6 +146,7 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
+
   async findParticipantByElectionIdAndEmail(electionId, email) {
     try {
       const election = await Election.findByPk(electionId, {
@@ -169,14 +172,14 @@ export default class ElectionRepository extends BaseRepository {
   }
 
 
-  async update(id, entity) {
+  async update(id, updatedElection) {
     try {
       const election = await Election.findByPk(id);
       if (election) {
-        election.title = entity.title || election.title;
-        election.image = entity.image || election.image;
-        election.init_date = entity.init_date || election.init_date;
-        election.end_date = entity.end_date || election.end_date;
+        election.title = updatedElection.title || election.title;
+        election.image = updatedElection.image || election.image;
+        election.init_date = updatedElection.voteInitialDate || election.init_date;
+        election.end_date = updatedElection.voteFinalDate || election.end_date;
 
 
         await election.save(); // Guarda los cambios

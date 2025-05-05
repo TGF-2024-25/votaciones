@@ -246,7 +246,7 @@ export default {
         const response = await axios.get(
           `${API_URL}elections/consultElection/${electionId}/participants`
         );
-        this.form.participantes = response.data;        
+        this.form.participantes = response.data;
       } catch (error) {
         console.error("Error cargando participantes:", error);
         this.form.participantes = [];
@@ -257,8 +257,8 @@ export default {
 
       try {
         await axios.delete(
-          `${API_URL}elections/${this.election.id}/participants/`, 
-          { data: { email } }	
+          `${API_URL}elections/${this.election.id}/participants/`,
+          { data: { email } }
         );
 
         this.form.participantes = this.form.participantes.filter((p) => p.id !== email);
@@ -304,7 +304,7 @@ export default {
           response = await axios.post(
             `${API_URL}elections/modifyElection/${this.election.id}`,
             electionData,
-            { headers: { "Content-Type": "multipart/form-data" } }
+            { headers: { "Content-Type": "application/json" } }
           );
         } else {
           response = await axios.post(
