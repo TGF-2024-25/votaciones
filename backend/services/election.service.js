@@ -214,7 +214,7 @@ export const service_election_vote = async (id, candidateId, voterHashId) => {
     //Comprobar que el ID no sea nulo
     throw new Error("El ID del voto es obligatorio.");
   }
-  const election = await electionRepository.findBy(id);
+  const election = await electionRepository.findById(id);
   if (!election) {
     throw new Error("La Elección asociada al candidato establecido no existe.");
   }

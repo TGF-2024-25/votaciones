@@ -39,6 +39,9 @@
 
 
       </div>
+      <div v-else class="alert alert-info text-center">
+        <p>No hay candidatos disponibles para esta elección.</p>
+      </div>
 
 
 
@@ -221,7 +224,7 @@ export default {
           voterHashId: hash,
         })
 
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           alert('Voto enviado con éxito', response.data);
           this.$router.push('/');
         } else {
