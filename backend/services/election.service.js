@@ -136,7 +136,17 @@ export const service_election_modify = async (
     voteInitialDate,
     voteFinalDate
   };
-  return await electionRepository.update(id, updatedElection);
+  const result = await electionRepository.update(id, updatedElection);
+
+  // Update participants
+  if (participants && participants.length > 0) {
+    const participantsUpdated = await electionRepository.updateParticipants(id, participants);
+    if (!participantsUpdated) {
+      throw new Error("Error al actualizar los participantes.");
+    }
+  }
+  console.log("Participants received:", participants);
+  return result;
 };
 
 
@@ -192,7 +202,7 @@ export const service_election_participants = async (electionId) => {
 };
 
 
-export const service_election_vote = async (candidate, voterHashId) => {
+export const service_election_vote = async (id, candidateId, voterHashId) => {
   const today = new Date();
   const day = String(today.getDate()).padStart(2, "0");
   const month = String(today.getMonth() + 1).padStart(2, "0"); // Los meses van de 0-11
@@ -204,11 +214,12 @@ export const service_election_vote = async (candidate, voterHashId) => {
     //Comprobar que el ID no sea nulo
     throw new Error("El ID del voto es obligatorio.");
   }
-  const election = await electionRepository.findBy(candidate);
+  const election = await electionRepository.findBy(id);
   if (!election) {
     throw new Error("La Elección asociada al candidato establecido no existe.");
   }
-  const voto = { candidate, voterHashId };
+  const voto = { candidateId, voterHashId };
+  console.log("Voto: ", voto);
   //return await ElectionRepository.addVote(election.id, voto);
 };
 

@@ -39,7 +39,7 @@ router.post("/modifyElection/:id", controller_election_update);
 router.post("/deleteElection/:id", controller_election_delete);
 
 
-router.post("/vote/:id", controller_election_vote);
+router.post("/:id/vote/", controller_election_vote);
 router.get("/verifyVote/:voterHashId", controller_election_verifyVote);
 router.get("/countVotes/:id", controller_election_countVotes);
 

@@ -192,4 +192,23 @@ export default class ElectionRepository extends BaseRepository {
       throw error;
     }
   }
+
+  async updateParticipants(electionId, participants) { 
+    try {
+      // Remove existing participants
+      await UserElection.destroy({ where: { electionId } });
+  
+      // Add new participants
+      const participantRecords = participants.map(email => ({
+        electionId,
+        email,
+      }));
+      await UserElection.bulkCreate(participantRecords);
+  
+      return true;
+    } catch (error) {
+      console.error("Error al actualizar los participantes:", error);
+      return false;
+    }
+  }
 }

@@ -174,7 +174,7 @@ export default {
           this.form.title = nuevaEleccion.title || "";
           this.form.init_date = this.formatDateForInput(nuevaEleccion.init_date);
           this.form.end_date = this.formatDateForInput(nuevaEleccion.end_date);
-          this.form.participantes = nuevaEleccion.participants || [];
+          this.form.participantes = nuevaEleccion.participants /*|| []*/;
           this.cargarParticipantes(nuevaEleccion.id);
         } else {
           this.resetForm();
@@ -247,6 +247,7 @@ export default {
           `${API_URL}elections/consultElection/${electionId}/participants`
         );
         this.form.participantes = response.data;
+        console.log("Participants sent:", this.form.participantes);
       } catch (error) {
         console.error("Error cargando participantes:", error);
         this.form.participantes = [];

@@ -16,14 +16,14 @@ import {
   
   export const controller_election_create = async (req, res) => {
     try {
-      const { image, title, init_date, end_date, participantes } = req.body;
+      const { image, title, voteInitialDate, voteFinalDate, participantes } = req.body;
   
   
       const newElection = await service_election_create(
         image,
         title,
-        init_date,
-        end_date,
+        voteInitialDate,
+        voteFinalDate,
         participantes
       );
   
@@ -126,7 +126,7 @@ import {
     try {
       const { id } = req.params;
       const participants = await service_election_participants(id);
-      console.log({participants})
+      //console.log({participants})
       res.status(200).json(participants);
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -136,8 +136,9 @@ import {
   
   export const controller_election_vote = async (req, res) => {
     try {
-      const { candidate, voterHashId } = req.body;
-      const vote = await service_election_vote(candidate, voterHashId);
+      const { id } = req.params;
+      const { candidateId, voterHashId } = req.body;
+      const vote = await service_election_vote(id, candidateId, voterHashId);
       res.status(201).json({ message: "Voto registrado con éxito", vote });
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -145,7 +146,7 @@ import {
   };
   
   
-  export const controller_election_verifyVote = async (req, res) => {
+  export const controller_election_verifyVote = async (req, res) => {   //RECUENTO DE VOTOS
     try {
       const { voterHashId } = req.params;
       const vote = await service_election_verifyVote(voterHashId);
