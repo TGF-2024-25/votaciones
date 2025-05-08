@@ -38,8 +38,8 @@ export const controller_user_logout = async (req, res) => {
 
 export const controller_user_delete = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const newUser = await service_user_delete(email, password);
+        const { email } = req.body;
+        const newUser = await service_user_delete(email);
         res.status(201).json({ message: 'Usuario eliminado con éxito', newUser });
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -48,9 +48,12 @@ export const controller_user_delete = async (req, res) => {
 
 export const controller_user_update = async (req, res) => {
     try {
-        const { email, oldPassword, name, surname, photo, password } = req.body;
-        const newUser = await service_user_update(email, oldPassword, name, surname, photo, password);
-        res.status(201).json({ message: 'Usuario modificado con éxito', newUser });
+        const { email, oldPassword, name, surname, password } = req.body;
+        console.log(req.body);
+        const photo = req.file;
+        const { user, token } = await service_user_update(email, oldPassword, name, surname, photo, password);
+        console.log(user);
+        res.status(201).json({ message: 'Usuario modificado con éxito', user, token });
     } catch (error) {
         res.status(400).json({ error: error.message });
     }
@@ -76,20 +79,8 @@ export const controller_user_consult = async (req, res) => {
     }
 };
 
-// Configuración de multer para manejar la subida de archivos
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'files/'); // Carpeta donde se guardarán los archivos
-    },
-    filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`); // Nombre único para cada archivo
-    },
-});
-
-export const upload = multer({ storage });
-
 // Controlador para manejar la subida de archivos
-export const controller_upload_file = async (req, res) => {
+export const controller_upload_image = async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'No se ha proporcionado ningún archivo' });

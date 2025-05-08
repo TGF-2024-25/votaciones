@@ -8,11 +8,27 @@ export const validateEmail = async (email) => {
     }
 }
 
+export const validateVideo = async (video) => {
+    if (!video) {
+      throw new Error('No se ha proporcionado ningún archivo.');
+    }
+
+    const allowedMimeTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/mov', 'video/avi', 'video/mkv'];
+    if (!allowedMimeTypes.includes(video.mimetype)) {
+      throw new Error(`El archivo proporcionado no es un vídeo válido. Tipo recibido: ${video.mimetype}`);
+    }
+  
+    const maxSizeInBytes = 100 * 1024 * 1024; // 100MB
+    if (video.size > maxSizeInBytes) {
+      throw new Error('El vídeo es demasiado grande. Tamaño máximo permitido: 100MB.');
+    }
+};
+
 export const validateString = async (string) => {
     if (typeof string !== 'string') {
         throw new Error(string + ' no es una cadena el string valido');
     }
-    if (!/^[a-zA-ZáéíóúÁÉÍÓÚ0-9.@=¿?¿¡!\s]+$/.test(string)) {
+    if (!/^[a-zA-ZáéíóúÁÉÍÓÚ0-9\-+.@=¿?¿¡!\s]+$/.test(string)) {
         throw new Error(string + ' debe estar compuesto por letras, numeros, espacios, o los carácteres especiales .@=¿?¿!');
     }
 }
@@ -35,7 +51,9 @@ export const validateDate = async (dateString) => {
         throw new Error('El formato de fecha debe ser YYYY-MM-DD');
     }
 }
+
 export const generateToken = async (user) => {
+        user.image = `http://localhost:3000/files/${encodeURIComponent(user.image)}`
     return jwt.sign(
         { user },
         process.env.JWT_SECRET,

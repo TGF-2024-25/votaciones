@@ -1,14 +1,18 @@
 import CandidacyRepository from '../repositories/CandidacyRepository.js';
-import { validateString, validateBoolean } from '../utils/utils.js';
+import { validateString, validateVideo, validateBoolean } from '../utils/utils.js';
 import { service_user_search, service_user_consult } from './user.service.js';
 
 const candidacyRepository = new CandidacyRepository();
 
 export const service_create_candidacy = async (candidacy) => {
     await validateString(candidacy.slogan);
+    console.log("Eslogan validado");
     await validateString(candidacy.text);
+    console.log("Texto validado");
     if (candidacy.video) {
-        await validateString(candidacy.video);
+        await validateVideo(candidacy.video);
+        await validateString(candidacy.video.filename);
+        candidacy.video = candidacy.video.filename;
     }
     if (!candidacy.electionID) {
         throw new Error('El id de eleccion es obligatorio.');
@@ -20,11 +24,13 @@ export const service_create_candidacy = async (candidacy) => {
     const params = {};
     params.electionID = candidacy.electionID;
     params.user = candidacy.user;
+    console.log("Buscamos candidatura");
     const existingCandidacy = await candidacyRepository.findByParams(params);
     if (existingCandidacy.length > 0) {
         throw new Error('Ya existe una candidatura para esta elección con este usuario.');
     }
 
+    console.log("Creamos candidatura");
     return await candidacyRepository.create(candidacy);
 };
 
@@ -41,7 +47,7 @@ export const service_delete_candidacy = async (id) => {
     return await candidacyRepository.delete(id);
 };
 
-export const service_update_candidacy = async (candidacy) => {
+export const service_update_candidacy = async (candidacy, video) => {
     if (candidacy.id == null) {
         throw new Error('El ID de la candidatura es obligatorio.');
     }
@@ -59,15 +65,16 @@ export const service_update_candidacy = async (candidacy) => {
         await validateString(candidacy.text);
         existingCandidacy.text = candidacy.text;
     }
-    if (typeof candidacy.video !== 'undefined') {
-        // await validateString(candidacy.video); TODO
-        // existingCandidacy.video = candidacy.video;
+    if (typeof video !== 'undefined') {
+        await validateVideo(video);
+        await validateString(video.filename);
+        existingCandidacy.video = video.filename;
     }
     if (typeof candidacy.approved !== 'undefined') {
         await validateBoolean(candidacy.approved);
         existingCandidacy.approved = candidacy.approved;
     }
-
+    console.log("ASUJDLOIAUSJDHPAISUDJP", existingCandidacy);
     return await candidacyRepository.update(candidacy.id, existingCandidacy);
 };
 
@@ -114,6 +121,11 @@ export const service_consult_candidacy = async (id) => {
     foundCandidacy.user = await service_user_consult(foundCandidacy.user);
     if (!foundCandidacy.user) {
         throw new Error('Error al guardar la información del candidato.');
+    }
+
+    if (foundCandidacy.video) {
+      foundCandidacy.video = `http://localhost:3000/files/${encodeURIComponent(foundCandidacy.video)}`;
+      console.log("Video encontrado: ", foundCandidacy.video);
     }
 
     return foundCandidacy;

@@ -54,33 +54,30 @@ export const service_user_register = async (name, surname, email, password) => {
 
 
 
-export const service_user_delete = async (email, password) => {
+export const service_user_delete = async (email) => {
     await validateEmail(email);
 
     const existingUser = await userRepository.findById(email);
     if (!existingUser) {
         throw new Error('El usuario no existe.');
-    }
-
-    const passwordCorrect = verifyPassword(password, existingUser.password)
-    if (!passwordCorrect) {
-        throw new Error('Contraseña incorrecta');
     }
 
     return await userRepository.delete(email);
 };
 
 export const service_user_update = async (email, oldPassword, name, surname, photo, newPassword) => {
-    await validateEmail(email);
 
+    await validateEmail(email);
     const existingUser = await userRepository.findById(email);
     if (!existingUser) {
         throw new Error('El usuario no existe.');
     }
-
-    const passwordCorrect = verifyPassword(oldPassword, existingUser.password)
-    if (!passwordCorrect) {
-        throw new Error('Contraseña incorrecta');
+    if(oldPassword) {
+        const passwordCorrect = verifyPassword(oldPassword, existingUser.password)
+        if (!passwordCorrect) {
+            throw new Error('Contraseña incorrecta');
+        }
+        
     }
 
     let hashedPassword = existingUser.password;
@@ -99,14 +96,19 @@ export const service_user_update = async (email, oldPassword, name, surname, pho
         await validateString(surname);
         newSurname = surname;
     }
-
-    let newPhoto = existingUser.photo;
+    let newPhoto = existingUser.image;
     if (photo) {
-        newPhoto = photo;
+        newPhoto = photo.filename;
+    }
+    const newUser = {name: newName, surname: newSurname, email: email, image: newPhoto, password: hashedPassword};
+    const user = await userRepository.update(email, newUser)
+    // Generar token de inicio de sesion 
+    const token = await generateToken(user);
+    if (!token) {
+        throw new Error('mal token');
     }
     
-    const newUser = {name: newName, surname: newSurname, email: email, photo: newPhoto, password: hashedPassword};
-    return await userRepository.update(email, newUser);
+    return { user, token };
 };
 
 export const service_user_search = async (email, name, surname) => {

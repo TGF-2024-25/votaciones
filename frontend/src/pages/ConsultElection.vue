@@ -202,7 +202,7 @@ export default {
     },
     postulable(election) {
       const now = new Date()
-      return new Date(election.init_date) < now && new Date(election.end_date) > now;
+      return new Date(election.init_date) > now;
     },
     getStatusText(election) {
       const now = new Date()

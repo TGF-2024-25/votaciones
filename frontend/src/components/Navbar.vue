@@ -2,6 +2,11 @@
   <nav class="layout">
     <RouterLink to="/" class="home-link">Home</RouterLink>
 
+    <!-- Mostrar nombre y apellidos del usuario logueado -->
+    <span v-if="usuarioLogueado" class="user-info">
+      {{ usuarioLogueado.name }} {{ usuarioLogueado.surname }}
+    </span>
+
     <!-- Botón de lupa -->
     <button 
       v-if="mostrarBotonLupa" 
@@ -28,6 +33,11 @@
 import { jwtDecode } from 'jwt-decode';
 
 export default {
+  data() {
+    return {
+      usuarioLogueado: null, // Datos del usuario logueado
+    };
+  },
   computed: {
     mostrarBotonLupa() {
       const token = localStorage.getItem('token');
@@ -48,7 +58,17 @@ export default {
     },
     irAjustes() {
       this.$router.push('/user-settings');
+    },
+    cargarUsuarioLogueado() {
+      const token = localStorage.getItem('token');
+      if (token) {
+        const decoded = jwtDecode(token);
+        this.usuarioLogueado = decoded.user; // Asignar los datos del usuario logueado
+      }
     }
+  },
+  mounted() {
+    this.cargarUsuarioLogueado(); // Cargar los datos del usuario al montar el componente
   }
 };
 </script>

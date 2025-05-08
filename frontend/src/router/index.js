@@ -5,14 +5,21 @@ import SearchCandidacy from '../pages/candidacy/SearchCandidacy.vue';
 import ListCandidacies from '../pages/candidacy/ListCandidacies.vue';
 import ConsultCandidacy from '../pages/candidacy/ConsultCandidacy.vue';
 import ModifyCandidacy from '../pages/candidacy/ModifyCandidacy.vue';
-import Login from '../pages/Login.vue';
+
 import Register from '../pages/Register.vue';
+import Login from '../pages/Login.vue';
+import UserSettings from '../pages/user/UserSettings.vue';
+import SearchUser from '../pages/user/SearchUser.vue';
+import ListUsers from '../pages/user/ListUsers.vue';
+import ConsultUser from '../pages/user/ConsultUser.vue';
+import ModifyUser from '../pages/user/ModifyUser.vue';
+
+
 import CreateElection from '../pages/CreateElection.vue';
 import SearchElection from '../pages/election/SearchElection.vue';
 import Vote from '../pages/Vote.vue';
 import HomeElections from '../pages/HomeElections.vue';
 import SearchPage from '../pages/SearchPage.vue';
-import UserSettings from '../pages/UserSettings.vue';
 import ElectionConsult from '../components/election/ElectionConsult.vue';
 import ModifyElection from '../pages/ModifyElection.vue';
 import ConsultElection from '../pages/ConsultElection.vue';
@@ -29,6 +36,9 @@ const routes = [
   },
   { path: '/search-candidacy', component: SearchCandidacy },
   { path: '/list-candidacies', component: ListCandidacies },
+  { path: '/search-user', component: SearchUser },
+  { path: '/list-user', component: ListUsers },
+  
   {
     path: '/consult-candidacy',
     component: ConsultCandidacy,
@@ -37,6 +47,16 @@ const routes = [
   {
     path: '/modify-candidacy',
     component: ModifyCandidacy,
+    props: route => ({ id: route.query.id })
+  },
+  {
+    path: '/consult-user',
+    component: ConsultUser,
+    props: route => ({ id: route.query.id })
+  },
+  {
+    path: '/modify-user',
+    component: ModifyUser,
     props: route => ({ id: route.query.id })
   },
 
@@ -53,8 +73,6 @@ const routes = [
     component: ModifyElection,
     props: route => ({ id: route.query.id })
   },
-  
-  
 
   { path: '/login', component: Login }, // Ruta de inicio de sesión
   { path: '/register', component: Register }, // Ruta de registro
