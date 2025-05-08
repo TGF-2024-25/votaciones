@@ -1,11 +1,32 @@
 import BaseRepository from "./BaseRepository.js";
 import Election, { UserElection } from "../models/Election.js";
 import User from "../models/User.js";
+import Vote from "../models/Vote.js";
 
 
 export default class ElectionRepository extends BaseRepository {
   constructor() {
     super();
+  }
+
+  async addVote(electionId, candidateId, voterHashId) {
+    try {
+      
+      console.log("Voto registrado con éxito:", electionId, candidateId," ", voterHashId);
+      // Registrar el voto en la tabla de votos
+      const vote = await Vote.create({
+        electionID: electionId,
+        candidacyID: candidateId,
+        voterHashID: voterHashId,
+        voteTime: new Date(),
+      });
+  
+      
+      return vote;
+    } catch (error) {
+      console.error("Error al registrar el voto:", error);
+      throw error;
+    }
   }
 
 
