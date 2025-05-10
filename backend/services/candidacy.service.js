@@ -74,7 +74,7 @@ export const service_update_candidacy = async (candidacy, video) => {
         await validateBoolean(candidacy.approved);
         existingCandidacy.approved = candidacy.approved;
     }
-
+    console.log("ASUJDLOIAUSJDHPAISUDJP", existingCandidacy);
     return await candidacyRepository.update(candidacy.id, existingCandidacy);
 };
 

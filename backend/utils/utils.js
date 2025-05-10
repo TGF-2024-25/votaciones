@@ -53,6 +53,7 @@ export const validateDate = async (dateString) => {
 }
 
 export const generateToken = async (user) => {
+        user.image = `http://localhost:3000/files/${encodeURIComponent(user.image)}`
     return jwt.sign(
         { user },
         process.env.JWT_SECRET,
