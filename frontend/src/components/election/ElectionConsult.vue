@@ -34,7 +34,7 @@ export default {
   methods: {
     async loadElectionData() {
       try {
-        const response = await axios.post(`${API_URL}/consultElection`, { id: this.id });
+        const response = await axios.get(`${API_URL}consultElection/${this.id}`);
         console.log(response.data); // Ver los datos obtenidos
         this.setElectionStatus();
       } catch (error) {

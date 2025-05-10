@@ -94,6 +94,10 @@ const routes = [
   { path: '/search', component: SearchPage },
   { path: '/user-settings', component: UserSettings },
   //{ path: '/election-ended', component: EleccionFin},
+  {
+    path: '/test-elections',
+    component: () => import('../components/ElectionTest.vue'),
+  }
 ];
 
 // Crear el router con historia en el navegador
