@@ -7,7 +7,7 @@
 
      <!-- Mostrar elecciones en curso si el usuario está autenticado -->
      <div v-if="checkAuth() && ongoingElections.length > 0" class="elections-section">
-      <h2>Mis elecciones en Curso</h2>
+      <h2>Elecciones en curso</h2>
       <ul>
         <li v-for="election in ongoingElections" :key="election.id" class="election-item">
           <!-- <p><strong>{{ election.title }}</strong></p> -->
@@ -94,15 +94,16 @@ export default {
 
     const now = new Date();
 
-    const elections = Array.isArray(response.data)
+    this.ongoingElections = Array.isArray(response.data)
       ? response.data
       : response.data?.elections || [];
 
+    /* No tiene sentido no mostrar las elecciones en todos sus estados, para poder consultar los resultados y postular candidaturas
     this.ongoingElections = elections.filter((election) => {
       const startDate = new Date(this.formatDateTime(election.init_date));
       const endDate = new Date(this.formatDateTime(election.end_date));
       return now >= startDate && now <= endDate;
-    });
+    });*/
   } catch (error) {
     console.error("Error al buscar elecciones en curso:", error);
     this.ongoingElections = [];

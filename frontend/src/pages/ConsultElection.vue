@@ -20,44 +20,51 @@
       </p>
 
       <!-- Dropdown para seleccionar candidato -->
-      <div v-if="candidates.length > 0" class="candidate-selection">
-        <h3 class="section-title">Elija Candidato :</h3>
-        <div> </div>
+      <div v-if="candidates.length > 0 && getStatusText(election) === 'EN CURSO' && !hasVoted" class="candidate-selection">
+        <h3 class="section-title">Elija Candidato:</h3>
         <select v-model="selectedCandidateId" class="form-select" style="width: 300px; margin: 0 auto;" size="1">
           <option disabled value="">Selecciona un candidato</option>
           <option v-for="candidate in candidates" :key="candidate.id" :value="candidate.id">
             {{ candidate.user }}
           </option>
         </select>
-        <div v-if="getStatusText(election) === 'EN CURSO'" class="text-center mt-3">
-
+        <div class="text-center mt-3">
           <button class="vote-button" :disabled="!selectedCandidateId" style="font-size: 18px; padding: 12px 24px;"
             @click="voteForCandidate">
             VOTAR
           </button>
         </div>
-
-
       </div>
+
+      <!-- Mostrar resultados si la elección ha finalizado -->
+      <div v-if="getStatusText(election) === 'FINALIZADA'" class="text-center mt-3">
+        <button class="btn btn-success" @click="consultarResultados">Ver resultados</button>
+
+        <div v-if="resultados.length > 0" class="mt-3">
+          <h4>Resultados:</h4>
+          <ul class="list-group" style="max-width: 500px; margin: 0 auto;">
+            <li v-for="resultado in resultados" :key="resultado.candidateId" class="list-group-item d-flex justify-content-between align-items-center">
+              {{ resultado.user }} 
+              <span class="badge bg-primary rounded-pill">{{ resultado.votes }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Botón para consultar candidaturas -->
+      <div v-if="candidates.length > 0" class="text-center mt-3">
+        <button class="btn btn-primary" @click="consultarCandidaturas">
+          Consultar candidaturas
+        </button>
+      </div>
+      
       <div v-else class="alert alert-info text-center">
-        <p>No hay candidatos disponibles para esta elección.</p>
+        <p>No hay candidatos disponibles para consultar.</p>
       </div>
-
-
-
 
       <div v-if="postulable(election)" class="text-center mt-3">
         <button class="btn btn-primary" @click="postularCandidatura">
           Postularme como candidato
-        </button>
-      </div>
-
-
-
-      <!-- Botón para consultar candidaturas -->
-      <div class="text-center mt-3">
-        <button class="btn btn-primary" @click="consultarCandidaturas">
-          Consultar candidaturas
         </button>
       </div>
 
@@ -86,7 +93,7 @@
 import axios from 'axios'
 import { API_URL } from '../utils/config'
 import { jwtDecode } from 'jwt-decode'
-import bcrypt from 'bcryptjs';
+import { sha256 } from 'js-sha256';
 
 export default {
   data() {
@@ -95,6 +102,8 @@ export default {
       candidates: [],
       selectedCandidateId: '',
       user: null,
+      hasVoted: null,
+      resultados: [],
     }
   },
   computed: {
@@ -105,8 +114,7 @@ export default {
         this.user = decoded.user
         return (
           decoded.user.type === 'admin' ||
-          decoded.user.type === 'creator' ||
-          decoded.user.id === this.election.creator
+          decoded.user.type === 'creator'
         )
       }
       return false
@@ -116,10 +124,10 @@ export default {
     election: {
       immediate: true,
       handler(nuevaEleccion) {
-        if (nuevaEleccion) {
-          this.candidates = JSON.parse(localStorage.getItem('candidaturasEncontradas') || '[]')
-        }
-      },
+      if (nuevaEleccion) {
+        this.buscarCandidaturas()
+      }
+    },
     }
   },
 
@@ -136,10 +144,20 @@ export default {
         console.error('Error al obtener la elección:', error)
       }
     },
+    async consultarResultados() {
+      try {
+        const response = await axios.get(`${API_URL}elections/countVotes/${this.election.id}`);
+        console.log(response.data.votes);
+        this.resultados = response.data.votes;
+      } catch (error) {
+        console.error('Error al obtener los resultados:', error);
+        alert('No se pudieron cargar los resultados de la elección.');
+      }
+    },
     postularCandidatura() {
       this.$router.push({ path: '/create-candidacy', query: { id: this.election.id } });
     },
-    async consultarCandidaturas() {
+    async buscarCandidaturas() {
       this.errorMessage = "";
       try {
         const response = await axios.post(`${API_URL}candidacies/search`, {
@@ -150,16 +168,16 @@ export default {
           email: null,
         });
 
-        if (Array.isArray(response.data) && response.data.length === 0) {
-          this.errorMessage = "No se encontraron candidaturas con estos filtros.";
-        } else {
-          this.resultados = response.data;
-          localStorage.setItem('candidaturasEncontradas', JSON.stringify(this.resultados.candidacies));
-          this.$router.push({ path: '/list-candidacies' });
-        }
+        this.candidates = response.data.candidacies;
+
       } catch (error) {
         this.errorMessage = "Error al buscar candidaturas. Inténtalo de nuevo.";
       }
+      return true;
+    },
+    async consultarCandidaturas() {
+      localStorage.setItem('candidaturasEncontradas', JSON.stringify(this.candidates));
+      this.$router.push({ path: '/list-candidacies' });
     },
     editarElection() {
       this.$router.push({ path: '/modify-election', query: { id: this.election.id } })
@@ -194,15 +212,21 @@ export default {
       }) + ' ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
     },
     hashVoterId: async (voterId) => {
-      const saltRounds = 10;
       if (!voterId) {
         throw new Error('Se requiere un ID de votante para generar el hash.');
       }
-      return await bcrypt.hash(voterId, saltRounds);
+      return sha256(voterId);
     },
     postulable(election) {
-      const now = new Date()
-      return new Date(election.init_date) < now && new Date(election.end_date) > now;
+      const now = new Date();
+      const esFutura = new Date(election.init_date) > now;
+      const token = localStorage.getItem('token');
+      if (token && esFutura) {
+        const decoded = jwtDecode(token);
+        this.user = decoded.user;
+        return !this.candidates.some(candidate => candidate.user === this.user.email);
+      }
+      return false;
     },
     getStatusText(election) {
       const now = new Date()
@@ -238,9 +262,27 @@ export default {
       }
     }
   },
-  mounted() {
-    const electionId = this.$route.query.id
-    this.fetchElectionDetails(electionId)
+  async mounted() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      const decoded = jwtDecode(token);
+      this.user = decoded.user;
+    }
+
+    const electionId = this.$route.query.id;
+    await this.fetchElectionDetails(electionId); // espera a que se cargue this.election
+
+    try {
+      const hash = await this.hashVoterId(this.user.email);
+      const vote = await axios.post(`${API_URL}elections/verifyVote/`, {
+        voterHashId: hash,
+        electionId: this.election.id,
+      });
+      this.hasVoted = vote.data.vote !== null;
+    } catch (error) {
+      console.error("Error verificando voto:", error);
+      this.hasVoted = true; // Asumimos que votó si hay error
+    }
   },
 }
 </script>

@@ -54,15 +54,17 @@ import {
       const id = req.params.id; // Obtener el ID de la elección desde el cuerpo de la solicitud
       const {
         image,
-        participants,
+        participantes,
         title,
         voteInitialDate,
         voteFinalDate,
       } = req.body;
+      console.log("Req.body:");
+      console.log(req.body);
       const modifiedElection = await service_election_modify(
         id,
         image,
-        participants,
+        participantes,
         title,
         voteInitialDate,
         voteFinalDate
@@ -148,8 +150,10 @@ import {
   
   export const controller_election_verifyVote = async (req, res) => {   //RECUENTO DE VOTOS
     try {
-      const { voterHashId } = req.params;
-      const vote = await service_election_verifyVote(voterHashId);
+      console.log("Verificamos el voto");
+      const { voterHashId, electionId } = req.body;
+      console.log(voterHashId, electionId);
+      const vote = await service_election_verifyVote(voterHashId, electionId);
       res.status(201).json({ message: "Voto verificado con éxito", vote });
     } catch (error) {
       res.status(400).json({ error: error.message });
@@ -166,7 +170,6 @@ import {
       res.status(400).json({ error: error.message });
     }
   };
-  
   
   export const controller_election_deleteCandidate = async (req, res) => {
     try {
@@ -196,11 +199,10 @@ import {
     }
   }
   
-  
-  
   export const controller_election_countVotes = async (req, res) => {
     try {
-      const votes = await service_election_countVotes();
+      const { id } = req.params;
+      const votes = await service_election_countVotes(id);
       res.status(201).json({ message: "Votos contados con éxito", votes });
     } catch (error) {
       res.status(400).json({ error: error.message });

@@ -261,8 +261,7 @@ export default {
           `${API_URL}elections/${this.election.id}/participants/`,
           { data: { email } }
         );
-
-        this.form.participantes = this.form.participantes.filter((p) => p.id !== email);
+        window.location.reload();
       } catch (error) {
         console.error("Error eliminando participante:", error);
         this.errorMessage = "No se pudo eliminar el participante";

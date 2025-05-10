@@ -1,7 +1,7 @@
 import Election from "../models/Election.js";
 import ElectionRepository from "../repositories/ElectionRepository.js";
 import { validateString, validateDate } from "../utils/utils.js";
-
+import { service_search_candidacy } from "./candidacy.service.js";
 
 const electionRepository = new ElectionRepository();
 
@@ -139,13 +139,14 @@ export const service_election_modify = async (
   const result = await electionRepository.update(id, updatedElection);
 
   // Update participants
+  console.log("Participantes:");
+  console.log(participants);
   if (participants && participants.length > 0) {
-    const participantsUpdated = await electionRepository.updateParticipants(id, participants);
+    const participantsUpdated = await electionRepository.createParticipants(participants, id)
     if (!participantsUpdated) {
       throw new Error("Error al actualizar los participantes.");
     }
   }
-  console.log("Participants received:", participants);
   return result;
 };
 
@@ -224,16 +225,18 @@ export const service_election_vote = async (id, candidateId, voterHashId) => {
 };
 
 
-export const service_election_verifyVote = async (voterHashId) => {
+export const service_election_verifyVote = async (voterHashId, electionId) => {
+  console.log("Verificamos el voto, ", voterHashId, electionId);
   //IDvoto
   if (!voterHashId) {
     //Comprobar que el ID no sea nulo
     throw new Error("El ID del voto es obligatorio.");
   }
-  const vote = await electionRepository; //buscar el voto
-  if (!vote) {
-    throw new Error("Voto no existente.");
+  if (!electionId) {
+    //Comprobar que el ID no sea nulo
+    throw new Error("El ID de la eleccion es obligatorio.");
   }
+  const vote = await electionRepository.findVote(voterHashId, electionId);
   return vote;
 };
 
@@ -252,15 +255,47 @@ export const service_election_deleteCandidate = async (candidate, id) => {
 
 
 export const service_election_countVotes = async (id) => {
-  //Comprobar fecha es inactiva
-  if (!id) {
-    //Comprobar que el ID no sea nulo
-    throw new Error("El ID de la Elección es obligatorio.");
+  console.log("Recuento de votos de la eleccion ", id);
+
+  const election = await service_election_consult(id);
+  if (!election) {
+    throw new Error("Elección no encontrada");
   }
-  //Bucle de candidatos
 
+  const now = new Date();
+  const endDate = new Date(election.end_date);
+  if (endDate > now) {
+    throw new Error("La elección aún no ha finalizado");
+  }
 
-  return service_election_consult(id);
+  // Obtener todos los votos de la elección
+  const votes = await electionRepository.findVotesByParams({ electionID: id });
+
+  // Obtener todas las candidaturas de la elección
+  const candidacies = await service_search_candidacy({ electionID: id });
+
+  // Inicializar el conteo de votos por candidatura
+  const resultsMap = {};
+  for (const candidatura of candidacies) {
+    resultsMap[candidatura.id] = {
+      candidateId: candidatura.id,
+      user: candidatura.user,
+      votes: 0,
+    };
+  }
+
+  // Contar votos
+  for (const vote of votes) {
+    console.log(vote);
+    if (resultsMap[vote.candidacyID]) {
+      resultsMap[vote.candidacyID].votes += 1;
+    }
+  }
+
+  // Devolver los resultados como array
+  const results = Object.values(resultsMap).sort((a, b) => b.votes - a.votes);
+
+  return results;
 };
 
 

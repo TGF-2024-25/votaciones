@@ -11,9 +11,6 @@ export default class ElectionRepository extends BaseRepository {
 
   async addVote(electionId, candidateId, voterHashId) {
     try {
-      
-      console.log("Voto registrado con éxito:", electionId, candidateId," ", voterHashId);
-      // Registrar el voto en la tabla de votos
       const vote = await Vote.create({
         electionID: electionId,
         candidacyID: candidateId,
@@ -29,6 +26,20 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
+  async findVote(voterHashId, electionId) {
+    try {
+      const participant = await Vote.findOne({
+        where: {
+          electionID: electionId,
+          voterHashID: voterHashId,
+        },
+      });
+      return participant;
+    } catch (error) {
+      console.error("Error al buscar el voto:", error);
+      throw error;
+    }
+  }
 
   async create(entity) {
     try {
@@ -79,7 +90,6 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
-
   async searchUserElections(email) {
     try {
       let params = { userId: email };
@@ -90,7 +100,6 @@ export default class ElectionRepository extends BaseRepository {
       throw error;
     }
   }
-
 
   async delete(id) {
     try {
@@ -106,25 +115,21 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
-
   async deleteParticipant(id, email) {
     try {
-      const participant = await UserElection.findByPk(id, {
-        include: [
-          {
-            model: User,
-            where: { email },
-            through: { attributes: [] },
-          },
-        ],
+      console.log("id, email: ", id, email);
+      const participant = await UserElection.findOne({
+        where: {
+          userId: email,
+          electionId: id,
+        },
       });
-
 
       if (!participant) {
         throw new Error("Elección no encontrada o usuario no participante");
       }
-      console.log("\n\n\n", type(participant), { participant });
-      //await participant.destroy();
+      console.log(participant);
+      await participant.destroy();
     } catch (error) {
       console.error(
         "Error al eliminar el participante de la elección:",
@@ -133,7 +138,6 @@ export default class ElectionRepository extends BaseRepository {
       throw error;
     }
   }
-
 
   async findById(id) {
     try {
@@ -145,7 +149,6 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
-
   async findAll() {
     try {
       const elections = await Election.findAll();
@@ -155,7 +158,6 @@ export default class ElectionRepository extends BaseRepository {
       throw error;
     }
   }
-
 
   async findByParams(params) {
     try {
@@ -167,6 +169,16 @@ export default class ElectionRepository extends BaseRepository {
     }
   }
 
+
+  async findVotesByParams(params) {
+    try {
+      const votes = await Vote.findAll({ where: params });
+      return votes;
+    } catch (error) {
+      console.error("Error al buscar elecciones con parámetros:", error);
+      throw error;
+    }
+  }
 
   async findParticipantByElectionIdAndEmail(electionId, email) {
     try {
