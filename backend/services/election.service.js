@@ -209,7 +209,7 @@ export const service_election_vote = async (id, candidateId, voterHashId) => {
   const year = today.getFullYear();
   const currentDate = `${day}/${month}/${year}`;
 
-  console.log("PRUEBA DEL DEIVID ", id, " ",candidateId," ", voterHashId)
+  //console.log("PRUEBA DEL DEIVID ", id, " ",candidateId," ", voterHashId)
 
   if (!voterHashId) {
     //Comprobar que el ID no sea nulo
@@ -220,8 +220,6 @@ export const service_election_vote = async (id, candidateId, voterHashId) => {
     throw new Error("La Elección asociada al candidato establecido no existe.");
   }
   // const voto = { candidateId, voterHashId };
-  // console.log("PRUEBA DEL DEIVID 2")
-  // console.log("Voto: ", voto);
   return await electionRepository.addVote(election.id, candidateId, voterHashId);
 };
 

@@ -87,7 +87,7 @@ import {
         voteInitialDate,
         voteFinalDate
       );
-      console.log(elections);
+      //console.log(elections);
       res
         .status(201)
         .json({ message: "Elecciones encontradas con éxito", elections });
