@@ -189,9 +189,7 @@ export default {
     },
     async eliminarElection() {
       try {
-        const response = await axios.post(`${API_URL}elections/delete`, {
-          id: this.election.id,
-        })
+        const response = await axios.post(`${API_URL}elections/deleteElection/${this.election.id}` )
         if (response.data) {
           alert('Elección eliminada correctamente')
           this.$router.push('/')
