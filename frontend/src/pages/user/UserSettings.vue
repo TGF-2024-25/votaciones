@@ -20,8 +20,12 @@
         </div>
         <input type="file" id="profileImage" @change="handleImageUpload" class="form-control" accept="image/jpeg, image/png" />
       </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-secondary mt-4" @click="editarDatos">Editar Datos</button>
+        <button type="button" class="btn btn-danger mt-4" @click="borrarCuenta">Borrar Cuenta</button>
+      </div>
+            <button type="submit" class="btn btn-primary mt-4">Aplicar</button>
 
-      <button type="submit" class="btn btn-primary mt-4">Aplicar</button>
     </form>
   </div>
 </template>
@@ -105,6 +109,34 @@ export default {
       } catch (error) {
         console.error('Error al guardar los ajustes:', error);
         alert('Error al guardar los ajustes. Inténtalo de nuevo.');
+      }
+    },
+    editarDatos() {
+      const token = localStorage.getItem('token');
+      const decoded = jwtDecode(token);
+      this.$router.push({ path: '/modify-user', query: { id: decoded.user.email } });
+    },
+    async borrarCuenta() {
+      const confirmacion = confirm('¿Estás seguro de que deseas borrar tu cuenta? Esta acción no se puede deshacer.');
+      if (confirmacion) {
+       try {
+          const token = localStorage.getItem('token');
+          const decoded = jwtDecode(token);
+
+          const response = await axios.post(`${API_URL}users/deleteUser`, {
+            email: decoded.user.email,
+          });
+  
+          if (response.data) {
+            alert('Usuario eliminado correctamente');
+            this.$router.push('/search'); // Redirigir a la pagina de busqueda
+          } else {
+            throw new Error('No se pudo eliminar el usuario.');
+          }
+        } catch (error) {
+          console.error('Error al eliminar el usuario:', error);
+          alert('Error al eliminar el usuario.');
+        }
       }
     },
   },
