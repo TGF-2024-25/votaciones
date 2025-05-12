@@ -51,6 +51,7 @@
         <label for="rol" class="form-label text-bold">Rol</label>
         <select id="rol" v-model="form.rol" class="form-control input-custom" required>
           <option value="user">Usuario</option>
+          <option value="creator">Usuario</option>
           <option value="admin">Administrador</option>
         </select>
       </div>
