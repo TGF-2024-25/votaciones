@@ -182,7 +182,7 @@ button {
 }
 
 .btn-primary {
-  background-color: #007bff;
+  background-color: #3e9bff;
   color: white;
   border: none;
   border-radius: 10px;
@@ -190,7 +190,7 @@ button {
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
+  background-color: #3e9bff;
 }
 .btn-vote {
   background-color: #ffa600;
@@ -202,7 +202,7 @@ button {
 }
 
 .btn-success {
-  background-color: #28a745;
+  background-color: #e1b000;
   color: white;
   border: none;
   border-radius: 4px;

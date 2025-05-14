@@ -87,7 +87,7 @@
     font-size: 16px;
     cursor: pointer;
   }
-  
+
   .error {
     color: red;
     margin-top: 10px;

@@ -1,19 +1,19 @@
 <template>
   <div class="login-container">
-    <h1>Iniciar Sesión</h1>
+    <h1></h1>
     <form @submit.prevent="login">
-      <div>
-        <label for="email">Email</label>
+      <div class="form-group">
+        <label for="email">Correo Electrónico</label>
         <input v-model="email" type="text" id="email" required />
       </div>
-      <div>
+      <div class="form-group">
         <label for="password">Contraseña</label>
         <input v-model="password" type="password" id="password" required />
       </div>
       <button type="submit">Iniciar sesión</button>
     </form>
     <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-    <p class="register-link">
+    <p class="register-link" style="margin-top: 40px;">
       ¿No tienes cuenta? 
       <router-link to="/register">Regístrate aquí</router-link>
     </p>
@@ -65,10 +65,43 @@
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+  width: 300px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .error {
   color: red;
   margin-top: 10px;
+}
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #3e9bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 </style>
