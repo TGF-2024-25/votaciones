@@ -91,9 +91,7 @@ export const service_search_candidacy = async (candidacy) => {
 
     let candidacies = [];
 
-    if (Object.keys(params).length !== 0) {
-        candidacies = await candidacyRepository.findByParams(params);
-    }
+    candidacies = await candidacyRepository.findByParams(params);
     
     const users = await service_user_search(candidacy.email, candidacy.name, candidacy.surname);
     if (candidacies.length > 0 && users.length === 1) {

@@ -169,6 +169,7 @@ export default {
         });
 
         this.candidates = response.data.candidacies;
+        this.candidates = this.candidates.filter(c => c.approved === true);
 
       } catch (error) {
         this.errorMessage = "Error al buscar candidaturas. Inténtalo de nuevo.";
