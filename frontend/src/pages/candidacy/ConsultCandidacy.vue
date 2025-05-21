@@ -101,7 +101,7 @@ export default {
         const response = await axios.post(`${API_URL}candidacies/consult`, {
           id: id,
         });
-
+        console.log(response);
         if (response.data) {
           this.candidacy = response.data.candidacyConsulted;
         } else {

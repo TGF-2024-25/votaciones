@@ -66,9 +66,7 @@ export default {
           const id = eleccionesArray[i].id;
 
           try {
-            const response = await axios.post(`${API_URL}elections/consult`, {
-              id: id,
-            });
+            const response = await axios.get(`${API_URL}elections/consultElection/${id}`);
 
             // Guardamos la versión completa
             //console.log(response);
@@ -118,7 +116,7 @@ export default {
 
     return `${year}-${month}-${day}`;
 },
-    
+
   },
   async mounted() {
     await this.cargarElecciones();

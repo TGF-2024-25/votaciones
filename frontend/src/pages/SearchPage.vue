@@ -65,7 +65,7 @@ export default {
 }
 
 .search-button.user {
-  background-color: #007bff;
+  background-color: #3e9bff;
 }
 
 .search-button.candidacy {
@@ -73,7 +73,7 @@ export default {
 }
 
 .search-button.election {
-  background-color: #ffc107;
+  background-color: #ffe100;
   color: #333;
 }
 

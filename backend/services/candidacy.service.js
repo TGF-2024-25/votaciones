@@ -74,7 +74,7 @@ export const service_update_candidacy = async (candidacy, video) => {
         await validateBoolean(candidacy.approved);
         existingCandidacy.approved = candidacy.approved;
     }
-
+    console.log("ASUJDLOIAUSJDHPAISUDJP", existingCandidacy);
     return await candidacyRepository.update(candidacy.id, existingCandidacy);
 };
 
@@ -91,18 +91,12 @@ export const service_search_candidacy = async (candidacy) => {
 
     let candidacies = [];
 
-    if (Object.keys(params).length !== 0) {
-        candidacies = await candidacyRepository.findByParams(params);
-    }
-
+    candidacies = await candidacyRepository.findByParams(params);
+    
     const users = await service_user_search(candidacy.email, candidacy.name, candidacy.surname);
-    if (users.length === 1) {
+    if (candidacies.length > 0 && users.length === 1) {
         const userEmail = users[0].email;
         candidacies = candidacies.filter(c => c.user === userEmail);
-    }
-
-    if (candidacies.length === 0) {
-        throw new Error('No se han encontrado candidaturas.');
     }
 
     return candidacies;

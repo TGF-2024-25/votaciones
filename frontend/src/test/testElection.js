@@ -19,7 +19,7 @@ export const testElectionCreate = async () => {
 export const testElectionUpdate = async () => {
     try {
         const response = await axios.post(`${API_URL}/updateElection`, {
-            id: '00001',
+            id: '100000001',
             title: 'Eleccion MODIFICADA',
             photoUrl: null,
             initialDate: '20-03-2025',
@@ -34,8 +34,8 @@ export const testElectionUpdate = async () => {
 
 export const testElectionConsult = async () => {
     try {
-        const response = await axios.post(`${API_URL}/consultElection`, {
-            id: '00001',
+        const response = await axios.get(`${API_URL}/consultElection/`, {
+            id: '100000000',
         });
         console.log('✅ Elección mostrada con exito:', response.data);
     } catch (error) {
@@ -47,7 +47,7 @@ export const testElectionConsult = async () => {
 export const testElectionDelete = async () => {
     try {
         const response = await axios.post(`${API_URL}/deleteElection`, {
-            id: '00001',
+            id: '100000000',
         });
         console.log('✅ Elección eliminada con exito:', response.data);
     } catch (error) {
